@@ -1,4 +1,8 @@
 import { Grid, GridItem } from "@chakra-ui/react";
+import { AiFillHome, BsCalendar,  } from "react-icons/ai";
+import { FaUserCircle } from "react-icons/fa";
+import { ImExit } from "react-icons/im";
+import { LuFolderEdit } from "react-icons/lu";
 
 export const Sidebar = () => {
     return(
@@ -12,11 +16,17 @@ export const Sidebar = () => {
                 fontWeight='bold'
             >
 
-            <GridItem pl= '2' bg='green.300' area={'nav'}>
+            <GridItem pl="2" bg="green.300" area={"nav"}>
                 Nav
+                <AiFillHome />
+                <BsCalendar />
+                <FaUserCircle/>
+                <ImExit/>
+                <LuFolderEdit/>
             </GridItem>
             <GridItem pl="2" bg="green.300" area={"main"}>
                 Main
+                
             </GridItem>
         </Grid>
     );
