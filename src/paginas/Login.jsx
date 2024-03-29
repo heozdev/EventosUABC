@@ -8,7 +8,34 @@ import {
     Input,
     Stack,
 } from "@chakra-ui/react";
+import { useState } from "react";
 
 export const Login = () => {
-    return <div>Login</div>;
+    const [correo, setCorreo] = useState("");
+    const [contrasena, setContrasena] = useState("");
+
+    return (
+        <Container borderRadius={10} p={10} mt={20} boxShadow={"xl"}>
+            <Heading mb={20}>Login</Heading>
+            <FormControl>
+                <Stack spacing={10}>
+                    <Box>
+                        <FormLabel>Correo</FormLabel>
+                        <Input type="email" placeholder="Ingrese su correo" />
+                    </Box>
+                    <Box>
+                        <FormLabel>Contraseña</FormLabel>
+                        <Input
+                            type="password"
+                            placeholder="Ingrese su contraseña"
+                        />
+                    </Box>
+                    <Box>
+                        <Button w={"100%"}>Iniciar sesion</Button>
+                    </Box>
+                </Stack>
+                <Stack></Stack>
+            </FormControl>
+        </Container>
+    );
 };
