@@ -17,11 +17,14 @@ export const Login = () => {
                 <Stack spacing={10}>
                     <Box>
                         <FormLabel>Correo</FormLabel>
-                        <Input type="email" />
+                        <Input type="email" placeholder="Ingrese su correo" />
                     </Box>
                     <Box>
                         <FormLabel>Contraseña</FormLabel>
-                        <Input type="password" />
+                        <Input
+                            type="password"
+                            placeholder="Ingrese su contraseña"
+                        />
                     </Box>
                     <Box>
                         <Button w={"100%"}>Iniciar sesion</Button>
