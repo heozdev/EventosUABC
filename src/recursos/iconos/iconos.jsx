@@ -6,14 +6,14 @@ import { ImExit } from "react-icons/im";
 import { BiSolidFilterAlt } from "react-icons/bi";
 
 export const iconos = () => {
-    return(
+    return (
         <div>
             <LuFolderEdit />
             <AiFillHome />
             <BsCalendar />
             <FaUserCircle />
             <ImExit />
-            <BiSolidFilterAlt/>
+            <BiSolidFilterAlt />
         </div>
     );
 };

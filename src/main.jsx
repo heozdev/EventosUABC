@@ -7,11 +7,12 @@ import { Solicitudes } from "./paginas/Solicitudes";
 import { Login } from "./paginas/Login";
 import { Perfil } from "./paginas/Perfil";
 import { ChakraProvider } from "@chakra-ui/react";
+import { App } from "./App";
 
 const router = createBrowserRouter([
     {
         path: "/",
-        element: <Login />,
+        element: <App />,
     },
     {
         path: "/inicio",

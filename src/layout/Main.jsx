@@ -1,22 +1,10 @@
-import { Grid, GridItem } from "@chakra-ui/react";
+import { GridItem } from "@chakra-ui/react";
+import { Outlet } from "react-router-dom";
 
-export const Main = () => {
+export const Main = ({ gridArea }) => {
     return (
-        <Grid 
-        templateAreas ={'"nav main"'}
-            gridTemplateRows={'100vh'}
-            gridTemplateColumns={'150px 1fr'}
-            h='200px'
-            gap='1'
-            color='blackAlpha.700'
-            fontWeight='bold'
-        >
-            <GridItem pl="2" bg="green.300" area={"nav"}>
-                Nav
-            </GridItem>
-            <GridItem pl="2" bg="green.300" area={"main"}>
-                Main
-            </GridItem>
-        </Grid>
+        <GridItem area={gridArea}>
+            <Outlet />
+        </GridItem>
     );
 };
