@@ -13,6 +13,7 @@ import { useState } from "react";
 export const Login = () => {
     const [correo, setCorreo] = useState("");
     const [contrasena, setContrasena] = useState("");
+    const [first, setFirst] = useState("");
 
     return (
         <Container borderRadius={10} p={10} mt={20} boxShadow={"xl"}>
