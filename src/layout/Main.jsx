@@ -11,13 +11,12 @@ export const Main = () => {
             color='blackAlpha.700'
             fontWeight='bold'
         >
-
-        <GridItem pl= '2' bg='green.300' area={'nav'}>
-            Nav
-        </GridItem>
-        <GridItem pl= '2' bg='green.300' area={'main'}>
-            Main
-        </GridItem>
-    </Grid>
-        );
+            <GridItem pl="2" bg="green.300" area={"nav"}>
+                Nav
+            </GridItem>
+            <GridItem pl="2" bg="green.300" area={"main"}>
+                Main
+            </GridItem>
+        </Grid>
+    );
 };

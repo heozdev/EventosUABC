@@ -1,6 +1,5 @@
 import { Grid, GridItem } from "@chakra-ui/react";
 
-
 export const Sidebar = () => {
     return(
         <Grid 
@@ -16,9 +15,9 @@ export const Sidebar = () => {
             <GridItem pl= '2' bg='green.300' area={'nav'}>
                 Nav
             </GridItem>
-            <GridItem pl= '2' bg='green.300' area={'main'}>
+            <GridItem pl="2" bg="green.300" area={"main"}>
                 Main
             </GridItem>
         </Grid>
-    )
+    );
 };
