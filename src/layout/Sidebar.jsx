@@ -5,7 +5,7 @@ export const Sidebar = () => {
     return(
         <Grid 
             templateAreas ={'"nav main"'}
-                gridTemplateRows={'1fr'}
+                gridTemplateRows={'100vh'}
                 gridTemplateColumns={'150px 1fr'}
                 h='200px'
                 gap='1'
