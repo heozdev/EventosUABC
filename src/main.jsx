@@ -6,6 +6,7 @@ import { Eventos } from "./paginas/Eventos";
 import { Solicitudes } from "./paginas/Solicitudes";
 import { Login } from "./paginas/Login";
 import { Perfil } from "./paginas/Perfil";
+import { ChakraProvider } from "@chakra-ui/react";
 
 const router = createBrowserRouter([
     {
@@ -32,6 +33,8 @@ const router = createBrowserRouter([
 
 ReactDOM.createRoot(document.getElementById("root")).render(
     <React.StrictMode>
-        <RouterProvider router={router} />
+        <ChakraProvider>
+            <RouterProvider router={router} />
+        </ChakraProvider>
     </React.StrictMode>
 );
