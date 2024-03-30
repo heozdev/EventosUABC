@@ -1,4 +1,4 @@
-import { Grid, GridItem, Link, Box } from "@chakra-ui/react";
+import { GridItem, Link, Box } from "@chakra-ui/react";
 import { ImExit } from "react-icons/im";
 import { LuFolderEdit } from "react-icons/lu";
 import { AiFillHome } from "react-icons/ai";
