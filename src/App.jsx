@@ -1,6 +1,4 @@
-import React from "react";
 import { Sidebar } from "./layout/Sidebar";
-import { Outlet } from "react-router-dom";
 import { Main } from "./layout/Main";
 import { Grid } from "@chakra-ui/react";
 

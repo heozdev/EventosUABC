@@ -21,7 +21,7 @@ export const Sidebar = ({ gridArea }) => {
                         }}
                     >
                         <AiFillHome size={35} style={{ color: "white" }} />
-                        <Link paddingLeft="10px" color="white" href="/">
+                        <Link paddingLeft="10px" color="white" href="/inicio">
                             Inicio
                         </Link>
                     </li>
@@ -34,7 +34,7 @@ export const Sidebar = ({ gridArea }) => {
                         }}
                     >
                         <BsCalendar size={35} style={{ color: "white" }} />
-                        <Link paddingLeft="10px" color="white" href="/">
+                        <Link paddingLeft="10px" color="white" href="/eventos">
                             Eventos
                         </Link>
                     </li>
@@ -47,7 +47,11 @@ export const Sidebar = ({ gridArea }) => {
                         }}
                     >
                         <LuFolderEdit size={37} style={{ color: "white" }} />
-                        <Link paddingLeft="10px" color="white" href="/">
+                        <Link
+                            paddingLeft="10px"
+                            color="white"
+                            href="/solicitudes"
+                        >
                             Solicitudes
                         </Link>
                     </li>
@@ -63,7 +67,7 @@ export const Sidebar = ({ gridArea }) => {
                         }}
                     >
                         <FaUserCircle size={35} style={{ color: "white" }} />
-                        <Link paddingLeft="10px" color="white" href="/">
+                        <Link paddingLeft="10px" color="white" href="/perfil">
                             Perfil
                         </Link>
                     </li>
@@ -75,7 +79,7 @@ export const Sidebar = ({ gridArea }) => {
                         }}
                     >
                         <ImExit size={35} style={{ color: "white" }} />
-                        <Link paddingLeft="10px" color="white" href="/">
+                        <Link paddingLeft="10px" color="white" href="/login">
                             Salir
                         </Link>
                     </li>

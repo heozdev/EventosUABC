@@ -4,7 +4,6 @@ import { RouterProvider, createBrowserRouter } from "react-router-dom";
 import { Inicio } from "./paginas/Inicio";
 import { Eventos } from "./paginas/Eventos";
 import { Solicitudes } from "./paginas/Solicitudes";
-import { Login } from "./paginas/Login";
 import { Perfil } from "./paginas/Perfil";
 import { ChakraProvider } from "@chakra-ui/react";
 import { App } from "./App";
@@ -13,22 +12,28 @@ const router = createBrowserRouter([
     {
         path: "/",
         element: <App />,
-    },
-    {
-        path: "/inicio",
-        element: <Inicio />,
-    },
-    {
-        path: "/eventos",
-        element: <Eventos />,
-    },
-    {
-        path: "/solicitudes",
-        element: <Solicitudes />,
-    },
-    {
-        path: "/perfil",
-        element: <Perfil />,
+        children: [
+            {
+                path: "/eventos",
+                element: <Eventos />,
+            },
+            {
+                path: "/inicio",
+                element: <Inicio />,
+            },
+            {
+                path: "/eventos",
+                element: <Eventos />,
+            },
+            {
+                path: "/solicitudes",
+                element: <Solicitudes />,
+            },
+            {
+                path: "/perfil",
+                element: <Perfil />,
+            },
+        ],
     },
 ]);
 
