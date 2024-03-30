@@ -2,7 +2,6 @@ import { Grid,
         GridItem,
         Input,
         Select,
-        DatePicker,
         Button,
         FormControl,
         FormLabel,
@@ -12,7 +11,7 @@ import { GoogleMap, LoadScript } from '@react-google-maps/api';
   
 
 
-    const Solicitud1 = () => {
+    const FormatoSolicitud1 = () => {
     return(
         <Grid templateColumns="repeat(2, 1fr)" gap={4}>
             <Grid>
@@ -46,7 +45,6 @@ import { GoogleMap, LoadScript } from '@react-google-maps/api';
             <Grid>
                 <GridItem>
                     <FormLabel>Fecha</FormLabel>
-                    <DatePicker placeholder="dd/mm/yyyy"/>
                 </GridItem>
 
                 <GridItem>
@@ -68,4 +66,4 @@ import { GoogleMap, LoadScript } from '@react-google-maps/api';
         
     );
 };
-export default Solicitud1;
+export default FormatoSolicitud1;

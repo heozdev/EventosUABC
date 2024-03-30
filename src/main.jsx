@@ -4,7 +4,6 @@ import { RouterProvider, createBrowserRouter } from "react-router-dom";
 import { Inicio } from "./paginas/Inicio";
 import { Eventos } from "./paginas/Eventos";
 import { Solicitudes } from "./paginas/Solicitudes";
-import { Login } from "./paginas/Login";
 import { Perfil } from "./paginas/Perfil";
 import { ChakraProvider } from "@chakra-ui/react";
 import { App } from "./App";

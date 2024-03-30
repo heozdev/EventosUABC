@@ -11,10 +11,10 @@ import { Grid,
         Select,
         Button } from "@chakra-ui/react"
 
-const Solicitud2 = () => {
+const FormatoSolicitud2 = () => {
   return (
     <Grid templateColumns={"1fr 1fr"} gap={4}>
-        <GridItem> --Divide el formulario en 2, izquierda y derecha
+        <GridItem> 
             <Grid templateRows={"1fr 1fr"} gap={4}>
                 <GridItem> 
                     <FormLabel>Capacidad</FormLabel>
@@ -79,4 +79,4 @@ const Solicitud2 = () => {
   )
 }
 
-export default Solicitud2
+export default FormatoSolicitud2
