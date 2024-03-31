@@ -1,11 +1,9 @@
-import FormatoSolicitud1 from "../componentes/Solicitud/FormatoSolicitud1";
-import FormatoSolicitud2 from "../componentes/Solicitud/FormatoSolicitud2";
+import PanelSolicitud from "../componentes/Solicitud/PanelSolicitud";
 
 export const Perfil = () => {
     return (
         <div>
-            <FormatoSolicitud1/>
-            <FormatoSolicitud2/>
+            <PanelSolicitud/>
         </div>
     );
 };

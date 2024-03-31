@@ -18,7 +18,7 @@ function PanelSolicitud() {
 
   return (
     <>
-      <Button onClick={onOpen}>Crear Evento</Button>
+      <Button onClick={onOpen}>Agregar Evento</Button>
 
       <Modal isOpen={isOpen} onClose={onClose} size="xl">
         <ModalOverlay />
