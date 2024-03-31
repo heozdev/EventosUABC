@@ -1,3 +1,9 @@
+
+
 export const Solicitud = () => {
-    return <div>Solicitud</div>;
+    return (
+        <div>
+            hola
+        </div>
+    );
 };

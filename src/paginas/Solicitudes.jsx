@@ -1,3 +1,7 @@
+import PanelSolicitud from "../componentes/Solicitud/PanelSolicitud";
+
 export const Solicitudes = () => {
-    return <div>Solicitudes</div>;
+    return (
+        <PanelSolicitud/>
+    );
 };

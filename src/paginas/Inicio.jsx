@@ -1,5 +1,5 @@
-import { Sidebar } from "../layout/Sidebar";
+import { Heading } from "@chakra-ui/react";
 
 export const Inicio = () => {
-    return <Sidebar/>;
+    return <Heading>Inicio</Heading>;
 };
