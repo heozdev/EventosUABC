@@ -1,5 +1,5 @@
-import { Heading } from "@chakra-ui/react";
+import PanelSolicitud from "../componentes/Solicitud/PanelSolicitud";
 
 export const Solicitudes = () => {
-    return <Heading>Solicitudes</Heading>;
+    return <PanelSolicitud />;
 };

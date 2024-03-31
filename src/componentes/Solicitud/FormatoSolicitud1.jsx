@@ -15,7 +15,7 @@ const FormatoSolicitud1 = () => {
             <Grid>
                 <GridItem>
                     <FormControl>
-                        <FormLabel>Nombre del evento</FormLabel>
+                        <FormLabel>Nombre</FormLabel>
                         <Input placeholder="Evento" />
                     </FormControl>
                 </GridItem>
@@ -49,14 +49,14 @@ const FormatoSolicitud1 = () => {
                 <GridItem>
                     <FormLabel>Ubicacion</FormLabel>
                     <LoadScript googleMapsApiKey="AIzaSyAN374Wr-hVKOGOM2mXSkG_Pddko8zDb8o">
-                        <GoogleMap
-                            mapContainerStyle={{
-                                width: "200px",
-                                height: "200px",
-                            }}
-                            center={{ lat: -34.397, lng: 150.644 }}
-                            zoom={8}
-                        />
+                    <GoogleMap
+                        mapContainerStyle={{ 
+                            width: '150px',
+                            height: '150px'
+                        }}
+                        center={{ lat: 32.632667857327895, lng: -115.44600813750422}}
+                        zoom={15}
+                      />
                     </LoadScript>
                 </GridItem>
             </Grid>
