@@ -8,8 +8,7 @@ import { Grid,
         FormLabel,
         Input,
         FormControl,
-        Select,
-        Button } from "@chakra-ui/react"
+        Select} from "@chakra-ui/react"
 
 const FormatoSolicitud2 = () => {
   return (
@@ -33,6 +32,7 @@ const FormatoSolicitud2 = () => {
                 </GridItem>
             </Grid>
 
+            
             <FormLabel>Tipo de evento</FormLabel>
             <FormControl>
                 <Select placeholder="Categoria">
@@ -72,8 +72,6 @@ const FormatoSolicitud2 = () => {
                 </GridItem>
             </Grid>
         </GridItem>
-
-        <Button colorScheme='Green' >Button</Button>
     </Grid>
 
   )
