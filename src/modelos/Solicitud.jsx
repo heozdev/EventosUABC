@@ -1,12 +1,11 @@
-import { Box, Image, Text } from "@chakra-ui/react";
+import Solicitud1 from "../componentes/Solicitudes/Solicitud1";
+import Solicitud2 from "../componentes/Solicitudes/Solicitud2";
 
 export const Solicitud = () => {
     return (
-        <Box>
-            <Image />
-            <Box>
-                <Text fontSize={"md"}></Text>
-            </Box>
-        </Box>
+        <div>
+            <Solicitud1 />
+            <Solicitud2 />
+        </div>
     );
 };

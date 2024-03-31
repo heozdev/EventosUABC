@@ -1,11 +1,7 @@
-import Solicitud1 from "../componentes/Solicitudes/Solicitud1";
-import Solicitud2 from "../componentes/Solicitudes/Solicitud2";
+import PanelSolicitud from "../componentes/Solicitud/PanelSolicitud";
 
 export const Solicitudes = () => {
     return (
-        <div>
-            <Solicitud1 />
-            <Solicitud2 />
-        </div>
+        <PanelSolicitud/>
     );
 };

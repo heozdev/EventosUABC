@@ -3,14 +3,13 @@ import {
     GridItem,
     Input,
     Select,
-    Button,
     FormControl,
     FormLabel,
     Textarea,
 } from "@chakra-ui/react";
-import { GoogleMap, LoadScript } from "@react-google-maps/api";
+import { LoadScript, GoogleMap } from "@react-google-maps/api";
 
-const Solicitud1 = () => {
+const FormatoSolicitud1 = () => {
     return (
         <Grid templateColumns="repeat(2, 1fr)" gap={4}>
             <Grid>
@@ -44,6 +43,7 @@ const Solicitud1 = () => {
             <Grid>
                 <GridItem>
                     <FormLabel>Fecha</FormLabel>
+                    <Input placeholder="Fecha" />
                 </GridItem>
 
                 <GridItem>
@@ -51,8 +51,8 @@ const Solicitud1 = () => {
                     <LoadScript googleMapsApiKey="AIzaSyAN374Wr-hVKOGOM2mXSkG_Pddko8zDb8o">
                         <GoogleMap
                             mapContainerStyle={{
-                                width: "400px",
-                                height: "400px",
+                                width: "200px",
+                                height: "200px",
                             }}
                             center={{ lat: -34.397, lng: 150.644 }}
                             zoom={8}
@@ -60,9 +60,7 @@ const Solicitud1 = () => {
                     </LoadScript>
                 </GridItem>
             </Grid>
-
-            <Button colorScheme="Green">Button</Button>
         </Grid>
     );
 };
-export default Solicitud1;
+export default FormatoSolicitud1;

@@ -10,15 +10,12 @@ import {
     Input,
     FormControl,
     Select,
-    Button,
 } from "@chakra-ui/react";
 
-const Solicitud2 = () => {
+const FormatoSolicitud2 = () => {
     return (
         <Grid templateColumns={"1fr 1fr"} gap={4}>
             <GridItem>
-                {" "}
-                --Divide el formulario en 2, izquierda y derecha
                 <Grid templateRows={"1fr 1fr"} gap={4}>
                     <GridItem>
                         <FormLabel>Capacidad</FormLabel>
@@ -36,6 +33,7 @@ const Solicitud2 = () => {
                         <Input value="Pendiente" isReadOnly />
                     </GridItem>
                 </Grid>
+
                 <FormLabel>Tipo de evento</FormLabel>
                 <FormControl>
                     <Select placeholder="Categoria">
@@ -75,10 +73,8 @@ const Solicitud2 = () => {
                     </GridItem>
                 </Grid>
             </GridItem>
-
-            <Button colorScheme="Green">Button</Button>
         </Grid>
     );
 };
 
-export default Solicitud2;
+export default FormatoSolicitud2;
