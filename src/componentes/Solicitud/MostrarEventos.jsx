@@ -2,10 +2,12 @@ import { useState } from 'react';
 import {
   Modal, ModalOverlay, ModalContent, ModalHeader, ModalFooter, ModalBody, ModalCloseButton,
   Text, Textarea, Heading, Button, Badge, Card, Image, Stack, CardBody, CardFooter,
-  FormControl, FormLabel, Grid, GridItem
+  FormControl, FormLabel, Grid, GridItem, Flex
 } from '@chakra-ui/react';
 import Solicitud1 from "./FormatoSolicitud1";
 import Solicitud2 from "./FormatoSolicitud2";
+import { SearchIcon } from '@chakra-ui/icons'
+import { BiSolidFilterAlt } from "react-icons/bi";
 
 function MostrarEventos() {
   const [isOpen, setIsOpen] = useState(false);
@@ -21,9 +23,14 @@ function MostrarEventos() {
 
   return (
     <center>
-      <Heading>Solicitudes</Heading>
+      <Heading size='3xl' color={'black'} mt={5}>Solicitudes</Heading>
+      <Flex justifyContent='center' alignItems='center' mt={10} ml={600}>
+        <BiSolidFilterAlt style={{ color: '#004928', fontSize: '45px', marginRight: '8px' }} />
+        <SearchIcon style={{ color: '#004928', fontSize: '45px' }} />
+      </Flex>
+      
       <Card
-        mt={20}
+        mt={10}
         direction={{ base: 'column', sm: 'row' }}
         overflow='hidden'
         variant='outline'
@@ -52,7 +59,10 @@ function MostrarEventos() {
                   <FormLabel mt={2} fontSize="xl">Abad Padilla</FormLabel>
                 </GridItem>
                 <GridItem>
-                <Badge colorScheme='green' variant='solid' fontSize="md" padding={2.5} borderRadius={15}>Aceptado</Badge>
+                  <Badge colorScheme='green' variant='solid' fontSize="md" padding={2.5} borderRadius={15} position={'absolute'} right={0} bottom={0}>
+                    Aceptado
+                  </Badge>
+                  <FormLabel mt={2} fontSize="xl" position={'absolute'} right={0} top={0}>8=1</FormLabel>
                 </GridItem>
               </Grid>
             </FormControl>
@@ -92,7 +102,9 @@ function MostrarEventos() {
                   <FormLabel mt={2} fontSize="xl">Abad Padilla</FormLabel>
                 </GridItem>
                 <GridItem>
-                <Badge colorScheme='green' variant='solid' fontSize="md" padding={2.5} borderRadius={15}>Aceptado</Badge>
+                  <Badge colorScheme='green' variant='solid' fontSize="md" padding={2.5} borderRadius={15} position={'absolute'} right={0} bottom={0}>
+                    Aceptado
+                  </Badge>
                 </GridItem>
               </Grid>
             </FormControl>
@@ -132,7 +144,9 @@ function MostrarEventos() {
                   <FormLabel mt={2} fontSize="xl">Abad Padilla</FormLabel>
                 </GridItem>
                 <GridItem>
-                <Badge colorScheme='green' variant='solid' fontSize="md" padding={2.5} borderRadius={15}>Aceptado</Badge>
+                  <Badge colorScheme='green' variant='solid' fontSize="md" padding={2.5} borderRadius={15} position={'absolute'} right={0} bottom={0}>
+                    Aceptado
+                  </Badge>
                 </GridItem>
               </Grid>
             </FormControl>
