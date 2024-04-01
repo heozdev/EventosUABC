@@ -28,7 +28,7 @@ function PanelSolicitud() {
   };
   return (
     <>
-      <Button onClick={onOpen}>Crear Evento</Button>
+      <Button onClick={onOpen} bgColor='#00723F' color='white'>Crear Evento</Button>
 
       <Modal isOpen={isOpen} onClose={onClose} size={modalSize}>
         <ModalOverlay />
