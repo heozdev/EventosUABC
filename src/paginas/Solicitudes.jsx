@@ -1,5 +1,5 @@
-import PanelSolicitud from "../componentes/Solicitud/PanelSolicitud";
+import MostrarEventos from "../componentes/Solicitud/MostrarEventos";
 
 export const Solicitudes = () => {
-    return <PanelSolicitud />;
+    return <MostrarEventos />;
 };

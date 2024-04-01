@@ -16,15 +16,9 @@ import Solicitud2 from "./FormatoSolicitud2";
 function PanelSolicitud() {
     const { isOpen, onOpen, onClose } = useDisclosure();
 
-<<<<<<< HEAD
     return (
         <>
             <Button onClick={onOpen}>Crear Evento</Button>
-=======
-  return (
-    <>
-      <Button onClick={onOpen}>Agregar Evento</Button>
->>>>>>> 295e8db07bfc0fc2a933ad7f1d7a65c0215f10be
 
             <Modal isOpen={isOpen} onClose={onClose} size="xl">
                 <ModalOverlay />

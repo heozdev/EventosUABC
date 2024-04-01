@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 import { Container, Grid, GridItem, Heading } from "@chakra-ui/react";
 import PanelSolicitud from "../componentes/Solicitud/PanelSolicitud";
 import { InformacionPerfil } from "../componentes/Perfil/InformacionPerfil";
@@ -21,14 +20,5 @@ export const Perfil = () => {
                 </Grid>
             </Container>
         </>
-=======
-import PanelSolicitud from "../componentes/Solicitud/PanelSolicitud";
-
-export const Perfil = () => {
-    return (
-        <div>
-            <PanelSolicitud/>
-        </div>
->>>>>>> 295e8db07bfc0fc2a933ad7f1d7a65c0215f10be
     );
 };
