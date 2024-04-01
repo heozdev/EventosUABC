@@ -1,4 +1,6 @@
-import { Tabs, TabList, TabPanels, Tab, TabPanel } from '@chakra-ui/react'
+
+import { useState } from 'react';
+import { Tabs, TabList, TabPanels, Tab, TabPanel } from '@chakra-ui/react';
 import {
   Modal,
   ModalOverlay,
@@ -9,39 +11,47 @@ import {
   ModalCloseButton,
   useDisclosure,
   Button
-} from '@chakra-ui/react'
+} from '@chakra-ui/react';
 import Solicitud1 from "./FormatoSolicitud1";
 import Solicitud2 from "./FormatoSolicitud2";
 
 function PanelSolicitud() {
-  const { isOpen, onOpen, onClose } = useDisclosure()
+  const { isOpen, onOpen, onClose } = useDisclosure();
 
+  const [modalSize, setModalSize] = useState("xl"); // Estado para el tamaño del modal
+  const handleTabChange = (index) => {
+    if (index === 2) {
+      setModalSize("5xl"); 
+    } else {
+      setModalSize("xl"); 
+    }
+  };
   return (
     <>
       <Button onClick={onOpen}>Crear Evento</Button>
 
-      <Modal isOpen={isOpen} onClose={onClose} size="xl">
+      <Modal isOpen={isOpen} onClose={onClose} size={modalSize}>
         <ModalOverlay />
         <ModalContent >
           <ModalHeader>Evento</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
-            <Tabs>
+            <Tabs onChange={handleTabChange}>
               <TabList>
                 <Tab>Paso 1</Tab>
-                <Tab>Paso 2</Tab>
-                <Tab>Confirmacion</Tab>
+                <Tab >Paso 2</Tab>
+                <Tab >Confirmacion</Tab>
               </TabList>
 
               <TabPanels>
                 <TabPanel>
-                  <Solicitud1/>
+                  <Solicitud1 />
                 </TabPanel>
                 <TabPanel>
-                  <Solicitud2/>
+                  <Solicitud2 />
                 </TabPanel>
                 <TabPanel>
-                  <div >
+                  <div style={{display:'flex', gap: '10px'}}>
                     <Solicitud1/>
                     <Solicitud2/>
                   </div>
@@ -51,8 +61,8 @@ function PanelSolicitud() {
           </ModalBody>
 
           <ModalFooter>
-            <Button colorScheme='blue' mr={3} onClick={onClose}>
-              Enviar
+            <Button bgColor='#00723F' color='white' mr={3} onClick={onClose} >
+              Enviar peticion
             </Button>
           </ModalFooter>
         </ModalContent>
