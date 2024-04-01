@@ -1,11 +1,23 @@
-import FormatoSolicitud1 from "../componentes/Solicitud/FormatoSolicitud1";
-import FormatoSolicitud2 from "../componentes/Solicitud/FormatoSolicitud2";
+import { Container, Grid, GridItem, Heading } from "@chakra-ui/react";
+import { InformacionPerfil } from "../componentes/Perfil/InformacionPerfil";
+import { AccionesPerfil } from "../componentes/Perfil/AccionesPerfil";
 
 export const Perfil = () => {
     return (
-        <div>
-            <FormatoSolicitud1/>
-            <FormatoSolicitud2/>
-        </div>
+        <>
+            <Heading pt={10} textAlign={"center"}>
+                Perfil
+            </Heading>
+            <Container>
+                <Grid gridTemplateRows={"repeat(2, 1fr)"}>
+                    <GridItem>
+                        <InformacionPerfil />
+                    </GridItem>
+                    <GridItem>
+                        <AccionesPerfil />
+                    </GridItem>
+                </Grid>
+            </Container>
+        </>
     );
 };

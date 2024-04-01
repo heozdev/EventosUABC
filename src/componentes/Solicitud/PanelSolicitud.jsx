@@ -71,5 +71,4 @@ function PanelSolicitud() {
   )
 }
 
-
-export default PanelSolicitud
+export default PanelSolicitud;

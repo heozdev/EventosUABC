@@ -1,14 +1,16 @@
-import { Grid,
-        GridItem,
-        NumberInput,
-        NumberInputField,
-        NumberInputStepper,
-        NumberIncrementStepper,
-        NumberDecrementStepper,
-        FormLabel,
-        Input,
-        FormControl,
-        Select} from "@chakra-ui/react"
+import {
+    Grid,
+    GridItem,
+    NumberInput,
+    NumberInputField,
+    NumberInputStepper,
+    NumberIncrementStepper,
+    NumberDecrementStepper,
+    FormLabel,
+    Input,
+    FormControl,
+    Select,
+} from "@chakra-ui/react";
 
 const FormatoSolicitud2 = () => {
   return (
@@ -71,8 +73,5 @@ const FormatoSolicitud2 = () => {
             </FormControl>
         </GridItem>
     </Grid>
-
-  )
-}
-
-export default FormatoSolicitud2
+);};
+export default FormatoSolicitud2;

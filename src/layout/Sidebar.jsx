@@ -4,6 +4,7 @@ import { LuFolderEdit } from "react-icons/lu";
 import { AiFillHome } from "react-icons/ai";
 import { BsCalendar } from "react-icons/bs";
 import { FaUserCircle } from "react-icons/fa";
+import { NavLink } from "react-router-dom";
 
 export const Sidebar = ({ gridArea }) => {
     return (
@@ -47,13 +48,17 @@ export const Sidebar = ({ gridArea }) => {
                         }}
                     >
                         <LuFolderEdit size={37} style={{ color: "white" }} />
-                        <Link
+                        <NavLink
+                            style={({ isActive, isPending }) => {
+                                return {
+                                    color: isActive ? "red" : "white",
+                                };
+                            }}
                             paddingLeft="10px"
-                            color="white"
-                            href="/solicitudes"
+                            to="/solicitudes"
                         >
                             Solicitudes
-                        </Link>
+                        </NavLink>
                     </li>
                 </ul>
 
