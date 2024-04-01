@@ -24,7 +24,7 @@ function MostrarEventos() {
   const [modalSize] = useState("5xl"); 
   return (
     <center>
-      <Heading size='3xl' color={'black'} mt={5}>Solicitudes</Heading>
+      <Heading size='xl' color={'black'} mt={5}>Solicitudes</Heading>
       <Flex justifyContent='center' alignItems='center' mt={10} ml={600}>
         <BiSolidFilterAlt style={{ color: '#004928', fontSize: '45px', marginRight: '8px' }} />
         <SearchIcon style={{ color: '#004928', fontSize: '45px' }} />
@@ -37,8 +37,8 @@ function MostrarEventos() {
         variant='outline'
         borderRadius={10}
         bgColor={'#F5F5F5'}
-        width={{ base: '100%', sm: '400px', md: '500px', lg: '35%' }}
-        height={{ base: '200px', sm: '300px', md: '250px' }}
+        width={{ base: '100%', sm: '400px', md: '500px', lg: '50%' }}
+        height={{ base: '200px', sm: '300px', md: '240px' }}
         onClick={handleOpen}
         cursor='pointer'
       >
@@ -51,7 +51,7 @@ function MostrarEventos() {
         />
         <Stack>
           <CardBody>
-            <FormControl mt={2}>
+            <FormControl>
               <Grid templateColumns={{ base: '1fr', md: 'repeat(2, 1fr)' }} gap={6}>
                 <GridItem>
                   <FormLabel mt={2} fontSize="xl">Curso de programación</FormLabel>
@@ -62,6 +62,48 @@ function MostrarEventos() {
                 <GridItem>
                   <Badge colorScheme='green' variant='solid' fontSize="md" padding={2.5} borderRadius={15} position={'absolute'} right={0} bottom={0}>
                     Aceptado
+                  </Badge>
+                </GridItem>
+              </Grid>
+            </FormControl>
+          </CardBody>
+          <CardFooter>
+          </CardFooter>
+        </Stack>
+      </Card>
+
+      <Card
+        mt={10}
+        direction={{ base: 'column', sm: 'row' }}
+        overflow='hidden'
+        variant='outline'
+        borderRadius={10}
+        bgColor={'#F5F5F5'}
+        width={{ base: '100%', sm: '400px', md: '500px', lg: '50%' }}
+        height={{ base: '200px', sm: '300px', md: '240px' }}
+        onClick={handleOpen}
+        cursor='pointer'
+      >
+        <Image
+          objectFit='cover'
+          maxW={{ base: '100%', sm: '200px', md: '200px' }}
+          maxH={{ base: '200px', sm: '300px', md: '250px' }}
+          src='https://d1csarkz8obe9u.cloudfront.net/posterpreviews/programming-course-lessons-flyer-template-design-d18f9ed41fc90f1491bcf62f9b1be3a2_screen.jpg?ts=1637024772'
+          alt='Evento'
+        />
+        <Stack>
+          <CardBody>
+            <FormControl>
+              <Grid templateColumns={{ base: '1fr', md: 'repeat(2, 1fr)' }} gap={6}>
+                <GridItem>
+                  <FormLabel mt={2} fontSize="xl">Curso de programación</FormLabel>
+                  <FormLabel mt={2} fontSize="xl">Ingeniería</FormLabel>
+                  <FormLabel mt={2} fontSize="xl">15 de julio de 2024</FormLabel>
+                  <FormLabel mt={2} fontSize="xl">Abad Padilla</FormLabel>
+                </GridItem>
+                <GridItem>
+                  <Badge colorScheme='yellow' variant='solid' fontSize="md" padding={2.5} borderRadius={15} position={'absolute'} right={0} bottom={0}>
+                    Pendiente
                   </Badge>
                   <FormLabel fontWeight={'bold'} mt={2} fontSize="xl" position={'absolute'} right={0} top={0}>8=1</FormLabel>
                 </GridItem>
@@ -74,14 +116,14 @@ function MostrarEventos() {
       </Card>
 
       <Card
-        mt={20}
+        mt={10}
         direction={{ base: 'column', sm: 'row' }}
         overflow='hidden'
         variant='outline'
         borderRadius={10}
         bgColor={'#F5F5F5'}
-        width={{ base: '100%', sm: '400px', md: '500px', lg: '35%' }}
-        height={{ base: '200px', sm: '300px', md: '250px' }}
+        width={{ base: '100%', sm: '400px', md: '500px', lg: '50%' }}
+        height={{ base: '200px', sm: '300px', md: '240px' }}
         onClick={handleOpen}
         cursor='pointer'
       >
@@ -94,7 +136,7 @@ function MostrarEventos() {
         />
         <Stack>
           <CardBody>
-            <FormControl mt={2}>
+            <FormControl>
               <Grid templateColumns={{ base: '1fr', md: 'repeat(2, 1fr)' }} gap={6}>
                 <GridItem>
                   <FormLabel mt={2} fontSize="xl">Curso de programación</FormLabel>
@@ -103,8 +145,8 @@ function MostrarEventos() {
                   <FormLabel mt={2} fontSize="xl">Abad Padilla</FormLabel>
                 </GridItem>
                 <GridItem>
-                  <Badge colorScheme='green' variant='solid' fontSize="md" padding={2.5} borderRadius={15} position={'absolute'} right={0} bottom={0}>
-                    Aceptado
+                  <Badge colorScheme='red' variant='solid' fontSize="md" padding={2.5} borderRadius={15} position={'absolute'} right={0} bottom={0}>
+                    Rechazado
                   </Badge>
                 </GridItem>
               </Grid>
@@ -116,14 +158,15 @@ function MostrarEventos() {
       </Card>
 
       <Card
-        mt={20}
+        mt={10}
+        mb={10}
         direction={{ base: 'column', sm: 'row' }}
         overflow='hidden'
         variant='outline'
         borderRadius={10}
         bgColor={'#F5F5F5'}
-        width={{ base: '100%', sm: '400px', md: '500px', lg: '35%' }}
-        height={{ base: '200px', sm: '300px', md: '250px' }}
+        width={{ base: '100%', sm: '400px', md: '500px', lg: '50%' }}
+        height={{ base: '200px', sm: '300px', md: '240px' }}
         onClick={handleOpen}
         cursor='pointer'
       >
@@ -136,49 +179,7 @@ function MostrarEventos() {
         />
         <Stack>
           <CardBody>
-            <FormControl mt={2}>
-              <Grid templateColumns={{ base: '1fr', md: 'repeat(2, 1fr)' }} gap={6}>
-                <GridItem>
-                  <FormLabel mt={2} fontSize="xl">Curso de programación</FormLabel>
-                  <FormLabel mt={2} fontSize="xl">Ingeniería</FormLabel>
-                  <FormLabel mt={2} fontSize="xl">15 de julio de 2024</FormLabel>
-                  <FormLabel mt={2} fontSize="xl">Abad Padilla</FormLabel>
-                </GridItem>
-                <GridItem>
-                  <Badge colorScheme='green' variant='solid' fontSize="md" padding={2.5} borderRadius={15} position={'absolute'} right={0} bottom={0}>
-                    Aceptado
-                  </Badge>
-                </GridItem>
-              </Grid>
-            </FormControl>
-          </CardBody>
-          <CardFooter>
-          </CardFooter>
-        </Stack>
-      </Card>
-
-      <Card
-        mt={20}
-        direction={{ base: 'column', sm: 'row' }}
-        overflow='hidden'
-        variant='outline'
-        borderRadius={10}
-        bgColor={'#F5F5F5'}
-        width={{ base: '100%', sm: '400px', md: '500px', lg: '35%' }}
-        height={{ base: '200px', sm: '300px', md: '250px' }}
-        onClick={handleOpen}
-        cursor='pointer'
-      >
-        <Image
-          objectFit='cover'
-          maxW={{ base: '100%', sm: '200px', md: '200px' }}
-          maxH={{ base: '200px', sm: '300px', md: '250px' }}
-          src='https://d1csarkz8obe9u.cloudfront.net/posterpreviews/programming-course-lessons-flyer-template-design-d18f9ed41fc90f1491bcf62f9b1be3a2_screen.jpg?ts=1637024772'
-          alt='Evento'
-        />
-        <Stack>
-          <CardBody>
-            <FormControl mt={2}>
+            <FormControl>
               <Grid templateColumns={{ base: '1fr', md: 'repeat(2, 1fr)' }} gap={6}>
                 <GridItem>
                   <FormLabel mt={2} fontSize="xl">Curso de programación</FormLabel>
