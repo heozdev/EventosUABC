@@ -1,5 +1,4 @@
 import { Container, Grid, GridItem, Heading } from "@chakra-ui/react";
-import PanelSolicitud from "../componentes/Solicitud/PanelSolicitud";
 import { InformacionPerfil } from "../componentes/Perfil/InformacionPerfil";
 import { AccionesPerfil } from "../componentes/Perfil/AccionesPerfil";
 

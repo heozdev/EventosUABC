@@ -1,3 +1,5 @@
+import PanelSolicitud from "../Solicitud/PanelSolicitud";
+
 export const MisSolicitudesPerfil = () => {
-    return <div>MisSolicitudesPerfil</div>;
+    return <PanelSolicitud/>;
 };
