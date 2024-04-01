@@ -26,6 +26,7 @@ function PanelSolicitud() {
       setModalSize("xl"); 
     }
   };
+  
   return (
     <>
       <Button onClick={onOpen} bgColor='#00723F' color='white'>Crear Evento</Button>
