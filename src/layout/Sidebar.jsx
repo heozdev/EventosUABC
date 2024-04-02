@@ -5,13 +5,14 @@ import { AiFillHome } from "react-icons/ai";
 import { BsCalendar } from "react-icons/bs";
 import { FaUserCircle } from "react-icons/fa";
 
+
 export const Sidebar = ({ gridArea }) => {
     return (
         <GridItem pl="2" bg="#00723F" area={gridArea}>
             <Box gap={20}>
-                <img src="logo-uabc.png" alt="" />
+                <img src="src\recursos\imagenes\logoUabc.png" alt="" />
 
-                <ul style={{ marginBottom: "350px" }}>
+                <ul style={{ marginBottom: "250px" }}>
                     <li
                         style={{
                             display: "flex",

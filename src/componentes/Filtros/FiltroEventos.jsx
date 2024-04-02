@@ -7,7 +7,6 @@ import {
     ModalFooter,
     ModalBody,
     ModalCloseButton,
-    useDisclosure,
     Button,
     FormLabel,
     FormControl,
@@ -17,13 +16,10 @@ import {
     HStack
   } from '@chakra-ui/react';
 
-function FiltroEventos() {
-    const { isOpen, onOpen, onClose } = useDisclosure();
+function FiltroEventos({isOpenModalFilter, onCloseModalFilter}) {
   return (
     <>
-        <Button onClick={onOpen} bgColor='#00723F' color='white'>Filtro</Button>
-
-        <Modal isOpen={isOpen} onClose={onClose}>
+        <Modal isOpen={isOpenModalFilter} onClose={onCloseModalFilter}>
         <ModalOverlay />
         <ModalContent>
           <ModalHeader>Filtros</ModalHeader>
@@ -69,7 +65,7 @@ function FiltroEventos() {
           </ModalBody>
 
           <ModalFooter>
-            <Button colorScheme='green' mr={3} onClick={onClose}>
+            <Button colorScheme='green' mr={3} onClick={onCloseModalFilter}>
               Filtrar
             </Button>
           </ModalFooter>
