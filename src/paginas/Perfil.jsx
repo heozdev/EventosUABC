@@ -5,7 +5,7 @@ import { AccionesPerfil } from "../componentes/Perfil/AccionesPerfil";
 export const Perfil = () => {
     return (
         <>
-            <Heading pt={10} textAlign={"center"}>
+            <Heading pt={10} size='xl' color={'black'} textAlign={"center"}>
                 Perfil
             </Heading>
             <Container>

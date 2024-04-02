@@ -3,7 +3,7 @@ import { Outlet } from "react-router-dom";
 
 export const Main = ({ gridArea }) => {
     return (
-        <GridItem area={gridArea}>
+        <GridItem area={gridArea} overflow={'scroll'}>
             <Outlet />
         </GridItem>
     );
