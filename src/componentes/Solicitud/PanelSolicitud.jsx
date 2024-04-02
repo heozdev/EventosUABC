@@ -41,7 +41,7 @@ function PanelSolicitud() {
               <TabList>
                 <Tab>Paso 1</Tab>
                 <Tab >Paso 2</Tab>
-                <Tab >Confirmacion</Tab>
+                <Tab>Confirmacion</Tab>
               </TabList>
 
               <TabPanels>

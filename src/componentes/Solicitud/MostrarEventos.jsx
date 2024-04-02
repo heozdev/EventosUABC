@@ -8,6 +8,7 @@ import Solicitud1 from "./FormatoSolicitud1";
 import Solicitud2 from "./FormatoSolicitud2";
 import { SearchIcon } from '@chakra-ui/icons'
 import { BiSolidFilterAlt } from "react-icons/bi";
+import FiltroEventos  from '../Eventos/FiltroEventos';
 
 function MostrarEventos() {
   const [isOpen, setIsOpen] = useState(false);
@@ -26,6 +27,7 @@ function MostrarEventos() {
     <center>
       <Heading size='xl' color={'black'} mt={5}>Solicitudes</Heading>
       <Flex justifyContent='center' alignItems='center' mt={10} ml={600}>
+        <FiltroEventos/>
         <BiSolidFilterAlt style={{ color: '#004928', fontSize: '45px', marginRight: '8px' }} />
         <SearchIcon style={{ color: '#004928', fontSize: '45px' }} />
       </Flex>
