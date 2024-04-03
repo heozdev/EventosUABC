@@ -10,7 +10,7 @@ export const Sidebar = ({ gridArea }) => {
     return (
         <GridItem pl="2" bg="#00723F" area={gridArea}>
             <Box gap={20}>
-                <img src="src\recursos\imagenes\logoUabc.png" alt="" />
+                <img src="src\recursos\imagenes\logoUabc.png" alt=""/>
 
                 <ul style={{ marginBottom: "250px" }}>
                     <li

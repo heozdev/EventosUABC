@@ -52,7 +52,7 @@ function MostrarEventos() {
           objectFit='cover'
           maxW={{ base: '100%', sm: '200px', md: '200px' }}
           maxH={{ base: '200px', sm: '300px', md: '250px' }}
-          src='https://d1csarkz8obe9u.cloudfront.net/posterpreviews/programming-course-lessons-flyer-template-design-d18f9ed41fc90f1491bcf62f9b1be3a2_screen.jpg?ts=1637024772'
+          src="src\recursos\imagenes\ejemploEvento.jpg"
           alt='Evento'
         />
         <Stack>
@@ -60,10 +60,10 @@ function MostrarEventos() {
             <FormControl>
               <Grid templateColumns={{ base: '1fr', md: 'repeat(2, 1fr)' }} gap={6}>
                 <GridItem>
-                  <FormLabel mt={2} fontSize="xl">Curso de programación</FormLabel>
-                  <FormLabel mt={2} fontSize="xl">Ingeniería</FormLabel>
-                  <FormLabel mt={2} fontSize="xl">15 de julio de 2024</FormLabel>
-                  <FormLabel mt={2} fontSize="xl">Abad Padilla</FormLabel>
+                  <FormLabel mt={2} fontSize="xl">Conferencia de Psicología</FormLabel>
+                  <FormLabel mt={2} fontSize="xl">Ciencias Humanas</FormLabel>
+                  <FormLabel mt={2} fontSize="xl">11 de Mayo de 2024</FormLabel>
+                  <FormLabel mt={2} fontSize="xl">Cristina Yang</FormLabel>
                 </GridItem>
                 <GridItem>
                   <Badge colorScheme='green' variant='solid' fontSize="md" padding={2.5} borderRadius={15} position={'absolute'} right={0} bottom={0}>
@@ -94,7 +94,7 @@ function MostrarEventos() {
           objectFit='cover'
           maxW={{ base: '100%', sm: '200px', md: '200px' }}
           maxH={{ base: '200px', sm: '300px', md: '250px' }}
-          src='https://d1csarkz8obe9u.cloudfront.net/posterpreviews/programming-course-lessons-flyer-template-design-d18f9ed41fc90f1491bcf62f9b1be3a2_screen.jpg?ts=1637024772'
+          src="src\recursos\imagenes\ejemploEvento.jpg"
           alt='Evento'
         />
         <Stack>
@@ -123,48 +123,6 @@ function MostrarEventos() {
 
       <Card
         mt={10}
-        direction={{ base: 'column', sm: 'row' }}
-        overflow='hidden'
-        variant='outline'
-        borderRadius={10}
-        bgColor={'#F5F5F5'}
-        width={{ base: '100%', sm: '400px', md: '500px', lg: '50%' }}
-        height={{ base: '200px', sm: '300px', md: '240px' }}
-        onClick={handleOpen}
-        cursor='pointer'
-      >
-        <Image
-          objectFit='cover'
-          maxW={{ base: '100%', sm: '200px', md: '200px' }}
-          maxH={{ base: '200px', sm: '300px', md: '250px' }}
-          src='https://d1csarkz8obe9u.cloudfront.net/posterpreviews/programming-course-lessons-flyer-template-design-d18f9ed41fc90f1491bcf62f9b1be3a2_screen.jpg?ts=1637024772'
-          alt='Evento'
-        />
-        <Stack>
-          <CardBody>
-            <FormControl>
-              <Grid templateColumns={{ base: '1fr', md: 'repeat(2, 1fr)' }} gap={6}>
-                <GridItem>
-                  <FormLabel mt={2} fontSize="xl">Curso de programación</FormLabel>
-                  <FormLabel mt={2} fontSize="xl">Ingeniería</FormLabel>
-                  <FormLabel mt={2} fontSize="xl">15 de julio de 2024</FormLabel>
-                  <FormLabel mt={2} fontSize="xl">Abad Padilla</FormLabel>
-                </GridItem>
-                <GridItem>
-                  <Badge colorScheme='red' variant='solid' fontSize="md" padding={2.5} borderRadius={15} position={'absolute'} right={0} bottom={0}>
-                    Rechazado
-                  </Badge>
-                </GridItem>
-              </Grid>
-            </FormControl>
-          </CardBody>
-          <CardFooter>
-          </CardFooter>
-        </Stack>
-      </Card>
-
-      <Card
-        mt={10}
         mb={10}
         direction={{ base: 'column', sm: 'row' }}
         overflow='hidden'
@@ -180,7 +138,7 @@ function MostrarEventos() {
           objectFit='cover'
           maxW={{ base: '100%', sm: '200px', md: '200px' }}
           maxH={{ base: '200px', sm: '300px', md: '250px' }}
-          src='https://d1csarkz8obe9u.cloudfront.net/posterpreviews/programming-course-lessons-flyer-template-design-d18f9ed41fc90f1491bcf62f9b1be3a2_screen.jpg?ts=1637024772'
+          src="src\recursos\imagenes\EventoArt.png"
           alt='Evento'
         />
         <Stack>
@@ -188,14 +146,14 @@ function MostrarEventos() {
             <FormControl>
               <Grid templateColumns={{ base: '1fr', md: 'repeat(2, 1fr)' }} gap={6}>
                 <GridItem>
-                  <FormLabel mt={2} fontSize="xl">Curso de programación</FormLabel>
-                  <FormLabel mt={2} fontSize="xl">Ingeniería</FormLabel>
-                  <FormLabel mt={2} fontSize="xl">15 de julio de 2024</FormLabel>
-                  <FormLabel mt={2} fontSize="xl">Abad Padilla</FormLabel>
+                  <FormLabel mt={2} fontSize="xl">Evento de Arte</FormLabel>
+                  <FormLabel mt={2} fontSize="xl">Arquitectura y Diseño</FormLabel>
+                  <FormLabel mt={2} fontSize="xl">08 de Julio de 2024</FormLabel>
+                  <FormLabel mt={2} fontSize="xl">García</FormLabel>
                 </GridItem>
                 <GridItem>
-                  <Badge colorScheme='green' variant='solid' fontSize="md" padding={2.5} borderRadius={15} position={'absolute'} right={0} bottom={0}>
-                    Aceptado
+                  <Badge colorScheme='red' variant='solid' fontSize="md" padding={2.5} borderRadius={15} position={'absolute'} right={0} bottom={0}>
+                    Rechazado
                   </Badge>
                   <FormLabel fontWeight={'bold'} mt={2} fontSize="xl" position={'absolute'} right={0} top={0}>8=1</FormLabel>
                 </GridItem>
