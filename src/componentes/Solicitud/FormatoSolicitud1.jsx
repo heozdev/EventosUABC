@@ -8,7 +8,8 @@ import { Grid,
         Textarea,
         Button,
         HStack,
-        Checkbox} from "@chakra-ui/react";
+        Checkbox,
+        Center} from "@chakra-ui/react";
 import{useRef} from "react";
 
 const FormatoSolicitud1 = () => {
@@ -22,19 +23,19 @@ const FormatoSolicitud1 = () => {
             <GridItem>
                 <Grid templateColumns="repeat(2, 1fr)" gap={4}>
                     <GridItem>
-                        <FormControl height="80px">
+                        <FormControl height="80px" isRequired>
                             <FormLabel >Nombre del evento</FormLabel>
                             <Input placeholder="Evento" />
                         </FormControl>
 
 
-                            <FormControl height="120px">
+                            <FormControl height="120px" isRequired>
                                 <FormLabel >Descripcion</FormLabel>
                                 <Textarea placeholder="Descripcion"/>
                             </FormControl>
 
 
-                        <FormControl height="80px">
+                        <FormControl height="80px" isRequired>
                             <FormLabel>Categoria</FormLabel>
                             <Select placeholder="Categoria" >
                                 <option>Ingenieria</option>
@@ -46,26 +47,22 @@ const FormatoSolicitud1 = () => {
                     </GridItem>
 
                     <GridItem>
-                        <FormControl height="80px">
+                        <FormControl height="80px" isRequired>
                             <FormLabel >Fecha</FormLabel>
                             <Input type="date" name="date"/>
                         </FormControl>
 
-                        <FormControl height="120px">
+                        <FormControl height="120px" isRequired>
                             <FormLabel >Ubicacion</FormLabel>
                             <Input placeholder="Ubicacion"/>
                         </FormControl>
 
                         <FormControl height="80px">
-                            <FormLabel>Imagen</FormLabel>
-                            <input
-                            type="file"
-                            id="docpicker"
-                            accept="image/png,image/jpg"
-                            ref={fileInputRef}
-                            style={{display: "none"}}    
-                            />
-                            <Button onClick={handleFileSelect} colorScheme="green">Seleccionar imagen (PNG o JPG)</Button>
+                            <FormLabel >Valor en créditos</FormLabel>
+                            <HStack paddingLeft={'5px'}> 
+                                <span>Si</span>
+                                <Checkbox size='lg' colorScheme='green'  borderColor="green" />
+                            </HStack>
                         </FormControl>
 
                     </GridItem>
@@ -75,11 +72,17 @@ const FormatoSolicitud1 = () => {
 
             <GridItem >
                 <FormControl>
-                    <FormLabel textAlign="center">Valor en créditos</FormLabel>
-                    <HStack justifyContent="center" paddingLeft={'5px'}> 
-                        <span>Si</span>
-                        <Checkbox size='lg' colorScheme='green'  borderColor="green" />
-                    </HStack>
+                    <FormLabel textAlign="center">Imagen</FormLabel>
+                    <Center>
+                            <input
+                            type="file"
+                            id="docpicker"
+                            accept="image/png,image/jpg"
+                            ref={fileInputRef}
+                            style={{display: "none"}}    
+                            />
+                            <Button onClick={handleFileSelect} colorScheme="green" marginLeft="auto" marginRight="auto">Seleccionar imagen (PNG o JPG)</Button>
+                    </Center>
                 </FormControl>
             </GridItem>
         </Grid>
