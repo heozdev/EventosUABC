@@ -30,15 +30,15 @@ const FormatoSolicitud1 = () => {
 
 
                             <FormControl height="120px" isRequired>
-                                <FormLabel >Descripcion</FormLabel>
-                                <Textarea placeholder="Descripcion"/>
+                                <FormLabel >Descripción</FormLabel>
+                                <Textarea placeholder="Descripción"/>
                             </FormControl>
 
 
                         <FormControl height="80px" isRequired>
-                            <FormLabel>Categoria</FormLabel>
-                            <Select placeholder="Categoria" >
-                                <option>Ingenieria</option>
+                            <FormLabel>Categoría</FormLabel>
+                            <Select placeholder="Categoría" >
+                                <option>Ingeniería</option>
                                 <option>Arquitectura</option>
                                 <option>Ciencias de la salud</option>
                                 <option>Derecho</option>
@@ -53,8 +53,8 @@ const FormatoSolicitud1 = () => {
                         </FormControl>
 
                         <FormControl height="120px" isRequired>
-                            <FormLabel >Ubicacion</FormLabel>
-                            <Input placeholder="Ubicacion"/>
+                            <FormLabel >Ubicación</FormLabel>
+                            <Input placeholder="Ubicación"/>
                         </FormControl>
 
                         <FormControl height="80px">

@@ -10,7 +10,7 @@ import {
     FormLabel,
     Input,
     FormControl,
-    Select,
+    Select
 } from "@chakra-ui/react";
 import DateTimePicker from 'react-datetime-picker';
 import 'react-datetime-picker/dist/DateTimePicker.css';
@@ -24,7 +24,7 @@ const FormatoSolicitud2 = () => {
   return (
     <Grid templateColumns={"1fr 1fr"} gap={4}>
         <GridItem> 
-            <FormControl height="93px" isRequired>
+            <FormControl height="93px" >
                 <GridItem> 
                     <FormLabel>Capacidad</FormLabel>
                     <NumberInput defaultValue={50} min={10} max={200}>
@@ -42,10 +42,10 @@ const FormatoSolicitud2 = () => {
             </FormControl>
             <FormControl height="93px" isRequired>
                 <FormLabel>Tipo de evento</FormLabel>
-                <Select placeholder="Categoria">
+                <Select placeholder="Categoría">
                     <option>General</option>
                     <option>Para estudiantes</option>
-                    <option>Propedeutico</option>
+                    <option>Propedéutico</option>
                     <option>Conferencia</option>
                 </Select>
             </FormControl>
@@ -57,14 +57,24 @@ const FormatoSolicitud2 = () => {
                 <Input placeholder="Co-responsable" />
             </FormControl>
 
-            <FormControl height="93px" isRequired>
-                <FormLabel>Hora inicio</FormLabel>
-                <DateTimePicker format={'HH:mm:ss'} onChange={onChange} value={value} disableCalendar />
-            </FormControl>
+            <div style={{display:'flex'}}>
+                <FormControl height="93px" isRequired style={{ marginRight: '20px' }}>
+                    <FormLabel>Hora inicio</FormLabel>
+                    <DateTimePicker format={'HH:mm'} onChange={onChange} value={value} disableCalendar disableClock/>
+                </FormControl>
+
+                <FormControl height="93px" isRequired>
+                    <FormLabel>Hora fin</FormLabel>
+                    <DateTimePicker format={'HH:mm'} onChange={onChange2} value={value2} disableCalendar disableClock/>
+                </FormControl>
+            </div>
 
             <FormControl height="93px" isRequired>
-                <FormLabel>Hora fin</FormLabel>
-                <DateTimePicker format={'HH:mm:ss'} onChange={onChange2} value={value2} disableCalendar	/>
+                <FormLabel>Modalidad</FormLabel>
+                <Select placeholder='Modalidad'>
+                    <option>Presencial</option>
+                    <option>Online</option>
+                </Select>
             </FormControl>
         </GridItem>
     </Grid>

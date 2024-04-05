@@ -41,7 +41,7 @@ function PanelSolicitud() {
                             <TabList>
                                 <Tab>Paso 1</Tab>
                                 <Tab>Paso 2</Tab>
-                                <Tab>Confirmacion</Tab>
+                                <Tab>Confirmación</Tab>
                             </TabList>
 
                             <TabPanels>
@@ -70,7 +70,7 @@ function PanelSolicitud() {
                             mr={3}
                             onClick={onClose}
                         >
-                            Enviar peticion
+                            Enviar petición
                         </Button>
                     </ModalFooter>
                 </ModalContent>
