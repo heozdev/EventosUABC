@@ -27,7 +27,6 @@ import Solicitud1 from "./FormatoSolicitud1";
 import Solicitud2 from "./FormatoSolicitud2";
 import { SearchIcon } from "@chakra-ui/icons";
 import { BiSolidFilterAlt } from "react-icons/bi";
-import FiltroEventos from "../Eventos/FiltroEventos";
 
 function MostrarEventos() {
     const [isOpen, setIsOpen] = useState(false);
