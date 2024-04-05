@@ -11,8 +11,8 @@ export const InformacionPerfil = () => {
                     />
                 </GridItem>
                 <GridItem>
-                    <Text>Monica guevara lam</Text>
-                    <Text>999999</Text>
+                    <Text>Mónica Cristina Lam Mora</Text>
+                    <Text>17058</Text>
                     <Text>Facultad de ingenieria</Text>
                     <Text>Lic. Sistemas computacionales</Text>
                 </GridItem>

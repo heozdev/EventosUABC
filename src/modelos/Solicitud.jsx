@@ -22,7 +22,7 @@ import {
   Textarea,
 } from '@chakra-ui/react';
 
-import Solicitud1 from "../componentes/Solicitud/FormatoSolicitud2";
+import Solicitud1 from "../componentes/Solicitud/FormatoSolicitud1";
 import Solicitud2 from "../componentes/Solicitud/FormatoSolicitud2";
 
 export const Solicitud = () => {
