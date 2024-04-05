@@ -1,4 +1,4 @@
-import { GridItem, Link, Box, Flex } from "@chakra-ui/react";
+import { GridItem, Link, Box } from "@chakra-ui/react";
 import { ImExit } from "react-icons/im";
 import { LuFolderEdit } from "react-icons/lu";
 import { AiFillHome } from "react-icons/ai";
@@ -6,7 +6,7 @@ import { BsCalendar } from "react-icons/bs";
 import { FaUserCircle } from "react-icons/fa";
 
 
-export const Sidebar = ({ gridArea }) => {
+export const SidebarDocente = ({ gridArea }) => {
     return (
         <GridItem pl="2" bg="#00723F" area={gridArea}>
             <Box gap={20}>
@@ -22,7 +22,7 @@ export const Sidebar = ({ gridArea }) => {
                         }}
                     >
                         <AiFillHome size={35} style={{ color: "white" }} />
-                        <Link paddingLeft="10px" color="white" href="/inicio">
+                        <Link paddingLeft="10px" color="white" href="/iniciodocente">
                             Inicio
                         </Link>
                     </li>
@@ -48,7 +48,7 @@ export const Sidebar = ({ gridArea }) => {
                         }}
                     >
                         <LuFolderEdit size={37} style={{ color: "white" }} />
-                        <Link paddingLeft="10px" color="white" href="/solicitudes">
+                        <Link paddingLeft="10px" color="white" href="/solicitudesdocente">
                             Solicitudes
                         </Link>
                     </li>
@@ -63,12 +63,10 @@ export const Sidebar = ({ gridArea }) => {
                             marginBottom: "10px",
                         }}
                     >
-                        <Flex alignItems="center" marginTop="350px">
-                            <FaUserCircle size={35} style={{ color: "white" }} />
-                            <Link paddingLeft="10px" color="white" href="/perfil">
-                                Perfil
-                            </Link>
-                        </Flex>
+                        <FaUserCircle size={35} style={{ color: "white" }} />
+                        <Link paddingLeft="10px" color="white" href="/perfil">
+                            Perfil
+                        </Link>
                     </li>
                     <li
                         style={{
