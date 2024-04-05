@@ -16,6 +16,40 @@ import Solicitud2 from "./FormatoSolicitud2";
 
 function PanelSolicitud() {
     const { isOpen, onOpen, onClose } = useDisclosure();
+    const [solicitud, setSolicitud] = useState({
+        nombre: "",
+        descripcion: "",
+        fecha: "",
+        valorEnCreditos: null,
+        horaInicio: "",
+        horaFin: "",
+        totalSellos: null,
+        modalidad: "",
+        estado: "",
+        responsable: null,
+        ubicacionData: {
+            facultad: "",
+            estado: "",
+            campus: "",
+            ciudad: "",
+            direccion: "",
+            aula: "",
+        },
+    });
+
+    const agregarSolicitud = () => {
+        fetch(`http://localhost:3000/solicitudes`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(solicitud),
+        })
+            .then((response) => response.json())
+            .then((data) => console.log(data));
+
+        onClose();
+    };
 
     const [modalSize, setModalSize] = useState("xl"); // Estado para el tamaño del modal
     const handleTabChange = (index) => {
@@ -55,8 +89,12 @@ function PanelSolicitud() {
                                     <div
                                         style={{ display: "flex", gap: "10px" }}
                                     >
-                                        <Solicitud1 />
-                                        <Solicitud2 />
+                                        <Solicitud1
+                                            setSolicitud={setSolicitud}
+                                        />
+                                        <Solicitud2
+                                            setSolicitud={setSolicitud}
+                                        />
                                     </div>
                                 </TabPanel>
                             </TabPanels>

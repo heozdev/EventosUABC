@@ -4,6 +4,19 @@ const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
 const app = express();
 
+app.use((req, res, next) => {
+    res.setHeader("Access-Control-Allow-Origin", "http://localhost:5173");
+    res.setHeader(
+        "Access-Control-Allow-Methods",
+        "GET, POST, OPTIONS, PUT, PATCH, DELETE"
+    );
+    res.setHeader(
+        "Access-Control-Allow-Headers",
+        "Content-Type, Authorization"
+    );
+    res.setHeader("Access-Control-Allow-Credentials", "true");
+    next();
+});
 app.use(express.json());
 app.listen(3000, (error) => {
     if (error) console.log(error);
@@ -12,7 +25,11 @@ app.listen(3000, (error) => {
 });
 
 app.get("/solicitudes", async (req, res) => {
-    const solicitudes = await prisma.solicitud.findMany();
+    const solicitudes = await prisma.solicitud.findMany({
+        include: {
+            ubicacion: true,
+        },
+    });
     res.json(solicitudes);
 });
 
