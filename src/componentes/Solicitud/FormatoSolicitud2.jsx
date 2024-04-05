@@ -69,7 +69,7 @@ const FormatoSolicitud2 = () => {
                 </FormControl>
             </div>
 
-            <FormControl height="93px">
+            <FormControl height="93px" isRequired>
                 <FormLabel>Modalidad</FormLabel>
                 <Select placeholder='Modalidad'>
                     <option>Presencial</option>
