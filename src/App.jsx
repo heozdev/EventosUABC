@@ -1,7 +1,7 @@
 import { Sidebar } from "./layout/Sidebar";
 import { SidebarDocente } from "./layout/SidebarDocente";
 import { Main } from "./layout/Main";
-import { Grid } from "@chakra-ui/react"; 
+import { Grid } from "@chakra-ui/react";
 
 export const App = () => {
     return (
@@ -9,7 +9,6 @@ export const App = () => {
             templateAreas={'"sidebar main"'}
             gridTemplateRows={"100vh"}
             gridTemplateColumns={"15% 1fr"}
-            h="200px"
             color="blackAlpha.700"
             fontWeight="bold"
         >

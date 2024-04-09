@@ -1,16 +1,7 @@
+const agregarSolicitud = () => {};
 
-const agregarSolicitud=(PanelSolicitud)=>{
-    
-}
+const eliminarSolicitud = () => {};
 
-const eliminarSolicitud =(PanelSolicitud) =>{
+const editarSolicitud = () => {};
 
-}
-
-const editarSolicitud= (PanelSolicitud) =>{
-
-}
-
-const consultarSolicitud = (PanelSolicitud) => {
-
-} 
+const consultarSolicitud = () => {};
