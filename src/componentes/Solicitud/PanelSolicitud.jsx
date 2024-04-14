@@ -1,4 +1,4 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import { Tabs, TabList, TabPanels, Tab, TabPanel } from "@chakra-ui/react";
 import {
     Modal,
@@ -10,11 +10,11 @@ import {
     ModalCloseButton,
     useDisclosure,
     Button,
+    Text,
 } from "@chakra-ui/react";
-import Solicitud1 from "./FormatoSolicitud1";
-import Solicitud2 from "./FormatoSolicitud2";
+import SolicitudGeneral from "./FormatosSolicitudGeneral";
 
-function PanelSolicitud() {
+function PanelSolicitud({ enviarSolicitud }) {
     const { isOpen, onOpen, onClose } = useDisclosure();
     const [solicitud, setSolicitud] = useState({
         nombre: "",
@@ -36,6 +36,9 @@ function PanelSolicitud() {
             aula: "",
         },
     });
+    const [mensajeError, setMensajeError] = useState("");
+    const [mensajeExito, setMensajeExito] = useState("");
+    const [mostrarAlerta, setMostrarAlerta] = useState(false);
 
     const agregarSolicitud = () => {
         fetch(`http://localhost:3000/solicitudes`, {
@@ -47,11 +50,21 @@ function PanelSolicitud() {
         })
             .then((response) => response.json())
             .then((data) => console.log(data));
+        if (!solicitud.nombre) {
+            setMensajeError("Error, llena los campos obligatorios");
+            setMostrarAlerta(true);
+            return;
+        }
+
+        enviarSolicitud(solicitud);
+        setMensajeExito("Solicitud enviada exitosamente");
+        setMostrarAlerta(true);
 
         onClose();
     };
 
-    const [modalSize, setModalSize] = useState("xl"); // Estado para el tamaño del modal
+    const [modalSize, setModalSize] = useState("x1"); // Estado para el tamaño del modal
+
     const handleTabChange = (index) => {
         if (index === 2) {
             setModalSize("5xl");
@@ -59,13 +72,20 @@ function PanelSolicitud() {
             setModalSize("xl");
         }
     };
+
+    const limpiarMensajes = () => {
+        setMensajeError("");
+        setMensajeExito("");
+        setMostrarAlerta(false); // Ocultar la alerta al limpiar mensajes
+    };
+
     return (
         <>
             <Button onClick={onOpen} bgColor="#00723F" color="white">
                 Crear Evento
             </Button>
 
-            <Modal isOpen={isOpen} onClose={onClose} size={modalSize}>
+            <Modal isOpen={isOpen} onClose={onClose} size={modalSize} onOpen={limpiarMensajes}>
                 <ModalOverlay />
                 <ModalContent>
                     <ModalHeader>Evento</ModalHeader>
@@ -73,29 +93,12 @@ function PanelSolicitud() {
                     <ModalBody>
                         <Tabs onChange={handleTabChange}>
                             <TabList>
-                                <Tab>Paso 1</Tab>
-                                <Tab>Paso 2</Tab>
                                 <Tab>Confirmación</Tab>
                             </TabList>
 
                             <TabPanels>
                                 <TabPanel>
-                                    <Solicitud1 />
-                                </TabPanel>
-                                <TabPanel>
-                                    <Solicitud2 />
-                                </TabPanel>
-                                <TabPanel>
-                                    <div
-                                        style={{ display: "flex", gap: "10px" }}
-                                    >
-                                        <Solicitud1
-                                            setSolicitud={setSolicitud}
-                                        />
-                                        <Solicitud2
-                                            setSolicitud={setSolicitud}
-                                        />
-                                    </div>
+                                    <SolicitudGeneral setSolicitud={setSolicitud} />
                                 </TabPanel>
                             </TabPanels>
                         </Tabs>
@@ -104,15 +107,23 @@ function PanelSolicitud() {
                     <ModalFooter>
                         <Button
                             bgColor="#00723F"
+                            id="EnvPet"
                             color="white"
                             mr={3}
-                            onClick={onClose}
+                            onClick={agregarSolicitud}
                         >
                             Enviar petición
                         </Button>
                     </ModalFooter>
                 </ModalContent>
             </Modal>
+
+            {mostrarAlerta && (
+                <div style={{ position: "fixed", top: "50%", left: "50%", transform: "translate(-50%, -50%)", backgroundColor: mensajeError ? "red" : "green", padding: "10px", borderRadius: "5px", zIndex: "9999" }}>
+                    <Text color="white">{mensajeError || mensajeExito}</Text>
+                    <Button onClick={() => setMostrarAlerta(false)}>OK</Button>
+                </div>
+            )}
         </>
     );
 }
