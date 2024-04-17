@@ -37,14 +37,15 @@ model Solicitud {
   evento Evento?
   nombre String
   descripcion String
-  fecha DateTime
+  fecha String
   valorEnCreditos Boolean
-  horaInicio DateTime
-  horaFin DateTime
+  horaInicio String
+  horaFin String
   totalSellos Int
   modalidad String
   estado String
-  responsable Int
+  responsable String
+  capacidad Int
 
   ubicacion Ubicacion @relation(fields: [ubicacionId], references: [id])
 }

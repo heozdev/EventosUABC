@@ -1,5 +1,6 @@
-import MostrarEventosDocente from "../componentes/Solicitud/MostrarEventosDocente";
+// import MostrarEventosDocente from "../componentes/Solicitud/MostrarEventosDocente";
 
 export const SolicitudesDocente = () => {
-    return <MostrarEventosDocente/>;
+    return <h1>hola</h1>;
+    // <MostrarEventosDocente />;
 };

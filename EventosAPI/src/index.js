@@ -46,6 +46,7 @@ app.post("/solicitudes", async (req, res) => {
         responsable,
         totalSellos,
         ubicacionData,
+        capacidad,
     } = req.body;
 
     const nuevoUbicacion = await prisma.ubicacion.create({
@@ -64,6 +65,7 @@ app.post("/solicitudes", async (req, res) => {
             estado,
             responsable,
             totalSellos,
+            capacidad,
             ubicacionId: nuevoUbicacion.id,
         },
     });
