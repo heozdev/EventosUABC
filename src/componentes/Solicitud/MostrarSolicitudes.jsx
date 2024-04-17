@@ -4,7 +4,7 @@ import { BiSolidFilterAlt } from "react-icons/bi";
 import FiltroEventos from "../Filtros/FiltroEventos";
 import FiltroBarraBusqueda from "../Filtros/FiltroBarraBusqueda";
 
-function MostrarEventos() {
+function MostrarSolicitudes() {
     const {
         isOpen: isOpenModalFilter,
         onOpen: onOpenModalFilter,
@@ -52,4 +52,4 @@ function MostrarEventos() {
     );
 }
 
-export default MostrarEventos;
+export default MostrarSolicitudes;

@@ -24,7 +24,8 @@ const solicitudes = [
         totalSellos: 1,
         modalidad: "Presencial",
         estado: "Pendiente",
-        responsable: 2,
+        capacidad: 20,
+        responsable: "hector",
     },
     {
         ubicacion: {
@@ -47,7 +48,8 @@ const solicitudes = [
         totalSellos: 3,
         modalidad: "Presencial",
         estado: "Pendiente",
-        responsable: 3,
+        capacidad: 20,
+        responsable: "juan",
     },
 ];
 

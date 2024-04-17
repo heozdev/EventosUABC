@@ -6,11 +6,11 @@ import { Eventos } from "./paginas/Eventos";
 import { Solicitudes } from "./paginas/Solicitudes";
 import { Perfil } from "./paginas/Perfil";
 import { ChakraProvider } from "@chakra-ui/react";
-import  { InicioDocente }  from './paginas/InicioDocente';
+import { InicioDocente } from "./paginas/InicioDocente";
 import { App } from "./App";
 import { SolicitudesDocente } from "./paginas/SolicitudesDocente";
 import { Login } from "./paginas/Login";
-
+import { CrearSolicitud } from "./paginas/CrearSolicitud";
 
 const router = createBrowserRouter([
     {
@@ -45,10 +45,13 @@ const router = createBrowserRouter([
                 path: "/solicitudesdocente",
                 element: <SolicitudesDocente />,
             },
+            {
+                path: "/perfil/crear-solicitud",
+                element: <CrearSolicitud />,
+            },
         ],
     },
 ]);
-
 
 ReactDOM.createRoot(document.getElementById("root")).render(
     <React.StrictMode>

@@ -22,9 +22,6 @@ import {
     Textarea,
 } from "@chakra-ui/react";
 
-import Solicitud1 from "../componentes/Solicitud/FormatoSolicitud1";
-import Solicitud2 from "../componentes/Solicitud/FormatoSolicitud2";
-
 export const Solicitud = ({ solicitud }) => {
     const [isOpen, setIsOpen] = useState(false);
     const [value, setValue] = useState("");
@@ -136,10 +133,7 @@ export const Solicitud = ({ solicitud }) => {
                     <ModalHeader>Información del Evento</ModalHeader>
                     <ModalCloseButton />
                     <ModalBody>
-                        <div style={{ display: "flex", gap: "10px" }}>
-                            <Solicitud1 />
-                            <Solicitud2 />
-                        </div>
+                        <div style={{ display: "flex", gap: "10px" }}></div>
                         <Text mb="8px" mt={10}>
                             Notas: {value}
                         </Text>

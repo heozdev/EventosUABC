@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import MostrarEventos from "../componentes/Solicitud/MostrarEventos";
 import { Solicitud } from "../modelos/Solicitud";
+import MostrarSolicitudes from "../componentes/Solicitud/MostrarSolicitudes";
 
 export const Solicitudes = () => {
     const [solicitudes, setSolicitudes] = useState([]);
@@ -15,7 +15,7 @@ export const Solicitudes = () => {
 
     return (
         <>
-            <MostrarEventos />
+            <MostrarSolicitudes />
             {solicitudes.map((solicitud) => (
                 <Solicitud
                     setSolicitudes={setSolicitudes}
