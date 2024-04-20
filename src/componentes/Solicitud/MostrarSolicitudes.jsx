@@ -4,7 +4,7 @@ import { BiSolidFilterAlt } from "react-icons/bi";
 import FiltroEventos from "../Filtros/FiltroEventos";
 import FiltroBarraBusqueda from "../Filtros/FiltroBarraBusqueda";
 
-function MostrarSolicitudes() {
+function MostrarSolicitudes({ solicitudes, setSolicitudes }) {
     const {
         isOpen: isOpenModalFilter,
         onOpen: onOpenModalFilter,
@@ -17,38 +17,40 @@ function MostrarSolicitudes() {
     } = useDisclosure();
 
     return (
-        <center>
-            <Heading size="xl" color={"black"} mt={5}>
-                Solicitudes
-            </Heading>
-            <Flex justifyContent="center" alignItems="center" mt={10} ml={600}>
-                <BiSolidFilterAlt
-                    style={{
-                        color: "#004928",
-                        fontSize: "45px",
-                        marginRight: "8px",
-                        cursor: "pointer",
-                    }}
-                    onClick={onOpenModalFilter}
-                />
-                <SearchIcon
-                    style={{
-                        color: "#004928",
-                        fontSize: "45px",
-                        cursor: "pointer",
-                    }}
-                    onClick={onOpenModalSearch}
-                />
-                <FiltroEventos
-                    isOpenModalFilter={isOpenModalFilter}
-                    onCloseModalFilter={onCloseModalFilter}
-                />
-                <FiltroBarraBusqueda
-                    isOpenModalSearch={isOpenModalSearch}
-                    onCloseModalSearch={onCloseModalSearch}
-                />
-            </Flex>
-        </center>
+      <center>
+        <Heading size="xl" color={"black"} mt={5}>
+          Solicitudes
+        </Heading>
+        <Flex justifyContent="center" alignItems="center" mt={10} ml={600}>
+          <BiSolidFilterAlt
+            style={{
+              color: "#004928",
+              fontSize: "45px",
+              marginRight: "8px",
+              cursor: "pointer",
+            }}
+            onClick={onOpenModalFilter}
+          />
+          <SearchIcon
+            style={{
+              color: "#004928",
+              fontSize: "45px",
+              cursor: "pointer",
+            }}
+            onClick={onOpenModalSearch}
+          />
+          <FiltroEventos
+            isOpenModalFilter={isOpenModalFilter}
+            onCloseModalFilter={onCloseModalFilter}
+            solicitudes={solicitudes}
+            setSolicitudes={setSolicitudes}
+          />
+          <FiltroBarraBusqueda
+            isOpenModalSearch={isOpenModalSearch}
+            onCloseModalSearch={onCloseModalSearch}
+          />
+        </Flex>
+      </center>
     );
 }
 

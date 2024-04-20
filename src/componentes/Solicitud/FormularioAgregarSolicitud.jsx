@@ -24,23 +24,23 @@ export const FormularioAgregarSolicitud = () => {
         nombre: "",
         descripcion: "",
         fecha: "",
-        valorEnCreditos: false,
+        modalidad: "",
         horaInicio: "",
         horaFin: "",
-        totalSellos: 1,
-        capacidad: 0,
-        modalidad: "",
+        valorEnCreditos: false,
         estado: "pendiente",
         responsable: "",
+        totalSellos: 1,
         ubicacionData: {
-            facultad: "",
-            estado: "",
-            campus: "",
-            ciudad: "",
-            direccion: "",
-            aula: "",
+          facultad: "",
+          estado: "",
+          campus: "",
+          ciudad: "",
+          direccion: "",
+          aula: "",
         },
-    });
+        capacidad: 0,
+      });
 
     // useEffect(() => {
     //     console.log(inputValues);
