@@ -63,6 +63,8 @@ function PanelSolicitud({ enviarSolicitud }) {
         onClose();
     };
 
+    // const mostrarAlertaR =
+
     const [modalSize, setModalSize] = useState("x1"); // Estado para el tamaño del modal
 
     const handleTabChange = (index) => {
@@ -124,6 +126,8 @@ function PanelSolicitud({ enviarSolicitud }) {
                     <Button onClick={() => setMostrarAlerta(false)}>OK</Button>
                 </div>
             )}
+
+
         </>
     );
 }

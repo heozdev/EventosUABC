@@ -33,6 +33,7 @@ app.get("/solicitudes", async (req, res) => {
     res.json(solicitudes);
 });
 
+
 app.post("/solicitudes", async (req, res) => {
     const {
         nombre,
