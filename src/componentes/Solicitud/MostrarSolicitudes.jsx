@@ -48,6 +48,8 @@ function MostrarSolicitudes({ solicitudes, setSolicitudes }) {
           <FiltroBarraBusqueda
             isOpenModalSearch={isOpenModalSearch}
             onCloseModalSearch={onCloseModalSearch}
+            solicitudes={solicitudes}
+            setSolicitudes={setSolicitudes}
           />
         </Flex>
       </center>
