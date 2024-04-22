@@ -7,8 +7,6 @@ import {
     CardFooter,
     FormControl,
     FormLabel,
-    Grid,
-    GridItem,
     Image,
     Modal,
     ModalBody,
@@ -86,45 +84,34 @@ export const Solicitud = ({ solicitud }) => {
                 <Stack>
                     <CardBody>
                         <FormControl>
-                            <Grid
-                                templateColumns={{
-                                    base: "1fr",
-                                    md: "repeat(2, 1fr)",
-                                }}
-                                gap={6}
-                            >
-                                <GridItem>
-                                    <FormLabel mt={2} fontSize="xl">
-                                        {solicitud.nombre}
-                                    </FormLabel>
-                                    <FormLabel mt={2} fontSize="xl">
-                                        {solicitud.ubicacion.facultad}
-                                    </FormLabel>
-                                    <FormLabel mt={2} fontSize="xl">
-                                        {solicitud.fecha}
-                                    </FormLabel>
-                                    <FormLabel mt={2} fontSize="xl">
-                                        {solicitud.responsable}
-                                    </FormLabel>
-                                </GridItem>
-                                <GridItem>
-                                    <Badge
-                                        colorScheme="green"
-                                        variant="solid"
-                                        fontSize="md"
-                                        padding={2.5}
-                                        borderRadius={15}
-                                        position="absolute"
-                                        right={0}
-                                        bottom={0}
-                                    >
-                                        {solicitud.estado}
-                                    </Badge>
-                                </GridItem>
-                            </Grid>
+                            <FormLabel mt={2} fontSize="xl">
+                                {solicitud.nombre}
+                            </FormLabel>
+                            <FormLabel mt={2} fontSize="xl">
+                                {solicitud.ubicacion.facultad}
+                            </FormLabel>
+                            <FormLabel mt={2} fontSize="xl">
+                                {solicitud.fecha}
+                            </FormLabel>
+                            <FormLabel mt={2} fontSize="xl">
+                                {solicitud.responsable}
+                            </FormLabel>
                         </FormControl>
                     </CardBody>
-                    <CardFooter></CardFooter>
+                    <CardFooter>
+                        <Badge
+                            colorScheme="yellow"
+                            variant="solid"
+                            fontSize="md"
+                            padding={2.5}
+                            borderRadius={15}
+                            position="absolute"
+                            right={10}
+                            bottom={5}
+                        >
+                            {solicitud.estado}
+                        </Badge>
+                    </CardFooter>
                 </Stack>
             </Card>
             <Modal isOpen={isOpen} onClose={handleClose} size={modalSize}>

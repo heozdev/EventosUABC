@@ -51,42 +51,42 @@ app.post("/solicitudes", async (req, res) => {
     } = req.body;
 
    
-    if (!nombre) {
-      return res.status(400).json({ error: "Missing 'nombre' field" });
-    }
-    if (!descripcion) {
-      return res.status(400).json({ error: "Missing 'descripcion' field" });
-    }
-    if (!fecha) {
-      return res.status(400).json({ error: "Missing 'fecha' field" });
-    }
-    if (!modalidad) {
-      return res.status(400).json({ error: "Missing 'modalidad' field" });
-    }
-    if (!horaInicio) {
-      return res.status(400).json({ error: "Missing 'horaInicio' field" });
-    }
-    if (!horaFin) {
-      return res.status(400).json({ error: "Missing 'horaFin' field" });
-    }
-    if (valorEnCreditos === undefined || valorEnCreditos === null) {
-      return res.status(400).json({ error: "Missing 'valorEnCreditos' field" });
-    }
-    if (!estado) {
-      return res.status(400).json({ error: "Missing 'estado' field" });
-    }
-    if (!responsable) {
-      return res.status(400).json({ error: "Missing 'responsable' field" });
-    }
-    if (!totalSellos) {
-      return res.status(400).json({ error: "Missing 'totalSellos' field" });
-    }
-    if (!ubicacionData) {
-      return res.status(400).json({ error: "Missing 'ubicacionData' field" });
-    }
-    if (!capacidad) {
-      return res.status(400).json({ error: "Missing 'capacidad' field" });
-    }
+    // if (!nombre) {
+    //   return res.status(400).json({ error: "Missing 'nombre' field" });
+    // }
+    // if (!descripcion) {
+    //   return res.status(400).json({ error: "Missing 'descripcion' field" });
+    // }
+    // if (!fecha) {
+    //   return res.status(400).json({ error: "Missing 'fecha' field" });
+    // }
+    // if (!modalidad) {
+    //   return res.status(400).json({ error: "Missing 'modalidad' field" });
+    // }
+    // if (!horaInicio) {
+    //   return res.status(400).json({ error: "Missing 'horaInicio' field" });
+    // }
+    // if (!horaFin) {
+    //   return res.status(400).json({ error: "Missing 'horaFin' field" });
+    // }
+    // if (valorEnCreditos === undefined || valorEnCreditos === null) {
+    //   return res.status(400).json({ error: "Missing 'valorEnCreditos' field" });
+    // }
+    // if (!estado) {
+    //   return res.status(400).json({ error: "Missing 'estado' field" });
+    // }
+    // if (!responsable) {
+    //   return res.status(400).json({ error: "Missing 'responsable' field" });
+    // }
+    // if (!totalSellos) {
+    //   return res.status(400).json({ error: "Missing 'totalSellos' field" });
+    // }
+    // if (!ubicacionData) {
+    //   return res.status(400).json({ error: "Missing 'ubicacionData' field" });
+    // }
+    // if (!capacidad) {
+    //   return res.status(400).json({ error: "Missing 'capacidad' field" });
+    // }
 
     const nuevoUbicacion = await prisma.ubicacion.create({
         data: ubicacionData,
@@ -130,6 +130,18 @@ app.delete(`/solicitud/:id`, async (req, res) => {
     const solicitud = await prisma.solicitud.delete({
         where: {
             id: Number(id),
+        },
+    });
+
+    res.json(solicitud);
+});
+
+app.get("/solicitud/:estado", async (req, res) => {
+    const {estado} = req.params;
+
+    const solicitud = await prisma.solicitud.get({
+        where: {
+            estado: String(estado),
         },
     });
 
