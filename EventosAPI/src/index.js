@@ -135,15 +135,3 @@ app.delete(`/solicitud/:id`, async (req, res) => {
 
     res.json(solicitud);
 });
-
-app.get("/solicitud/:estado", async (req, res) => {
-    const {estado} = req.params;
-
-    const solicitud = await prisma.solicitud.get({
-        where: {
-            estado: String(estado),
-        },
-    });
-
-    res.json(solicitud);
-});
