@@ -88,7 +88,7 @@ export const Solicitud = ({ solicitud }) => {
                                 {solicitud.nombre}
                             </FormLabel>
                             <FormLabel mt={2} fontSize="xl">
-                                {solicitud.ubicacion.facultad}
+                                {solicitud.ubicacion.direccion}
                             </FormLabel>
                             <FormLabel mt={2} fontSize="xl">
                                 {solicitud.fecha}
@@ -218,6 +218,8 @@ export const Solicitud = ({ solicitud }) => {
                     </ModalFooter>
                 </ModalContent>
             </Modal>
+            {console.log(solicitud.modalidad)}
+            {console.log(solicitud.valorEnCreditos)}
         </center>
     );
 };
