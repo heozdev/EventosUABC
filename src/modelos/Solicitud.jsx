@@ -192,6 +192,17 @@ export const Solicitud = ({ solicitud }) => {
                     </ModalBody>
                     <ModalFooter>
                         <Button
+                            name="Rechazado"
+                            colorScheme="red"
+                            mr={10}
+                            onClick={eliminarSolicitud}
+                            position="absolute"
+                            left={10}
+                            bottom={5}
+                        >
+                            Eliminar
+                        </Button>
+                        <Button
                             name="Aceptado"
                             colorScheme="green"
                             mr={3}
@@ -206,14 +217,6 @@ export const Solicitud = ({ solicitud }) => {
                             onClick={aceptarORechazarEvento}
                         >
                             Rechazar
-                        </Button>
-                        <Button
-                            name="Rechazado"
-                            colorScheme="red"
-                            mr={10}
-                            onClick={eliminarSolicitud}
-                        >
-                            Eliminar
                         </Button>
                     </ModalFooter>
                 </ModalContent>
