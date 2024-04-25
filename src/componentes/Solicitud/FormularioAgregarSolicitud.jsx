@@ -42,10 +42,6 @@ export const FormularioAgregarSolicitud = () => {
         },
     });
 
-    // useEffect(() => {
-    //     console.log(inputValues);
-    // }, [inputValues]);
-
     const agregarSolicitud = () => {
         fetch(`http://localhost:3000/solicitudes`, {
             method: "POST",
@@ -103,6 +99,7 @@ export const FormularioAgregarSolicitud = () => {
                 <FormControl isRequired>
                     <FormLabel>Nombre del evento</FormLabel>
                     <Input
+                        variant="filled"
                         placeholder="Evento"
                         value={inputValues.nombre}
                         name="nombre"
@@ -112,6 +109,7 @@ export const FormularioAgregarSolicitud = () => {
                 <FormControl isRequired>
                     <FormLabel>Responsable</FormLabel>
                     <Input
+                        variant="filled"
                         placeholder="Evento"
                         value={inputValues.responsable}
                         name="responsable"
@@ -121,6 +119,7 @@ export const FormularioAgregarSolicitud = () => {
                 <FormControl isRequired>
                     <FormLabel>Descripción</FormLabel>
                     <Textarea
+                        variant={"filled"}
                         placeholder="Descripción"
                         value={inputValues.descripcion}
                         name="descripcion"
@@ -130,6 +129,7 @@ export const FormularioAgregarSolicitud = () => {
                 <FormControl isRequired>
                     <FormLabel>Fecha</FormLabel>
                     <Input
+                        variant="filled"
                         type="date"
                         value={inputValues.fecha}
                         name="fecha"
@@ -139,6 +139,7 @@ export const FormularioAgregarSolicitud = () => {
                 <FormControl isRequired>
                     <FormLabel>Ubicación</FormLabel>
                     <Input
+                        variant="filled"
                         placeholder="Ubicación"
                         value={inputValues.ubicacionData.direccion}
                         name="ubicacionData.direccion"
@@ -163,6 +164,7 @@ export const FormularioAgregarSolicitud = () => {
                     <GridItem>
                         <FormLabel>Total de sellos</FormLabel>
                         <NumberInput
+                            variant="filled"
                             defaultValue={inputValues.totalSellos}
                             min={1}
                             max={3}
@@ -182,7 +184,10 @@ export const FormularioAgregarSolicitud = () => {
                 <FormControl>
                     <GridItem>
                         <FormLabel>Capacidad</FormLabel>
-                        <NumberInput defaultValue={inputValues.capacidad}>
+                        <NumberInput
+                            variant="filled"
+                            defaultValue={inputValues.capacidad}
+                        >
                             <NumberInputField
                                 name="capacidad"
                                 onChange={handleInputsChange}
@@ -190,35 +195,35 @@ export const FormularioAgregarSolicitud = () => {
                         </NumberInput>
                     </GridItem>
                 </FormControl>
+                <FormControl isRequired>
+                    <FormLabel>Hora inicio</FormLabel>
 
-                <div style={{ display: "flex" }}>
-                    <FormControl isRequired style={{ marginRight: "20px" }}>
-                        <FormLabel>Hora inicio</FormLabel>
+                    <Input
+                        variant="filled"
+                        type="time"
+                        format={"HH:mm"}
+                        name="horaInicio"
+                        onChange={handleInputsChange}
+                        value={inputValues.horaInicio}
+                    />
+                </FormControl>
 
-                        <Input
-                            type="time"
-                            format={"HH:mm"}
-                            name="horaInicio"
-                            onChange={handleInputsChange}
-                            value={inputValues.horaInicio}
-                        />
-                    </FormControl>
-
-                    <FormControl isRequired>
-                        <FormLabel>Hora fin</FormLabel>
-                        <Input
-                            type="time"
-                            format={"HH:mm"}
-                            name="horaFin"
-                            onChange={handleInputsChange}
-                            value={inputValues.horaFin}
-                        />
-                    </FormControl>
-                </div>
+                <FormControl isRequired>
+                    <FormLabel>Hora fin</FormLabel>
+                    <Input
+                        variant="filled"
+                        type="time"
+                        format={"HH:mm"}
+                        name="horaFin"
+                        onChange={handleInputsChange}
+                        value={inputValues.horaFin}
+                    />
+                </FormControl>
 
                 <FormControl isRequired>
                     <FormLabel>Modalidad</FormLabel>
                     <Select
+                        variant={"filled"}
                         name="modalidad"
                         value={inputValues.modalidad}
                         onChange={handleInputsChange}
