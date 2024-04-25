@@ -228,7 +228,7 @@ export const FormularioAgregarSolicitud = () => {
                     />
                     <FormErrorMessage>{errors.fecha}</FormErrorMessage>
                 </FormControl>
-                <FormControl isRequired isInvalid={errors.direccion}>
+                <FormControl isRequired isInvalid={errors.ubicacion}>
                     <FormLabel>Ubicación</FormLabel>
                     <Input
                         placeholder="Ubicación"
@@ -236,7 +236,7 @@ export const FormularioAgregarSolicitud = () => {
                         name="ubicacionData.direccion"
                         onChange={handleInputsChange}
                     />
-                    <FormErrorMessage>{errors.direccion}</FormErrorMessage>
+                    <FormErrorMessage>{errors.ubicacion}</FormErrorMessage>
                 </FormControl>
                 <FormControl>
                     <FormLabel>Valor en créditos</FormLabel>
