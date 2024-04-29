@@ -98,9 +98,11 @@ export const FormularioAgregarSolicitud = () => {
         if (!inputValues.ubicacionData.direccion.trim()) {
             newErrors.direccion = "La dirección es obligatoria";
         }
-
+        
         if (!inputValues.ubicacionData.aula.trim()) {
-            newErrors.aula = "El aula es obligatoria";
+            newErrors.aula = "El nombre del evento es obligatorio";
+        } else if (!/^[a-zA-Z0-9\sáéíóúÁÉÍÓÚñÑüÜ]*$/.test(inputValues.ubicacionData.aula)) {
+            newErrors.aula = "El aula no puede contener caracteres especiales";
         }
       
         if (!inputValues.horaInicio.trim()) {
@@ -267,6 +269,7 @@ export const FormularioAgregarSolicitud = () => {
                         <FormControl isRequired isInvalid={errors.modalidad}>
                             <FormLabel>Modalidad</FormLabel>
                             <Select
+                                placeholder="Seleccionar"
                                 name="modalidad"
                                 value={inputValues.modalidad}
                                 onChange={handleInputsChange}
@@ -279,7 +282,7 @@ export const FormularioAgregarSolicitud = () => {
                         <FormControl isRequired isInvalid={errors.responsable}>
                             <FormLabel>Responsable</FormLabel>
                             <Input
-                                placeholder="Evento"
+                                placeholder="Responsable"
                                 value={inputValues.responsable}
                                 name="responsable"
                                 onChange={handleInputsChange}
@@ -347,42 +350,61 @@ export const FormularioAgregarSolicitud = () => {
                         <Grid my={10} gap="10px" gridTemplateColumns={"repeat(2, 1fr)"}>
                             <FormControl isRequired isInvalid={errors.facultad}>
                                 <FormLabel>Facultad</FormLabel>
-                                <Input
-                                    placeholder="Facultad"
-                                    value={inputValues.ubicacionData.facultad}
+                                <Select
+                                    placeholder="Seleccionar"
                                     name="ubicacionData.facultad"
+                                    value={inputValues.ubicacionData.facultad}
                                     onChange={handleInputsChange}
-                                />
+                                >
+                                    <option>Ingeniería</option>
+                                    <option>Arquitectura y Diseño</option>
+                                    <option>Derecho</option>
+                                    <option>Deportes</option>
+                                    <option>Administración</option>
+                                </Select>
                                 <FormErrorMessage>{errors.facultad}</FormErrorMessage>
                             </FormControl>
                             <FormControl isRequired isInvalid={errors.estado}>
                                 <FormLabel>Estado</FormLabel>
-                                <Input
-                                    placeholder="Estado"
-                                    value={inputValues.ubicacionData.estado}
+                                <Select
+                                    placeholder="Seleccionar"
                                     name="ubicacionData.estado"
+                                    value={inputValues.ubicacionData.estado}
                                     onChange={handleInputsChange}
-                                />
+                                >
+                                    <option>Baja California</option>
+                                    <option>Fuera de Baja California</option>
+                                </Select>
                                 <FormErrorMessage>{errors.estado}</FormErrorMessage>
                             </FormControl>
                             <FormControl isRequired isInvalid={errors.campus}>
                                 <FormLabel>Campus</FormLabel>
-                                <Input
-                                    placeholder="Campus"
-                                    value={inputValues.ubicacionData.campus}
+                                <Select
+                                    placeholder="Seleccionar"
                                     name="ubicacionData.campus"
+                                    value={inputValues.ubicacionData.campus}
                                     onChange={handleInputsChange}
-                                />
+                                >
+                                    <option>Mexicali</option>
+                                    <option>Ciencias Administrativas</option>
+                                    <option>Ciencias Humanas</option>
+                                </Select>
                                 <FormErrorMessage>{errors.campus}</FormErrorMessage>
                             </FormControl>
                             <FormControl isRequired isInvalid={errors.ciudad}>
                                 <FormLabel>Ciudad</FormLabel>
-                                <Input
-                                    placeholder="Ciudad"
-                                    value={inputValues.ubicacionData.ciudad}
+                                <Select
+                                    placeholder="Seleccionar"
                                     name="ubicacionData.ciudad"
+                                    value={inputValues.ubicacionData.ciudad}
                                     onChange={handleInputsChange}
-                                />
+                                >
+                                    <option>Mexicali</option>
+                                    <option>Tecate</option>
+                                    <option>Ensenada</option>
+                                    <option>Tijuana</option>
+                                    <option>Valle de Guadalupe</option>
+                                </Select>
                                 <FormErrorMessage>{errors.ciudad}</FormErrorMessage>
                             </FormControl>
                             <FormControl isRequired isInvalid={errors.direccion}>
