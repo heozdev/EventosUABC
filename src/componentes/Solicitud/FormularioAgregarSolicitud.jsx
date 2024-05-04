@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useToast } from "@chakra-ui/react";
 import {
     Grid,
     GridItem,
@@ -17,6 +18,7 @@ import {
     NumberIncrementStepper,
     Heading,
     Container,
+    FormErrorMessage,
 } from "@chakra-ui/react";
 
 export const FormularioAgregarSolicitud = () => {
@@ -24,14 +26,13 @@ export const FormularioAgregarSolicitud = () => {
         nombre: "",
         descripcion: "",
         fecha: "",
-        valorEnCreditos: false,
+        modalidad: "",
         horaInicio: "",
         horaFin: "",
-        totalSellos: 1,
-        capacidad: 0,
-        modalidad: "",
+        valorEnCreditos: false,
         estado: "pendiente",
         responsable: "",
+        totalSellos: 1,
         ubicacionData: {
             facultad: "",
             estado: "",
@@ -40,20 +41,110 @@ export const FormularioAgregarSolicitud = () => {
             direccion: "",
             aula: "",
         },
+        capacidad: 0,
     });
+    const [errors, setErrors] = useState({});
+    const toast = useToast();
+
+    const validateFields = () => {
+        let newErrors = {};
+
+        if (!inputValues.nombre.trim()) {
+            newErrors.nombre = "El nombre del evento es obligatorio";
+        } else if (!/^[a-zA-Z0-9\s]*$/.test(inputValues.nombre)) {
+            newErrors.nombre =
+                "El nombre no puede contener caracteres especiales";
+        }
+
+        if (!inputValues.responsable.trim()) {
+            newErrors.responsable = "El responsable es obligatorio";
+        } else if (!/^[a-zA-Z0-9\s]*$/.test(inputValues.responsable)) {
+            newErrors.responsable =
+                "El responsable no puede contener caracteres especiales";
+        }
+
+        if (!inputValues.descripcion.trim()) {
+            newErrors.descripcion = "La descripción es obligatoria";
+        }
+
+        if (!inputValues.fecha.trim()) {
+            newErrors.fecha = "La fecha es obligatoria";
+        }
+
+        if (!inputValues.ubicacionData.direccion.trim()) {
+            newErrors.ubicacion = "La ubicación es obligatoria";
+        }
+
+        if (!inputValues.horaInicio.trim()) {
+            newErrors.horaInicio = "La hora de inicio es obligatoria";
+        }
+
+        if (!inputValues.horaFin.trim()) {
+            newErrors.horaFin = "La hora de fin es obligatoria";
+        }
+
+        if (!inputValues.modalidad) {
+            newErrors.modalidad = "La modalidad es obligatoria";
+        }
+
+        setErrors(newErrors);
+        return Object.keys(newErrors).length === 0;
+    };
 
     const agregarSolicitud = () => {
-        fetch(`http://localhost:3000/solicitudes`, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify(inputValues),
-        })
-            .then((response) => response.json())
-            .then((data) => console.log(data));
-
-        console.log(inputValues);
+        if (validateFields()) {
+            fetch(`http://localhost:3000/solicitudes`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(inputValues),
+            })
+                .then((response) => response.json())
+                .then((data) => {
+                    console.log(data);
+                    toast({
+                        title: "Solicitud enviada",
+                        description:
+                            "La solicitud se ha enviado correctamente.",
+                        status: "success",
+                        position: "top-right",
+                        duration: 3000,
+                        isClosable: true,
+                    });
+                    setInputValues({
+                        nombre: "",
+                        descripcion: "",
+                        fecha: "",
+                        modalidad: "",
+                        horaInicio: "",
+                        horaFin: "",
+                        valorEnCreditos: false,
+                        estado: "pendiente",
+                        responsable: "",
+                        totalSellos: 1,
+                        ubicacionData: {
+                            facultad: "",
+                            estado: "",
+                            campus: "",
+                            ciudad: "",
+                            direccion: "",
+                            aula: "",
+                        },
+                        capacidad: 0,
+                    });
+                    setErrors({});
+                });
+        } else {
+            toast({
+                title: "Error",
+                description: "Por favor, corrija los errores en el formulario.",
+                status: "error",
+                duration: 3000,
+                position: "top-right",
+                isClosable: true,
+            });
+        }
     };
 
     const handleInputsChange = (e) => {
@@ -96,7 +187,7 @@ export const FormularioAgregarSolicitud = () => {
             </Heading>
 
             <Grid my={10} gap="10px" gridTemplateColumns={"repeat(2, 1fr)"}>
-                <FormControl isRequired>
+                <FormControl isRequired isInvalid={errors.nombre}>
                     <FormLabel>Nombre del evento</FormLabel>
                     <Input
                         variant="filled"
@@ -105,8 +196,9 @@ export const FormularioAgregarSolicitud = () => {
                         name="nombre"
                         onChange={handleInputsChange}
                     />
+                    <FormErrorMessage>{errors.nombre}</FormErrorMessage>
                 </FormControl>
-                <FormControl isRequired>
+                <FormControl isRequired isInvalid={errors.responsable}>
                     <FormLabel>Responsable</FormLabel>
                     <Input
                         variant="filled"
@@ -115,8 +207,9 @@ export const FormularioAgregarSolicitud = () => {
                         name="responsable"
                         onChange={handleInputsChange}
                     />
+                    <FormErrorMessage>{errors.responsable}</FormErrorMessage>
                 </FormControl>
-                <FormControl isRequired>
+                <FormControl isRequired isInvalid={errors.descripcion}>
                     <FormLabel>Descripción</FormLabel>
                     <Textarea
                         variant={"filled"}
@@ -125,8 +218,9 @@ export const FormularioAgregarSolicitud = () => {
                         name="descripcion"
                         onChange={handleInputsChange}
                     />
+                    <FormErrorMessage>{errors.descripcion}</FormErrorMessage>
                 </FormControl>
-                <FormControl isRequired>
+                <FormControl isRequired isInvalid={errors.fecha}>
                     <FormLabel>Fecha</FormLabel>
                     <Input
                         variant="filled"
@@ -135,8 +229,9 @@ export const FormularioAgregarSolicitud = () => {
                         name="fecha"
                         onChange={handleInputsChange}
                     />
+                    <FormErrorMessage>{errors.fecha}</FormErrorMessage>
                 </FormControl>
-                <FormControl isRequired>
+                <FormControl isRequired isInvalid={errors.direccion}>
                     <FormLabel>Ubicación</FormLabel>
                     <Input
                         variant="filled"
@@ -145,6 +240,7 @@ export const FormularioAgregarSolicitud = () => {
                         name="ubicacionData.direccion"
                         onChange={handleInputsChange}
                     />
+                    <FormErrorMessage>{errors.direccion}</FormErrorMessage>
                 </FormControl>
                 <FormControl>
                     <FormLabel>Valor en créditos</FormLabel>
@@ -166,7 +262,7 @@ export const FormularioAgregarSolicitud = () => {
                         <NumberInput
                             variant="filled"
                             defaultValue={inputValues.totalSellos}
-                            min={1}
+                            min={0}
                             max={3}
                         >
                             <NumberInputField
@@ -198,29 +294,43 @@ export const FormularioAgregarSolicitud = () => {
                 <FormControl isRequired>
                     <FormLabel>Hora inicio</FormLabel>
 
-                    <Input
-                        variant="filled"
-                        type="time"
-                        format={"HH:mm"}
-                        name="horaInicio"
-                        onChange={handleInputsChange}
-                        value={inputValues.horaInicio}
-                    />
+                    <div style={{ display: "flex" }}>
+                        <FormControl
+                            isRequired
+                            style={{ marginRight: "20px" }}
+                            isInvalid={errors.horaInicio}
+                        >
+                            <FormLabel>Hora inicio</FormLabel>
+
+                            <Input
+                                type="time"
+                                format={"HH:mm"}
+                                name="horaInicio"
+                                onChange={handleInputsChange}
+                                value={inputValues.horaInicio}
+                            />
+                            <FormErrorMessage>
+                                {errors.horaInicio}
+                            </FormErrorMessage>
+                        </FormControl>
+
+                        <FormControl isRequired isInvalid={errors.horaFin}>
+                            <FormLabel>Hora fin</FormLabel>
+                            <Input
+                                type="time"
+                                format={"HH:mm"}
+                                name="horaFin"
+                                onChange={handleInputsChange}
+                                value={inputValues.horaFin}
+                            />
+                            <FormErrorMessage>
+                                {errors.horaFin}
+                            </FormErrorMessage>
+                        </FormControl>
+                    </div>
                 </FormControl>
 
-                <FormControl isRequired>
-                    <FormLabel>Hora fin</FormLabel>
-                    <Input
-                        variant="filled"
-                        type="time"
-                        format={"HH:mm"}
-                        name="horaFin"
-                        onChange={handleInputsChange}
-                        value={inputValues.horaFin}
-                    />
-                </FormControl>
-
-                <FormControl isRequired>
+                <FormControl isRequired isInvalid={errors.modalidad}>
                     <FormLabel>Modalidad</FormLabel>
                     <Select
                         variant={"filled"}
@@ -231,6 +341,7 @@ export const FormularioAgregarSolicitud = () => {
                         <option>Presencial</option>
                         <option>Online</option>
                     </Select>
+                    <FormErrorMessage>{errors.modalidad}</FormErrorMessage>
                 </FormControl>
             </Grid>
             <Button

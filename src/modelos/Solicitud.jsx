@@ -7,8 +7,6 @@ import {
     CardFooter,
     FormControl,
     FormLabel,
-    Grid,
-    GridItem,
     Image,
     Modal,
     ModalBody,
@@ -86,45 +84,58 @@ export const Solicitud = ({ solicitud }) => {
                 <Stack>
                     <CardBody>
                         <FormControl>
-                            <Grid
-                                templateColumns={{
-                                    base: "1fr",
-                                    md: "repeat(2, 1fr)",
-                                }}
-                                gap={6}
-                            >
-                                <GridItem>
-                                    <FormLabel mt={2} fontSize="xl">
-                                        {solicitud.nombre}
-                                    </FormLabel>
-                                    <FormLabel mt={2} fontSize="xl">
-                                        {solicitud.ubicacion.facultad}
-                                    </FormLabel>
-                                    <FormLabel mt={2} fontSize="xl">
-                                        {solicitud.fecha}
-                                    </FormLabel>
-                                    <FormLabel mt={2} fontSize="xl">
-                                        {solicitud.responsable}
-                                    </FormLabel>
-                                </GridItem>
-                                <GridItem>
-                                    <Badge
-                                        colorScheme="green"
-                                        variant="solid"
-                                        fontSize="md"
-                                        padding={2.5}
-                                        borderRadius={15}
-                                        position="absolute"
-                                        right={0}
-                                        bottom={0}
-                                    >
-                                        {solicitud.estado}
-                                    </Badge>
-                                </GridItem>
-                            </Grid>
+                            <FormLabel mt={2} fontSize="xl">
+                                {solicitud.nombre}
+                            </FormLabel>
+                            <FormLabel mt={2} fontSize="xl">
+                                {solicitud.ubicacion.direccion}
+                            </FormLabel>
+                            <FormLabel mt={2} fontSize="xl">
+                                {solicitud.fecha}
+                            </FormLabel>
+                            <FormLabel mt={2} fontSize="xl">
+                                {solicitud.responsable}
+                            </FormLabel>
                         </FormControl>
                     </CardBody>
-                    <CardFooter></CardFooter>
+                    <CardFooter>
+                        {solicitud.estado === 'pendiente' && (
+                            <Badge colorScheme='yellow'
+                                    variant="solid"
+                                    fontSize="md"
+                                    padding={2.5}
+                                    borderRadius={15}
+                                    position="absolute"
+                                    right={10}
+                                    bottom={5}>
+                                Pendiente
+                            </Badge>
+                        )}
+                        {solicitud.estado === 'Aceptado' && (
+                            <Badge colorScheme='green'
+                                    variant="solid"
+                                    fontSize="md"
+                                    padding={2.5}
+                                    borderRadius={15}
+                                    position="absolute"
+                                    right={10}
+                                    bottom={5}>
+                                Aceptado
+                            </Badge>
+                        )}
+                        {solicitud.estado === 'Rechazado' && (
+                            <Badge colorScheme='red'
+                                    variant="solid"
+                                    fontSize="md"
+                                    padding={2.5}
+                                    borderRadius={15}
+                                    position="absolute"
+                                    right={10}
+                                    bottom={5}>
+                                Rechazado
+                            </Badge>
+                        )}
+                    </CardFooter>
                 </Stack>
             </Card>
             <Modal isOpen={isOpen} onClose={handleClose} size={modalSize}>
@@ -133,7 +144,42 @@ export const Solicitud = ({ solicitud }) => {
                     <ModalHeader>Información del Evento</ModalHeader>
                     <ModalCloseButton />
                     <ModalBody>
-                        <div style={{ display: "flex", gap: "10px" }}></div>
+                        <div style={{ display: "flex", gap: "10px" }}>
+                            <FormControl>
+                                <FormLabel mt={2} fontSize="m">
+                                    ID del Evento: {solicitud.id}
+                                </FormLabel>
+                                <FormLabel mt={2} fontSize="m">
+                                    Nombre del Evento: {solicitud.nombre}
+                                </FormLabel>
+                                <FormLabel mt={2} fontSize="m">
+                                    Ubicacion: {solicitud.ubicacion.direccion}
+                                </FormLabel>
+                                <FormLabel mt={2} fontSize="m">
+                                    Fecha del Evento: {solicitud.fecha}
+                                </FormLabel>
+                                <FormLabel mt={2} fontSize="m">
+                                    Responsable: {solicitud.responsable}
+                                </FormLabel>
+                            </FormControl>
+                            <FormControl>
+                                <FormLabel mt={2} fontSize="m">
+                                    Hora Inicio: {solicitud.horaInicio}
+                                </FormLabel>
+                                <FormLabel mt={2} fontSize="m">
+                                    Hora Fin: {solicitud.horaFin}
+                                </FormLabel>
+                                <FormLabel mt={2} fontSize="m">
+                                    Modalidad: {solicitud.modalidad}
+                                </FormLabel>
+                                <FormLabel mt={2} fontSize="m">
+                                    Capacidad: {solicitud.capacidad}
+                                </FormLabel>
+                                <FormLabel mt={2} fontSize="m">
+                                    Total de Sellos: {solicitud.totalSellos}
+                                </FormLabel>
+                            </FormControl>
+                        </div>
                         <Text mb="8px" mt={10}>
                             Notas: {value}
                         </Text>
@@ -145,6 +191,17 @@ export const Solicitud = ({ solicitud }) => {
                         />
                     </ModalBody>
                     <ModalFooter>
+                        <Button
+                            name="Rechazado"
+                            colorScheme="red"
+                            mr={10}
+                            onClick={eliminarSolicitud}
+                            position="absolute"
+                            left={10}
+                            bottom={5}
+                        >
+                            Eliminar
+                        </Button>
                         <Button
                             name="Aceptado"
                             colorScheme="green"
@@ -161,17 +218,11 @@ export const Solicitud = ({ solicitud }) => {
                         >
                             Rechazar
                         </Button>
-                        <Button
-                            name="Rechazado"
-                            colorScheme="red"
-                            mr={10}
-                            onClick={eliminarSolicitud}
-                        >
-                            Eliminar
-                        </Button>
                     </ModalFooter>
                 </ModalContent>
             </Modal>
+            {console.log(solicitud.modalidad)}
+            {console.log(solicitud.valorEnCreditos)}
         </center>
     );
 };

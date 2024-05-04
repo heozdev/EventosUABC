@@ -4,7 +4,7 @@ import { BiSolidFilterAlt } from "react-icons/bi";
 import FiltroEventos from "../Filtros/FiltroEventos";
 import FiltroBarraBusqueda from "../Filtros/FiltroBarraBusqueda";
 
-function MostrarSolicitudes() {
+function MostrarSolicitudes({ solicitudes, setSolicitudes }) {
     const {
         isOpen: isOpenModalFilter,
         onOpen: onOpenModalFilter,
@@ -42,10 +42,14 @@ function MostrarSolicitudes() {
                 <FiltroEventos
                     isOpenModalFilter={isOpenModalFilter}
                     onCloseModalFilter={onCloseModalFilter}
+                    solicitudes={solicitudes}
+                    setSolicitudes={setSolicitudes}
                 />
                 <FiltroBarraBusqueda
                     isOpenModalSearch={isOpenModalSearch}
                     onCloseModalSearch={onCloseModalSearch}
+                    solicitudes={solicitudes}
+                    setSolicitudes={setSolicitudes}
                 />
             </Flex>
         </center>
