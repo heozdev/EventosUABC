@@ -15,12 +15,12 @@ import {
   } from '@chakra-ui/react';
 import { useState,useEffect } from 'react';
 
-const FiltroBarraBusqueda = ({isOpenModalSearch, onCloseModalSearch,solicitudes, setSolicitudes}) => {
-
-  const[search,setSearch] = useState("");
-  const[showAlert,setShowAlert] = useState(false);
+const FiltroBarraBusqueda = ({ isOpenModalSearch, onCloseModalSearch, solicitudes, setSolicitudes }) => {
+  const [search, setSearch] = useState("");
+  const [showAlert, setShowAlert] = useState(false);
 
   useEffect(() => {
+    setSearch(""); // Restablecer el estado search cuando isOpenModalSearch cambia
     setShowAlert(false);
   }, [isOpenModalSearch]);
 
@@ -29,11 +29,16 @@ const FiltroBarraBusqueda = ({isOpenModalSearch, onCloseModalSearch,solicitudes,
   };
 
   const handleSearch = () => {
-    const filtered = solicitudes.filter(evento => 
-      evento.nombre.toLowerCase().includes(search.toLowerCase())
-    );
+    const filtered = solicitudes.filter(evento => {
+      const nombreIncluido = evento.nombre.toLowerCase().includes(search.toLowerCase());
+      const facultadIncluida = evento.ubicacion.facultad.toLowerCase().includes(search.toLowerCase());
+      const ciudadIncluida = evento.ubicacion.ciudad.toLowerCase().includes(search.toLowerCase());
+
+      return nombreIncluido || ciudadIncluida || facultadIncluida;
+    });
+
     if (filtered.length === 0) {
-      setShowAlert(true); // Muestra la alerta si no se encontraron resultados
+      setShowAlert(true);
     } else {
       onCloseModalSearch();
       setSolicitudes(filtered);
@@ -41,30 +46,27 @@ const FiltroBarraBusqueda = ({isOpenModalSearch, onCloseModalSearch,solicitudes,
   };
 
   const handleCloseModal = () => {
-    setShowAlert(false); // Oculta la alerta al cerrar el modal
+    setShowAlert(false);
     onCloseModalSearch();
   };
 
-
   return (
     <>
-    <Modal isOpen={isOpenModalSearch} onClose={handleCloseModal}>
+      <Modal isOpen={isOpenModalSearch} onClose={handleCloseModal}>
         <ModalOverlay />
         <ModalContent>
-          <ModalHeader>Barra de busqueda </ModalHeader>
+          <ModalHeader>Barra de búsqueda </ModalHeader>
           <ModalCloseButton />
           <ModalBody>
-
             <FormControl>
               <FormLabel>Ingresa alguna palabra clave</FormLabel>
-              <Input 
-                placeholder='Facultad, carrera, evento' 
-                type='text' 
-                value={search} 
+              <Input
+                placeholder='Facultad, ciudad, evento'
+                type='text'
+                value={search}
                 onChange={handleChangeSearch}
               />
             </FormControl>
-
             {showAlert && (
               <Alert status="warning" mt={4} onClose={() => setShowAlert(false)}>
                 <AlertIcon />
@@ -72,7 +74,6 @@ const FiltroBarraBusqueda = ({isOpenModalSearch, onCloseModalSearch,solicitudes,
               </Alert>
             )}
           </ModalBody>
-
           <ModalFooter>
             <Button colorScheme='green' mr={3} onClick={handleSearch}>
               Buscar
@@ -84,4 +85,4 @@ const FiltroBarraBusqueda = ({isOpenModalSearch, onCloseModalSearch,solicitudes,
   )
 }
 
-export default FiltroBarraBusqueda
+export default FiltroBarraBusqueda;

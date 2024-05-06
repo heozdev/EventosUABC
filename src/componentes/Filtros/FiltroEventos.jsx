@@ -1,27 +1,22 @@
-import {useState, useEffect} from 'react'
-
+import { useState, useEffect } from 'react';
 import {
-    Modal,
-    ModalOverlay,
-    ModalContent,
-    ModalHeader,
-    ModalFooter,
-    ModalBody,
-    ModalCloseButton,
-    Button,
-    FormLabel,
-    FormControl,
-    Select,
-    Checkbox,
-    Input,
-    HStack
-  } from '@chakra-ui/react';
+  Modal,
+  ModalOverlay,
+  ModalContent,
+  ModalHeader,
+  ModalFooter,
+  ModalBody,
+  ModalCloseButton,
+  Button,
+  FormLabel,
+  FormControl,
+  Select,
+  Checkbox,
+  Input,
+  HStack,
+} from '@chakra-ui/react';
 
-function FiltroEventos({ isOpenModalFilter, onCloseModalFilter,solicitudes,setSolicitudes }) {
-  
-  /**
-   * Filtro de solicitudes
-   */
+function FiltroEventos({ isOpenModalFilter, onCloseModalFilter, solicitudes, setSolicitudes }) {
   const [filtro, setFiltro] = useState({
     ciudad: "",
     facultad: "",
@@ -30,50 +25,35 @@ function FiltroEventos({ isOpenModalFilter, onCloseModalFilter,solicitudes,setSo
     categoria: "",
   });
 
-  // Filtro de solicitudes
   const [filteredSolicitudes, setFilteredSolicitudes] = useState([]);
 
-
-  // Actualizar solicitudes filtradas
   useEffect(() => {
     setFilteredSolicitudes(filterSolicitudes());
   }, [filtro, solicitudes]);
 
-
-  // Actualizar solicitudes filtradas
   const handleChangeFiltro = (e) => {
     const { name, value, type, checked } = e.target;
     const val = type === "checkbox" ? checked : value;
     setFiltro({ ...filtro, [name]: val });
   };
 
-
-  // Filtrar solicitudes por ciudad, facultad, valor en creditos, fecha y categoria
   const filterSolicitudes = () => {
     return solicitudes.filter((evento) => {
       return (
-        (filtro.ciudad === "" || 
-          (evento.ciudad && evento.ciudad.toLowerCase()
-          .includes(filtro.ciudad.toLowerCase()))) &&
-        (filtro.facultad === "" || 
-          (evento.facultad && evento.facultad.toLowerCase().
-          includes(filtro.facultad.toLowerCase()))) &&
+        (filtro.ciudad === "" ||
+          (evento.ciudad && evento.ciudad.toLowerCase().includes(filtro.ciudad.toLowerCase()))) &&
+        (filtro.facultad === "" ||
+          (evento.facultad && evento.facultad.toLowerCase().includes(filtro.facultad.toLowerCase()))) &&
         (filtro.valorEnCreditos === false ||
-          evento.valorEnCreditos.
-          toString() === filtro.valorEnCreditos.toString()) &&
+          evento.valorEnCreditos.toString() === filtro.valorEnCreditos.toString()) &&
         (filtro.fecha === "" ||
           evento.fecha === filtro.fecha) &&
-        (filtro.categoria === "" || 
-          (evento.categoria && evento.categoria.
-          toLowerCase().
-          includes(filtro.categoria.toLowerCase())))
+        (filtro.categoria === "" ||
+          (evento.categoria && evento.categoria.toLowerCase().includes(filtro.categoria.toLowerCase())))
       );
     });
   };
-  
 
-
-  // Función para manejar el filtro
   const handleFilter = () => {
     onCloseModalFilter();
     setSolicitudes(filterSolicitudes());
@@ -95,10 +75,11 @@ function FiltroEventos({ isOpenModalFilter, onCloseModalFilter,solicitudes,setSo
                 value={filtro.ciudad}
                 onChange={handleChangeFiltro}
               >
-                <option>Mexicali</option>
-                <option>Tijuana</option>
-                <option>Ensenada</option>
-                <option>Tecate</option>
+                <option value="">Seleccione una ciudad</option>
+                <option value="mexicali">Mexicali</option>
+                <option value="tijuana">Tijuana</option>
+                <option value="ensenada">Ensenada</option>
+                <option value="tecate">Tecate</option>
               </Select>
             </FormControl>
             <FormControl>
@@ -109,13 +90,13 @@ function FiltroEventos({ isOpenModalFilter, onCloseModalFilter,solicitudes,setSo
                 value={filtro.facultad}
                 onChange={handleChangeFiltro}
               >
-                <option>Facultad de Ingenieria Mexicali</option>
-                <option>Facultad de Idiomas Mexicali</option>
-                <option>Facultad de Arquitectura</option>
-                <option>Facultad de Artes</option>
+                <option value="">Seleccione una facultad</option>
+                <option value="ingenieria">Facultad de Ingeniería Mexicali</option>
+                <option value="idiomas">Facultad de Idiomas Mexicali</option>
+                <option value="arquitectura">Facultad de Arquitectura</option>
+                <option value="artes">Facultad de Artes</option>
               </Select>
             </FormControl>
-
             <FormControl>
               <FormLabel>Valor en créditos</FormLabel>
               <HStack paddingLeft={"5px"}>
@@ -123,10 +104,9 @@ function FiltroEventos({ isOpenModalFilter, onCloseModalFilter,solicitudes,setSo
                 <Checkbox
                   size="lg"
                   colorScheme="green"
-                  defaultChecked
+                  defaultChecked={filtro.valorEnCreditos}
                   borderColor="green"
                   name="valorEnCreditos"
-                  isChecked={filtro.valorEnCreditos}
                   onChange={handleChangeFiltro}
                 />
               </HStack>
@@ -141,20 +121,20 @@ function FiltroEventos({ isOpenModalFilter, onCloseModalFilter,solicitudes,setSo
               />
             </FormControl>
             <FormControl>
-              <FormLabel>Categoria</FormLabel>
+              <FormLabel>Categoría</FormLabel>
               <Select
-                placeholder="Categoria"
+                placeholder="Categoría"
                 name="categoria"
                 value={filtro.categoria}
                 onChange={handleChangeFiltro}
               >
-                <option>General</option>
-                <option>Conferencia</option>
-                <option>Investigacion</option>
+                <option value="">Seleccione una categoría</option>
+                <option value="general">General</option>
+                <option value="conferencia">Conferencia</option>
+                <option value="investigacion">Investigación</option>
               </Select>
             </FormControl>
           </ModalBody>
-
           <ModalFooter>
             <Button colorScheme="green" mr={3} onClick={handleFilter}>
               Filtrar

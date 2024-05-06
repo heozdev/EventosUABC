@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useToast } from "@chakra-ui/react";
 import {
     Badge,
     Button,
@@ -23,11 +24,26 @@ import {
 export const Solicitud = ({ solicitud }) => {
     const [isOpen, setIsOpen] = useState(false);
     const [value, setValue] = useState("");
+    const [showConfirmModal, setShowConfirmModal] = useState(false);
+    const toast = useToast(); 
 
     const aceptarORechazarEvento = (e) => {
         const estadoEvento = e.target.name;
         const solicitudId = solicitud.id;
-
+    
+        if (estadoEvento === 'Rechazado' && !value.trim()) {
+            // Verificar si se ha ingresado alguna nota antes de rechazar la solicitud
+            toast({
+                title: "Error",
+                description: "Agrega observaciones antes de rechazar una solicitud",
+                status: "error",
+                position: "top-right",
+                duration: 3000,
+                isClosable: true,
+            });
+            return; // Detener si no se ingresan observaciones
+        }
+    
         fetch(`http://localhost:3000/solicitudes/${solicitudId}`, {
             method: "PUT",
             headers: {
@@ -36,19 +52,63 @@ export const Solicitud = ({ solicitud }) => {
             body: JSON.stringify({ estado: estadoEvento }),
         })
             .then((response) => response.json())
-            .then((data) => console.log(data));
-
+            .then((data) => {
+                console.log(data);
+                if (estadoEvento === 'Rechazado') {
+                    // Mostrar mensaje de exito solo si se rechaza la solicitud
+                    toast({
+                        title: "Solicitud rechazada",
+                        description: "La solicitud ha sido rechazada correctamente.",
+                        status: "success",
+                        position: "top-right",
+                        duration: 3000,
+                        isClosable: true,
+                    });
+                } else {
+                    // Mostrar mensaje de exito para lo demas
+                    toast({
+                        title: "Solicitud enviada",
+                        description: "La solicitud fue aceptada correctamente.",
+                        status: "success",
+                        position: "top-right",
+                        duration: 3000,
+                        isClosable: true,
+                    });
+                }
+            });
+    
         handleClose();
     };
+    
+    
 
     const eliminarSolicitud = () => {
+        setShowConfirmModal(true);
+    };
+    
+    const handleConfirmEliminar = () => {
         fetch(`http://localhost:3000/solicitud/${solicitud.id}`, {
             method: "DELETE",
         })
             .then((response) => response.json())
-            .then((data) => console.log(data));
+            .then((data) => {
+                console.log(data);
+                toast({ 
+                    title: "Solicitud eliminada",
+                    description: "La solicitud ha sido eliminada correctamente.",
+                    status: "success",
+                    position: "top-right",
+                    duration: 3000,
+                    isClosable: true,
+                });
+            });
 
         handleClose();
+        setShowConfirmModal(false);
+    };
+
+    const handleCancelEliminar = () => {
+        setShowConfirmModal(false);
     };
 
     const handleOpen = () => setIsOpen(true);
@@ -220,6 +280,24 @@ export const Solicitud = ({ solicitud }) => {
                         >
                             Eliminar
                         </Button>
+                        <Modal isOpen={showConfirmModal} onClose={handleCancelEliminar}>
+                <ModalOverlay />
+                <ModalContent>
+                    <ModalHeader>Confirmar eliminacion</ModalHeader>
+                    <ModalCloseButton />
+                    <ModalBody>
+                        ¿Seguro que quieres eliminar esta solicitud?
+                    </ModalBody>
+                    <ModalFooter>
+                        <Button colorScheme="green" mr={3} onClick={handleCancelEliminar}>
+                            Cancelar
+                        </Button>
+                        <Button colorScheme="red" onClick={handleConfirmEliminar}>
+                            Eliminar
+                        </Button>
+                    </ModalFooter>
+                </ModalContent>
+            </Modal>
                         <Button
                             name="Aceptado"
                             colorScheme="green"

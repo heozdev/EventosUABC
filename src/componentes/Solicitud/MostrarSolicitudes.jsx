@@ -1,10 +1,14 @@
-import { Heading, Flex, useDisclosure } from "@chakra-ui/react";
+import React, { useState } from "react";
+import { Heading, Flex, useDisclosure, Button } from "@chakra-ui/react";
 import { SearchIcon } from "@chakra-ui/icons";
+import { AddIcon } from "@chakra-ui/icons";
 import { BiSolidFilterAlt } from "react-icons/bi";
 import FiltroEventos from "../Filtros/FiltroEventos";
 import FiltroBarraBusqueda from "../Filtros/FiltroBarraBusqueda";
+import { FormularioAgregarSolicitud } from "./FormularioAgregarSolicitud";
 
 function MostrarSolicitudes({ solicitudes, setSolicitudes }) {
+
     const {
         isOpen: isOpenModalFilter,
         onOpen: onOpenModalFilter,
@@ -16,12 +20,26 @@ function MostrarSolicitudes({ solicitudes, setSolicitudes }) {
         onClose: onCloseModalSearch,
     } = useDisclosure();
 
+    const [mostrarFormulario, setMostrarFormulario] = useState(false);
+
+    const AgregarSolicitud = () => {
+      setMostrarFormulario(!mostrarFormulario);
+  };
+
     return (
       <center>
         <Heading size="xl" color={"black"} mt={5}>
           Solicitudes
         </Heading>
         <Flex justifyContent="center" alignItems="center" mt={10} ml={600}>
+        <Button
+                    color="#004928"
+                    colorScheme="white"
+                    leftIcon={<AddIcon />}
+                    onClick={AgregarSolicitud}
+                >
+                    {mostrarFormulario ? "Cerrar Formulario" : "Agregar Solicitud"}
+                </Button>
           <BiSolidFilterAlt
             style={{
               color: "#004928",
@@ -52,6 +70,7 @@ function MostrarSolicitudes({ solicitudes, setSolicitudes }) {
             setSolicitudes={setSolicitudes}
           />
         </Flex>
+        {mostrarFormulario && <FormularioAgregarSolicitud />} {}
       </center>
     );
 }
