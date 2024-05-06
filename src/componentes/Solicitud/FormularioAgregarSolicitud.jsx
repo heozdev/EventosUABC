@@ -1,5 +1,15 @@
 import { useState } from "react";
-import { useToast } from "@chakra-ui/react";
+import {
+    Tabs,
+    TabList,
+    TabPanels,
+    Tab,
+    TabPanel,
+    useToast,
+    Icon,
+    Box,
+    CloseButton,
+} from "@chakra-ui/react";
 import {
     Grid,
     GridItem,
@@ -20,6 +30,7 @@ import {
     Container,
     FormErrorMessage,
 } from "@chakra-ui/react";
+import { FaCheckCircle, FaInfoCircle, FaMapMarkerAlt } from "react-icons/fa";
 
 export const FormularioAgregarSolicitud = () => {
     const [inputValues, setInputValues] = useState({
@@ -45,20 +56,38 @@ export const FormularioAgregarSolicitud = () => {
     });
     const [errors, setErrors] = useState({});
     const toast = useToast();
+    const [tabIndex, setTabIndex] = useState(0);
 
+    function CloseButtonLink() {
+        return (
+            <a
+                href="/perfil"
+                style={{
+                    position: "absolute",
+                    top: "5px",
+                    right: "50px",
+                    textDecoration: "none",
+                }}
+            >
+                <CloseButton size="lg" />
+            </a>
+        );
+    }
     const validateFields = () => {
         let newErrors = {};
 
         if (!inputValues.nombre.trim()) {
             newErrors.nombre = "El nombre del evento es obligatorio";
-        } else if (!/^[a-zA-Z0-9\s]*$/.test(inputValues.nombre)) {
+        } else if (!/^[a-zA-Z0-9\sáéíóúÁÉÍÓÚñÑüÜ]*$/.test(inputValues.nombre)) {
             newErrors.nombre =
                 "El nombre no puede contener caracteres especiales";
         }
 
         if (!inputValues.responsable.trim()) {
             newErrors.responsable = "El responsable es obligatorio";
-        } else if (!/^[a-zA-Z0-9\s]*$/.test(inputValues.responsable)) {
+        } else if (
+            !/^[a-zA-Z0-9\sáéíóúÁÉÍÓÚñÑüÜ]*$/.test(inputValues.responsable)
+        ) {
             newErrors.responsable =
                 "El responsable no puede contener caracteres especiales";
         }
@@ -71,8 +100,34 @@ export const FormularioAgregarSolicitud = () => {
             newErrors.fecha = "La fecha es obligatoria";
         }
 
+        if (!inputValues.ubicacionData.facultad.trim()) {
+            newErrors.facultad = "La facultad es obligatoria";
+        }
+
+        if (!inputValues.ubicacionData.estado.trim()) {
+            newErrors.estado = "El estado es obligatoria";
+        }
+
+        if (!inputValues.ubicacionData.campus.trim()) {
+            newErrors.campus = "El campus es obligatoria";
+        }
+
+        if (!inputValues.ubicacionData.ciudad.trim()) {
+            newErrors.ciudad = "La ciudad es obligatoria";
+        }
+
         if (!inputValues.ubicacionData.direccion.trim()) {
-            newErrors.ubicacion = "La ubicación es obligatoria";
+            newErrors.direccion = "La dirección es obligatoria";
+        }
+
+        if (!inputValues.ubicacionData.aula.trim()) {
+            newErrors.aula = "El nombre del evento es obligatorio";
+        } else if (
+            !/^[a-zA-Z0-9\sáéíóúÁÉÍÓÚñÑüÜ]*$/.test(
+                inputValues.ubicacionData.aula
+            )
+        ) {
+            newErrors.aula = "El aula no puede contener caracteres especiales";
         }
 
         if (!inputValues.horaInicio.trim()) {
@@ -186,225 +241,438 @@ export const FormularioAgregarSolicitud = () => {
                 Crear solicitud
             </Heading>
 
-            <Grid my={10} gap="10px" gridTemplateColumns={"repeat(2, 1fr)"}>
-                <FormControl isRequired isInvalid={errors.nombre}>
-                    <FormLabel>Nombre del evento</FormLabel>
-                    <Input
-                        variant="filled"
-                        placeholder="Evento"
-                        value={inputValues.nombre}
-                        name="nombre"
-                        onChange={handleInputsChange}
-                    />
-                    <FormErrorMessage>{errors.nombre}</FormErrorMessage>
-                </FormControl>
-                <FormControl isRequired isInvalid={errors.responsable}>
-                    <FormLabel>Responsable</FormLabel>
-                    <Input
-                        variant="filled"
-                        placeholder="Evento"
-                        value={inputValues.responsable}
-                        name="responsable"
-                        onChange={handleInputsChange}
-                    />
-                    <FormErrorMessage>{errors.responsable}</FormErrorMessage>
-                </FormControl>
-                <FormControl isRequired isInvalid={errors.descripcion}>
-                    <FormLabel>Descripción</FormLabel>
-                    <Textarea
-                        variant={"filled"}
-                        placeholder="Descripción"
-                        value={inputValues.descripcion}
-                        name="descripcion"
-                        onChange={handleInputsChange}
-                    />
-                    <FormErrorMessage>{errors.descripcion}</FormErrorMessage>
-                </FormControl>
-                <FormControl isRequired isInvalid={errors.fecha}>
-                    <FormLabel>Fecha</FormLabel>
-                    <Input
-                        variant="filled"
-                        type="date"
-                        value={inputValues.fecha}
-                        name="fecha"
-                        onChange={handleInputsChange}
-                    />
-                    <FormErrorMessage>{errors.fecha}</FormErrorMessage>
-                </FormControl>
-                <FormControl isRequired isInvalid={errors.direccion}>
-                    <FormLabel>Ubicación</FormLabel>
-                    <Input
-                        variant="filled"
-                        placeholder="Ubicación"
-                        value={inputValues.ubicacionData.direccion}
-                        name="ubicacionData.direccion"
-                        onChange={handleInputsChange}
-                    />
-                    <FormErrorMessage>{errors.direccion}</FormErrorMessage>
-                </FormControl>
-                <FormControl>
-                    <FormLabel>Valor en créditos</FormLabel>
-                    <HStack paddingLeft={"5px"}>
-                        <span>Si</span>
-                        <Checkbox
-                            size="lg"
-                            colorScheme="green"
-                            borderColor="green"
-                            value={inputValues.categoria}
-                            name="valorEnCreditos"
-                            onChange={handleInputsChange}
-                        />
-                    </HStack>
-                </FormControl>
-                <FormControl>
-                    <GridItem>
-                        <FormLabel>Total de sellos</FormLabel>
-                        <NumberInput
-                            variant="filled"
-                            defaultValue={inputValues.totalSellos}
-                            min={0}
-                            max={3}
-                        >
-                            <NumberInputField
-                                name="totalSellos"
-                                onChange={handleInputsChange}
-                            />
-                            <NumberInputStepper>
-                                <NumberIncrementStepper />
-                                <NumberDecrementStepper />
-                            </NumberInputStepper>
-                        </NumberInput>
-                    </GridItem>
-                </FormControl>
+            <CloseButtonLink />
 
-                <FormControl>
-                    <GridItem>
-                        <FormLabel>Capacidad</FormLabel>
-                        <NumberInput
-                            variant="filled"
-                            defaultValue={inputValues.capacidad}
-                        >
-                            <NumberInputField
-                                name="capacidad"
-                                onChange={handleInputsChange}
-                            />
-                        </NumberInput>
-                    </GridItem>
-                </FormControl>
-                <FormControl isRequired>
-                    <FormLabel>Hora inicio</FormLabel>
-
-                    <div style={{ display: "flex" }}>
-                        <FormControl
-                            isRequired
-                            style={{ marginRight: "20px" }}
-                            isInvalid={errors.horaInicio}
-                        >
-                            <FormLabel>Hora inicio</FormLabel>
-
-                            <Input
-                                type="time"
-                                format={"HH:mm"}
-                                name="horaInicio"
-                                onChange={handleInputsChange}
-                                value={inputValues.horaInicio}
-                            />
-                            <FormErrorMessage>
-                                {errors.horaInicio}
-                            </FormErrorMessage>
-                        </FormControl>
-
-                        <FormControl isRequired isInvalid={errors.horaFin}>
-                            <FormLabel>Hora fin</FormLabel>
-                            <Input
-                                type="time"
-                                format={"HH:mm"}
-                                name="horaFin"
-                                onChange={handleInputsChange}
-                                value={inputValues.horaFin}
-                            />
-                            <FormErrorMessage>
-                                {errors.horaFin}
-                            </FormErrorMessage>
-                        </FormControl>
-                    </div>
-                </FormControl>
-
-                <FormControl isRequired isInvalid={errors.modalidad}>
-                    <FormLabel>Modalidad</FormLabel>
-                    <Select
-                        variant={"filled"}
-                        name="modalidad"
-                        value={inputValues.modalidad}
-                        onChange={handleInputsChange}
-                    >
-                        <option>Presencial</option>
-                        <option>Online</option>
-                    </Select>
-                    <FormErrorMessage>{errors.modalidad}</FormErrorMessage>
-                </FormControl>
-            </Grid>
-            <Button
-                w={"100%"}
-                bgColor="#00723F"
-                color="white"
-                mr={3}
-                onClick={agregarSolicitud}
+            <Tabs
+                variant="soft-rounded"
+                colorScheme="green"
+                index={tabIndex}
+                onChange={setTabIndex}
             >
-                Enviar petición
-            </Button>
-            {/* <FormControl  isRequired>
-                    <FormLabel>Categoría</FormLabel>
-                    <Select
-                        placeholder="Categoría"
-                        value={inputValues.categoria}
-                        name="categoria"
-                        onChange={handleInputsChange}
+                <TabList>
+                    <Tab
+                        py={4}
+                        px={8}
+                        borderRadius="md"
+                        bg="green.50"
+                        color="green.700"
+                        _selected={{ bg: "green.500", color: "white" }}
                     >
-                        <option value="">Selecciona una categoría</option>
-                        <option value="Ingeniería">Ingeniería</option>
-                        <option value="Arquitectura">Arquitectura</option>
-                        <option value="Ciencias de la salud">
-                            Ciencias de la salud
-                        </option>
-                        <option value="Derecho">Derecho</option>
-                    </Select>
-                </FormControl> */}
-            {/* <FormControl>
-                    <FormLabel textAlign="center">Imagen</FormLabel>
-                    <Center>
-                        <Input
-                            type="file"
-                            id="docpicker"
-                            accept="image/png,image/jpg"
-                            style={{ display: "none" }}
-                        />
-                        <Button
-                            colorScheme="green"
-                            marginLeft="auto"
-                            marginRight="auto"
+                        <Icon as={FaInfoCircle} mr={2} />
+                        Datos del Evento
+                    </Tab>
+                    <Tab
+                        py={4}
+                        px={8}
+                        borderRadius="md"
+                        bg="green.50"
+                        color="green.700"
+                        _selected={{ bg: "green.500", color: "white" }}
+                    >
+                        <Icon as={FaMapMarkerAlt} mr={2} />
+                        Ubicación
+                    </Tab>
+                    <Tab
+                        py={4}
+                        px={8}
+                        borderRadius="md"
+                        bg="green.50"
+                        color="green.700"
+                        _selected={{ bg: "green.500", color: "white" }}
+                    >
+                        <Icon as={FaCheckCircle} mr={2} />
+                        Verificar Información
+                    </Tab>
+                </TabList>
+                <TabPanels>
+                    <TabPanel>
+                        <Grid
+                            my={10}
+                            gap="10px"
+                            gridTemplateColumns={"repeat(2, 1fr)"}
                         >
-                            Seleccionar imagen (PNG o JPG)
+                            <FormControl isRequired isInvalid={errors.nombre}>
+                                <FormLabel>Nombre del evento</FormLabel>
+                                <Input
+                                    placeholder="Evento"
+                                    value={inputValues.nombre}
+                                    name="nombre"
+                                    onChange={handleInputsChange}
+                                />
+                                <FormErrorMessage>
+                                    {errors.nombre}
+                                </FormErrorMessage>
+                            </FormControl>
+                            <FormControl
+                                isRequired
+                                isInvalid={errors.modalidad}
+                            >
+                                <FormLabel>Modalidad</FormLabel>
+                                <Select
+                                    placeholder="Seleccionar"
+                                    name="modalidad"
+                                    value={inputValues.modalidad}
+                                    onChange={handleInputsChange}
+                                >
+                                    <option>Presencial</option>
+                                    <option>Online</option>
+                                </Select>
+                                <FormErrorMessage>
+                                    {errors.modalidad}
+                                </FormErrorMessage>
+                            </FormControl>
+                            <FormControl
+                                isRequired
+                                isInvalid={errors.responsable}
+                            >
+                                <FormLabel>Responsable</FormLabel>
+                                <Input
+                                    placeholder="Responsable"
+                                    value={inputValues.responsable}
+                                    name="responsable"
+                                    onChange={handleInputsChange}
+                                />
+                                <FormErrorMessage>
+                                    {errors.responsable}
+                                </FormErrorMessage>
+                            </FormControl>
+                            <FormControl>
+                                <FormLabel>Valor en créditos</FormLabel>
+                                <HStack paddingLeft={"5px"}>
+                                    <span>Si</span>
+                                    <Checkbox
+                                        size="lg"
+                                        colorScheme="green"
+                                        borderColor="green"
+                                        value={inputValues.categoria}
+                                        name="valorEnCreditos"
+                                        onChange={handleInputsChange}
+                                    />
+                                </HStack>
+                            </FormControl>
+                            <FormControl>
+                                <GridItem>
+                                    <FormLabel>Total de sellos</FormLabel>
+                                    <NumberInput
+                                        defaultValue={inputValues.totalSellos}
+                                        min={0}
+                                        max={3}
+                                    >
+                                        <NumberInputField
+                                            name="totalSellos"
+                                            onChange={handleInputsChange}
+                                        />
+                                        <NumberInputStepper>
+                                            <NumberIncrementStepper />
+                                            <NumberDecrementStepper />
+                                        </NumberInputStepper>
+                                    </NumberInput>
+                                </GridItem>
+                            </FormControl>
+                            <FormControl>
+                                <GridItem>
+                                    <FormLabel>Capacidad</FormLabel>
+                                    <NumberInput
+                                        defaultValue={inputValues.capacidad}
+                                    >
+                                        <NumberInputField
+                                            name="capacidad"
+                                            onChange={handleInputsChange}
+                                        />
+                                    </NumberInput>
+                                </GridItem>
+                            </FormControl>
+                            <FormControl
+                                isRequired
+                                isInvalid={errors.descripcion}
+                                gridColumn="span 2"
+                            >
+                                <FormLabel>Descripción</FormLabel>
+                                <Textarea
+                                    placeholder="Descripción"
+                                    value={inputValues.descripcion}
+                                    name="descripcion"
+                                    onChange={handleInputsChange}
+                                />
+                                <FormErrorMessage>
+                                    {errors.descripcion}
+                                </FormErrorMessage>
+                            </FormControl>
+                        </Grid>
+                        <TabPanelContent
+                            index={tabIndex}
+                            setTabIndex={setTabIndex}
+                        />
+                    </TabPanel>
+                    <TabPanel>
+                        <Grid
+                            my={10}
+                            gap="10px"
+                            gridTemplateColumns={"repeat(2, 1fr)"}
+                        >
+                            <FormControl isRequired isInvalid={errors.facultad}>
+                                <FormLabel>Facultad</FormLabel>
+                                <Select
+                                    placeholder="Seleccionar"
+                                    name="ubicacionData.facultad"
+                                    value={inputValues.ubicacionData.facultad}
+                                    onChange={handleInputsChange}
+                                >
+                                    <option>Ingeniería</option>
+                                    <option>Arquitectura y Diseño</option>
+                                    <option>Derecho</option>
+                                    <option>Deportes</option>
+                                    <option>Administración</option>
+                                </Select>
+                                <FormErrorMessage>
+                                    {errors.facultad}
+                                </FormErrorMessage>
+                            </FormControl>
+                            <FormControl isRequired isInvalid={errors.estado}>
+                                <FormLabel>Estado</FormLabel>
+                                <Select
+                                    placeholder="Seleccionar"
+                                    name="ubicacionData.estado"
+                                    value={inputValues.ubicacionData.estado}
+                                    onChange={handleInputsChange}
+                                >
+                                    <option>Baja California</option>
+                                    <option>Fuera de Baja California</option>
+                                </Select>
+                                <FormErrorMessage>
+                                    {errors.estado}
+                                </FormErrorMessage>
+                            </FormControl>
+                            <FormControl isRequired isInvalid={errors.campus}>
+                                <FormLabel>Campus</FormLabel>
+                                <Select
+                                    placeholder="Seleccionar"
+                                    name="ubicacionData.campus"
+                                    value={inputValues.ubicacionData.campus}
+                                    onChange={handleInputsChange}
+                                >
+                                    <option>Mexicali</option>
+                                    <option>Ciencias Administrativas</option>
+                                    <option>Ciencias Humanas</option>
+                                </Select>
+                                <FormErrorMessage>
+                                    {errors.campus}
+                                </FormErrorMessage>
+                            </FormControl>
+                            <FormControl isRequired isInvalid={errors.ciudad}>
+                                <FormLabel>Ciudad</FormLabel>
+                                <Select
+                                    placeholder="Seleccionar"
+                                    name="ubicacionData.ciudad"
+                                    value={inputValues.ubicacionData.ciudad}
+                                    onChange={handleInputsChange}
+                                >
+                                    <option>Mexicali</option>
+                                    <option>Tecate</option>
+                                    <option>Ensenada</option>
+                                    <option>Tijuana</option>
+                                    <option>Valle de Guadalupe</option>
+                                </Select>
+                                <FormErrorMessage>
+                                    {errors.ciudad}
+                                </FormErrorMessage>
+                            </FormControl>
+                            <FormControl
+                                isRequired
+                                isInvalid={errors.direccion}
+                            >
+                                <FormLabel>Dirección</FormLabel>
+                                <Input
+                                    placeholder="Dirección"
+                                    value={inputValues.ubicacionData.direccion}
+                                    name="ubicacionData.direccion"
+                                    onChange={handleInputsChange}
+                                />
+                                <FormErrorMessage>
+                                    {errors.direccion}
+                                </FormErrorMessage>
+                            </FormControl>
+                            <FormControl isRequired isInvalid={errors.aula}>
+                                <FormLabel>Aula</FormLabel>
+                                <Input
+                                    placeholder="Aula"
+                                    value={inputValues.ubicacionData.aula}
+                                    name="ubicacionData.aula"
+                                    onChange={handleInputsChange}
+                                />
+                                <FormErrorMessage>
+                                    {errors.aula}
+                                </FormErrorMessage>
+                            </FormControl>
+                        </Grid>
+                        <Heading size="md" mb="5" color="black">
+                            Fecha y Hora
+                        </Heading>
+                        <div style={{ display: "flex", marginBottom: "30px" }}>
+                            <FormControl
+                                isRequired
+                                style={{ marginRight: "10px" }}
+                                isInvalid={errors.fecha}
+                            >
+                                <FormLabel>Fecha</FormLabel>
+                                <Input
+                                    type="date"
+                                    value={inputValues.fecha}
+                                    name="fecha"
+                                    onChange={handleInputsChange}
+                                />
+                                <FormErrorMessage>
+                                    {errors.fecha}
+                                </FormErrorMessage>
+                            </FormControl>
+                            <FormControl
+                                isRequired
+                                style={{ marginRight: "10px" }}
+                                isInvalid={errors.horaInicio}
+                            >
+                                <FormLabel>Hora inicio</FormLabel>
+                                <Input
+                                    type="time"
+                                    format={"HH:mm"}
+                                    name="horaInicio"
+                                    onChange={handleInputsChange}
+                                    value={inputValues.horaInicio}
+                                />
+                                <FormErrorMessage>
+                                    {errors.horaInicio}
+                                </FormErrorMessage>
+                            </FormControl>
+                            <FormControl isRequired isInvalid={errors.horaFin}>
+                                <FormLabel>Hora fin</FormLabel>
+                                <Input
+                                    type="time"
+                                    format={"HH:mm"}
+                                    name="horaFin"
+                                    onChange={handleInputsChange}
+                                    value={inputValues.horaFin}
+                                />
+                                <FormErrorMessage>
+                                    {errors.horaFin}
+                                </FormErrorMessage>
+                            </FormControl>
+                        </div>
+                        <TabPanelContent
+                            index={tabIndex}
+                            setTabIndex={setTabIndex}
+                        />
+                    </TabPanel>
+                    <TabPanel>
+                        <div
+                            style={{
+                                display: "grid",
+                                gridTemplateColumns: "1fr 1fr",
+                                fontSize: "18px",
+                            }}
+                        >
+                            <FormControl>
+                                <FormLabel mt={3} fontSize="m">
+                                    <b>Nombre del Evento</b>
+                                    <br /> {inputValues.nombre}
+                                </FormLabel>
+                                <FormLabel mt={3} fontSize="m">
+                                    <b>Responsable</b>
+                                    <br /> {inputValues.responsable}
+                                </FormLabel>
+                                <FormLabel mt={3} fontSize="m">
+                                    <b>Modalidad</b>
+                                    <br /> {inputValues.modalidad}
+                                </FormLabel>
+                                <FormLabel mt={3} fontSize="m">
+                                    <b>Capacidad</b>
+                                    <br /> {inputValues.capacidad}
+                                </FormLabel>
+                                <FormLabel mt={3} fontSize="m">
+                                    <b>Valor en Créditos</b>
+                                    <br /> {inputValues.valorEnCreditos}
+                                </FormLabel>
+                                <FormLabel mt={3} fontSize="m">
+                                    <b>Total de Sellos</b>
+                                    <br /> {inputValues.totalSellos}
+                                </FormLabel>
+                                <FormLabel mt={3} fontSize="m">
+                                    <b>Hora Inicio</b>
+                                    <br /> {inputValues.horaInicio}
+                                </FormLabel>
+                                <FormLabel mt={3} fontSize="m">
+                                    <b>Hora Fin</b>
+                                    <br /> {inputValues.horaFin}
+                                </FormLabel>
+                            </FormControl>
+                            <FormControl>
+                                <FormLabel mt={3} fontSize="m">
+                                    <b>Descripción</b>
+                                    <br /> {inputValues.descripcion}
+                                </FormLabel>
+                                <FormLabel mt={3} fontSize="m">
+                                    <b>Facultad</b>
+                                    <br /> {inputValues.ubicacionData.facultad}
+                                </FormLabel>
+                                <FormLabel mt={3} fontSize="m">
+                                    <b>Estado</b>
+                                    <br /> {inputValues.ubicacionData.estado}
+                                </FormLabel>
+                                <FormLabel mt={3} fontSize="m">
+                                    <b>Campus</b>
+                                    <br /> {inputValues.ubicacionData.campus}
+                                </FormLabel>
+                                <FormLabel mt={3} fontSize="m">
+                                    <b>Ciudad</b>
+                                    <br /> {inputValues.ubicacionData.ciudad}
+                                </FormLabel>
+                                <FormLabel mt={3} fontSize="m">
+                                    <b>Dirección</b>
+                                    <br /> {inputValues.ubicacionData.direccion}
+                                </FormLabel>
+                                <FormLabel mt={3} fontSize="m">
+                                    <b>Aula</b>
+                                    <br /> {inputValues.ubicacionData.aula}
+                                </FormLabel>
+                                <FormLabel mt={3} fontSize="m">
+                                    <b>Fecha</b>
+                                    <br /> {inputValues.fecha}
+                                </FormLabel>
+                            </FormControl>
+                        </div>
+                        <Button
+                            w={"100%"}
+                            bgColor="#00723F"
+                            color="white"
+                            mt={5}
+                            onClick={agregarSolicitud}
+                        >
+                            Enviar petición
                         </Button>
-                    </Center>
-                </FormControl> */}
-            {/* <FormControl>
-                    <FormLabel>Estado</FormLabel>
-                    <Input value="Pendiente" isReadOnly />
-                </FormControl> */}
-            {/* <FormControl isRequired>
-                    <FormLabel>Tipo de evento</FormLabel>
-                    <Select placeholder="Categoría">
-                        <option>General</option>
-                        <option>Para estudiantes</option>
-                        <option>Propedéutico</option>
-                        <option>Conferencia</option>
-                    </Select>
-                </FormControl> */}
-            {/* <FormControl>
-                    <FormLabel>Co-Responsable</FormLabel>
-                    <Input placeholder="Co-responsable" />
-                </FormControl> */}
+                    </TabPanel>
+                </TabPanels>
+            </Tabs>
         </Container>
+    );
+};
+
+const TabPanelContent = ({ index, setTabIndex }) => {
+    const handleNextClick = () => {
+        setTabIndex(index + 1);
+    };
+
+    return (
+        <Box>
+            {/* Contenido del tab */}
+            {index < 2 && (
+                <Button
+                    w={"100%"}
+                    bgColor="#00723F"
+                    color="white"
+                    mr={3}
+                    onClick={handleNextClick}
+                >
+                    Siguiente
+                </Button>
+            )}
+        </Box>
     );
 };

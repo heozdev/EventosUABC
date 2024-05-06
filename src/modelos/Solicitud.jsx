@@ -144,39 +144,57 @@ export const Solicitud = ({ solicitud }) => {
                     <ModalHeader>Información del Evento</ModalHeader>
                     <ModalCloseButton />
                     <ModalBody>
-                        <div style={{ display: "flex", gap: "10px" }}>
+                    <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", fontSize: "18px"}}>
                             <FormControl>
-                                <FormLabel mt={2} fontSize="m">
-                                    ID del Evento: {solicitud.id}
+                                <FormLabel mt={3} fontSize="m">
+                                    <b>Nombre del Evento: </b>{solicitud.nombre}
                                 </FormLabel>
-                                <FormLabel mt={2} fontSize="m">
-                                    Nombre del Evento: {solicitud.nombre}
+                                <FormLabel mt={3} fontSize="m">
+                                    <b>Responsable: </b>{solicitud.responsable}
                                 </FormLabel>
-                                <FormLabel mt={2} fontSize="m">
-                                    Ubicacion: {solicitud.ubicacion.direccion}
+                                <FormLabel mt={3} fontSize="m">
+                                    <b>Modalidad: </b>{solicitud.modalidad}
                                 </FormLabel>
-                                <FormLabel mt={2} fontSize="m">
-                                    Fecha del Evento: {solicitud.fecha}
+                                <FormLabel mt={3} fontSize="m">
+                                    <b>Capacidad: </b>{solicitud.capacidad}
                                 </FormLabel>
-                                <FormLabel mt={2} fontSize="m">
-                                    Responsable: {solicitud.responsable}
+                                <FormLabel mt={3} fontSize="m">
+                                    <b>Valor en Créditos: </b>{solicitud.valorEnCreditos}
+                                </FormLabel>
+                                <FormLabel mt={3} fontSize="m">
+                                    <b>Total de Sellos: </b>{solicitud.totalSellos}
+                                </FormLabel>
+                                <FormLabel mt={3} fontSize="m">
+                                    <b>Hora Inicio: </b>{solicitud.horaInicio}
+                                </FormLabel>
+                                <FormLabel mt={3} fontSize="m">
+                                    <b>Hora Fin: </b>{solicitud.horaFin}
                                 </FormLabel>
                             </FormControl>
                             <FormControl>
-                                <FormLabel mt={2} fontSize="m">
-                                    Hora Inicio: {solicitud.horaInicio}
+                                <FormLabel mt={3} fontSize="m">
+                                    <b>Descripción: </b>{solicitud.descripcion}
                                 </FormLabel>
-                                <FormLabel mt={2} fontSize="m">
-                                    Hora Fin: {solicitud.horaFin}
+                                <FormLabel mt={3} fontSize="m">
+                                    <b>Facultad: </b>{solicitud.ubicacion.facultad}
                                 </FormLabel>
-                                <FormLabel mt={2} fontSize="m">
-                                    Modalidad: {solicitud.modalidad}
+                                <FormLabel mt={3} fontSize="m">
+                                    <b>Estado: </b>{solicitud.ubicacion.estado}
                                 </FormLabel>
-                                <FormLabel mt={2} fontSize="m">
-                                    Capacidad: {solicitud.capacidad}
+                                <FormLabel mt={3} fontSize="m">
+                                    <b>Campus: </b>{solicitud.ubicacion.campus}
                                 </FormLabel>
-                                <FormLabel mt={2} fontSize="m">
-                                    Total de Sellos: {solicitud.totalSellos}
+                                <FormLabel mt={3} fontSize="m">
+                                    <b>Ciudad: </b>{solicitud.ubicacion.ciudad}
+                                </FormLabel>
+                                <FormLabel mt={3} fontSize="m">
+                                    <b>Dirección: </b>{solicitud.ubicacion.direccion}
+                                </FormLabel>
+                                <FormLabel mt={3} fontSize="m">
+                                    <b>Aula: </b>{solicitud.ubicacion.aula}
+                                </FormLabel>
+                                <FormLabel mt={3} fontSize="m">
+                                    <b>Fecha: </b>{solicitud.fecha}
                                 </FormLabel>
                             </FormControl>
                         </div>
