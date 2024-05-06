@@ -31,8 +31,10 @@ import {
     FormErrorMessage,
 } from "@chakra-ui/react";
 import { FaCheckCircle, FaInfoCircle, FaMapMarkerAlt } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
 
 export const FormularioAgregarSolicitud = () => {
+    const navigate = useNavigate();
     const [inputValues, setInputValues] = useState({
         nombre: "",
         descripcion: "",
@@ -189,6 +191,7 @@ export const FormularioAgregarSolicitud = () => {
                         capacidad: 0,
                     });
                     setErrors({});
+                    navigate("/perfil");
                 });
         } else {
             toast({
