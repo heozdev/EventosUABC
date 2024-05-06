@@ -147,6 +147,9 @@ export const Solicitud = ({ solicitud }) => {
                     <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", fontSize: "18px"}}>
                             <FormControl>
                                 <FormLabel mt={3} fontSize="m">
+                                    <b>ID del Evento: </b>{solicitud.id}
+                                </FormLabel>
+                                <FormLabel mt={3} fontSize="m">
                                     <b>Nombre del Evento: </b>{solicitud.nombre}
                                 </FormLabel>
                                 <FormLabel mt={3} fontSize="m">
