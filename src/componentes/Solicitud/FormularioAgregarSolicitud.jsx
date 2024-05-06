@@ -297,12 +297,12 @@ export const FormularioAgregarSolicitud = () => {
                             <HStack paddingLeft={"5px"}>
                                 <span>Si</span>
                                 <Checkbox
-                                    size="lg"
-                                    colorScheme="green"
-                                    borderColor="green"
-                                    value={inputValues.categoria}
-                                    name="valorEnCreditos"
-                                    onChange={handleInputsChange}
+                                size="lg"
+                                colorScheme="green"
+                                borderColor="green"
+                                checked={inputValues.valorEnCreditos}
+                                name="valorEnCreditos"
+                                onChange={handleInputsChange}
                                 />
                             </HStack>
                         </FormControl>
@@ -484,7 +484,7 @@ export const FormularioAgregarSolicitud = () => {
                                     <b>Capacidad</b><br/> {inputValues.capacidad}
                                 </FormLabel>
                                 <FormLabel mt={3} fontSize="m">
-                                    <b>Valor en Créditos</b><br/> {inputValues.valorEnCreditos}
+                                <b>Valor en Créditos</b><br/> {inputValues.valorEnCreditos ? "Sí" : "No"}
                                 </FormLabel>
                                 <FormLabel mt={3} fontSize="m">
                                     <b>Total de Sellos</b><br/> {inputValues.totalSellos}

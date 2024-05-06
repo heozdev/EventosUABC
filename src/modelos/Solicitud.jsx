@@ -222,7 +222,7 @@ export const Solicitud = ({ solicitud }) => {
                                     <b>Capacidad: </b>{solicitud.capacidad}
                                 </FormLabel>
                                 <FormLabel mt={3} fontSize="m">
-                                    <b>Valor en Créditos: </b>{solicitud.valorEnCreditos}
+                                    <b>Valor en Créditos: </b>{solicitud.valorEnCreditos ? "Sí" : "No"}
                                 </FormLabel>
                                 <FormLabel mt={3} fontSize="m">
                                     <b>Total de Sellos: </b>{solicitud.totalSellos}
@@ -320,8 +320,6 @@ export const Solicitud = ({ solicitud }) => {
                     </ModalFooter>
                 </ModalContent>
             </Modal>
-            {console.log(solicitud.modalidad)}
-            {console.log(solicitud.valorEnCreditos)}
         </center>
     );
 };
