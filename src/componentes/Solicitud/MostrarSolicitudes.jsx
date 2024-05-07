@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { Heading, Flex, useDisclosure, Button } from "@chakra-ui/react";
 import { SearchIcon } from "@chakra-ui/icons";
 import { AddIcon } from "@chakra-ui/icons";
