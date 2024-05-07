@@ -14,6 +14,10 @@ import { CrearSolicitud } from "./paginas/CrearSolicitud";
 
 const router = createBrowserRouter([
     {
+        path: "/login",
+        element: <Login />,
+    },
+    {
         path: "/",
         element: <App />,
         children: [
@@ -24,10 +28,6 @@ const router = createBrowserRouter([
             {
                 path: "/inicio",
                 element: <Inicio />,
-            },
-            {
-                path: "/login",
-                element: <Login />,
             },
             {
                 path: "/solicitudes",
