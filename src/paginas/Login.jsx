@@ -16,7 +16,7 @@ export const Login = () => {
             <FormControl>
                 <Stack spacing={10}>
                     <Box>
-                        <FormLabel>Correo</FormLabel>
+                        <FormLabel>Usuario</FormLabel>
                         <Input type="email" placeholder="Ingrese su correo" />
                     </Box>
                     <Box>

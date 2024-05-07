@@ -11,13 +11,13 @@ const images = [
 const Carrusel = ({ images }) => {
     const [currentIndex, setCurrentIndex] = useState(0);
 
-    const Anterior = () => {
+    const goToPrevious = () => {
         setCurrentIndex((prevIndex) =>
             prevIndex === 0 ? images.length - 1 : prevIndex - 1
         );
     };
 
-    const Siguiente = () => {
+    const goToNext = () => {
         setCurrentIndex((prevIndex) =>
             prevIndex === images.length - 1 ? 0 : prevIndex + 1
         );
@@ -34,7 +34,7 @@ const Carrusel = ({ images }) => {
                 <IconButton
                     icon={<FaChevronLeft style={{ color: "green" }} />}
                     aria-label="Previous"
-                    onClick={Anterior}
+                    onClick={goToPrevious}
                     variant="ghost"
                     colorScheme="gray"
                     size="lg"
@@ -43,7 +43,7 @@ const Carrusel = ({ images }) => {
                 <IconButton
                     icon={<FaChevronRight style={{ color: "green" }} />}
                     aria-label="Next"
-                    onClick={Siguiente}
+                    onClick={goToNext}
                     variant="ghost"
                     colorScheme="gray"
                     size="lg"

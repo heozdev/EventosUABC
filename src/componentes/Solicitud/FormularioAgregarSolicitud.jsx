@@ -252,7 +252,7 @@ export const FormularioAgregarSolicitud = () => {
                 index={tabIndex}
                 onChange={setTabIndex}
             >
-                <TabList>
+                <TabList gap={2}>
                     <Tab
                         py={4}
                         px={8}
