@@ -13,6 +13,7 @@ function MostrarSolicitudes({ solicitudes, setSolicitudes }) {
         onOpen: onOpenModalFilter,
         onClose: onCloseModalFilter,
     } = useDisclosure();
+
     const {
         isOpen: isOpenModalSearch,
         onOpen: onOpenModalSearch,
@@ -71,7 +72,7 @@ function MostrarSolicitudes({ solicitudes, setSolicitudes }) {
                     setSolicitudes={setSolicitudes}
                 />
             </Flex>
-            {mostrarFormulario && <FormularioAgregarSolicitud />} {}
+            {mostrarFormulario && <FormularioAgregarSolicitud />}
         </center>
     );
 }

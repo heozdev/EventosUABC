@@ -1,5 +1,4 @@
 import { Sidebar } from "./layout/Sidebar";
-import { SidebarDocente } from "./layout/SidebarDocente";
 import { Main } from "./layout/Main";
 import { Grid } from "@chakra-ui/react";
 
