@@ -53,18 +53,69 @@ const solicitudes = [
     },
 ];
 
+const roles = [
+    {
+        rol: "Profesor",
+    },
+    {
+        rol: "Alumno",
+    },
+    {
+        rol: "Encargado",
+    },
+];
+
+const usuarios = [
+    {
+        correo: "hosuna2900@gmail.com",
+        contrasena: "hosuna2900",
+        idTipoUsuario: 1,
+    },
+    {
+        correo: "leo.canett@gmail.com",
+        contrasena: "leo.canett",
+        idTipoUsuario: 2,
+    },
+    {
+        correo: "alberto.guevara@gmail.com",
+        contrasena: "alberto.guevara",
+        idTipoUsuario: 3,
+    },
+];
+
 async function main() {
     console.log(`Start seeding ...`);
+
     for (const s of solicitudes) {
         const solicitud = await prisma.solicitud.create({
             data: s,
         });
-        console.log(`Created solicitud with id: ${solicitud.id}`);
+        console.log(`Se creo solicitud con el id: ${solicitud.id}`);
     }
+
+    for (const r of roles) {
+        const rol = await prisma.tipoDeUsuario.create({
+            data: r,
+        });
+        console.log(`Se creo rol con el id: ${rol.id}`);
+    }
+
+    for (const u of usuarios) {
+        const usuario = await prisma.usuario.create({
+            data: u,
+        });
+        console.log(`Se creo usuario con el id: ${usuario.id}`);
+    }
+
     console.log(`Seeding finished.`);
 
     const getSolicitudes = await prisma.solicitud.findMany();
+    const getRoles = await prisma.tipoDeUsuario.findMany();
+    const getUsuarios = await prisma.usuario.findMany();
+
     console.log(getSolicitudes);
+    console.log(getRoles);
+    console.log(getUsuarios);
 }
 
 main()
