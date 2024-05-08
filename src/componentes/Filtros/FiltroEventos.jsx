@@ -16,6 +16,7 @@ import {
   HStack,
 } from '@chakra-ui/react';
 
+
 function FiltroEventos({ isOpenModalFilter, onCloseModalFilter, solicitudes, setSolicitudes }) {
   const [filtro, setFiltro] = useState({
     ciudad: "",
@@ -59,6 +60,8 @@ function FiltroEventos({ isOpenModalFilter, onCloseModalFilter, solicitudes, set
     setSolicitudes(filterSolicitudes());
   };
 
+  const opcionesCiudad = ["Mexicali", "Tijuana", "Ensenada", "Tecate" ]
+
   return (
     <>
       <Modal isOpen={isOpenModalFilter} onClose={onCloseModalFilter}>
@@ -75,11 +78,11 @@ function FiltroEventos({ isOpenModalFilter, onCloseModalFilter, solicitudes, set
                 value={filtro.ciudad}
                 onChange={handleChangeFiltro}
               >
-                <option value="">Seleccione una ciudad</option>
-                <option value="mexicali">Mexicali</option>
-                <option value="tijuana">Tijuana</option>
-                <option value="ensenada">Ensenada</option>
-                <option value="tecate">Tecate</option>
+
+              {opcionesCiudad.map((tipo, index)=>(
+                <option value={tipo} key={index}>{tipo}</option>
+              ))}
+          
               </Select>
             </FormControl>
             <FormControl>
@@ -90,7 +93,6 @@ function FiltroEventos({ isOpenModalFilter, onCloseModalFilter, solicitudes, set
                 value={filtro.facultad}
                 onChange={handleChangeFiltro}
               >
-                <option value="">Seleccione una facultad</option>
                 <option value="ingenieria">Facultad de Ingeniería Mexicali</option>
                 <option value="idiomas">Facultad de Idiomas Mexicali</option>
                 <option value="arquitectura">Facultad de Arquitectura</option>
