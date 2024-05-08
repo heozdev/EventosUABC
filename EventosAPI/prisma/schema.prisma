@@ -1,0 +1,73 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlserver"
+  url      = env("DATABASE_URL")
+}
+
+model TipoDeUsuario {
+  IdTipoUsuario Int @id @default(autoincrement())
+  usuario Usuario?
+  rol String
+}
+
+
+model Usuario {
+  id Int @id @default(autoincrement())
+  idTipoUsuario Int @unique
+  correo String 
+  contrasena String
+  
+  tipoUsuario TipoDeUsuario @relation(fields: [idTipoUsuario], references: [IdTipoUsuario])
+}
+
+model Solicitud {
+  id Int @id @default(autoincrement())
+  ubicacionId Int @unique
+  evento Evento?
+  nombre String
+  descripcion String
+  fecha String
+  valorEnCreditos Boolean
+  horaInicio String
+  horaFin String
+  totalSellos Int
+  modalidad String
+  estado String
+  responsable String
+  capacidad Int
+
+  ubicacion Ubicacion @relation(fields: [ubicacionId], references: [id])
+}
+
+model Ubicacion {
+  id Int @id @default(autoincrement())
+  solicitud Solicitud?
+  facultad String
+  estado String
+  campus String
+  ciudad String
+  direccion String
+  aula String
+}
+
+model Evento {
+  id Int @id @default(autoincrement())
+  solicitudId Int @unique
+  usuarioEventosFavoritosId Int
+  usuarioEventosAsistidosId Int
+  estado String
+  
+  solicitud Solicitud @relation(fields: [solicitudId],references: [id])
+}
+
+
+
