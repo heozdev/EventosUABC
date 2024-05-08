@@ -4,37 +4,31 @@ import MostrarSolicitudes from "../componentes/Solicitud/MostrarSolicitudes";
 
 export const Solicitudes = () => {
     const [solicitudes, setSolicitudes] = useState([]); // Solicitudes sin filtrar
-    const [solicitud, setSolicitud] = useState();
+    const [filtered, setFilteredSolicitudes] = useState([]); // Solicitudes filtradas
 
-    const getSolicitudes = () => {
+    useEffect(() => {
         fetch("http://localhost:3000/solicitudes")
             .then((response) => response.json())
             .then((data) => {
                 setSolicitudes(data);
             });
-    };
-
-    useEffect(() => {
-        getSolicitudes();
     }, []);
 
+    // Actualizar solicitudes filtradas
     useEffect(() => {
-        getSolicitudes();
-    }, [solicitud]);
+        setFilteredSolicitudes(solicitudes);
+    }, [solicitudes]);
 
     return (
         <>
-            <MostrarSolicitudes
-                solicitudes={solicitudes}
-                setSolicitudes={setSolicitudes}
-            />
-            {solicitudes.map((solicitud) => (
+            <MostrarSolicitudes solicitudes={solicitudes} setSolicitudes={setSolicitudes} />
+            {filtered.map((solicitud) => (
                 <Solicitud
+                    setSolicitudes={setSolicitudes}
                     key={solicitud.id}
                     solicitud={solicitud}
-                    setSolicitud={setSolicitud}
                 />
-            ))}
+            ))} 
         </>
     );
 };

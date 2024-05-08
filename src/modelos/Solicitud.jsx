@@ -21,22 +21,21 @@ import {
     Textarea,
 } from "@chakra-ui/react";
 
-export const Solicitud = ({ solicitud, setSolicitud }) => {
+export const Solicitud = ({ solicitud }) => {
     const [isOpen, setIsOpen] = useState(false);
     const [value, setValue] = useState("");
     const [showConfirmModal, setShowConfirmModal] = useState(false);
-    const toast = useToast();
+    const toast = useToast(); 
 
     const aceptarORechazarEvento = (e) => {
         const estadoEvento = e.target.name;
         const solicitudId = solicitud.id;
-
-        if (estadoEvento === "Rechazado" && !value.trim()) {
+    
+        if (estadoEvento === 'Rechazado' && !value.trim()) {
             // Verificar si se ha ingresado alguna nota antes de rechazar la solicitud
             toast({
                 title: "Error",
-                description:
-                    "Agrega observaciones antes de rechazar una solicitud",
+                description: "Agrega observaciones antes de rechazar una solicitud",
                 status: "error",
                 position: "top-right",
                 duration: 3000,
@@ -44,7 +43,7 @@ export const Solicitud = ({ solicitud, setSolicitud }) => {
             });
             return; // Detener si no se ingresan observaciones
         }
-
+    
         fetch(`http://localhost:3000/solicitudes/${solicitudId}`, {
             method: "PUT",
             headers: {
@@ -54,13 +53,12 @@ export const Solicitud = ({ solicitud, setSolicitud }) => {
         })
             .then((response) => response.json())
             .then((data) => {
-                setSolicitud(data);
-                if (estadoEvento === "Rechazado") {
+                console.log(data);
+                if (estadoEvento === 'Rechazado') {
                     // Mostrar mensaje de exito solo si se rechaza la solicitud
                     toast({
                         title: "Solicitud rechazada",
-                        description:
-                            "La solicitud ha sido rechazada correctamente.",
+                        description: "La solicitud ha sido rechazada correctamente.",
                         status: "success",
                         position: "top-right",
                         duration: 3000,
@@ -78,25 +76,26 @@ export const Solicitud = ({ solicitud, setSolicitud }) => {
                     });
                 }
             });
-
+    
         handleClose();
     };
+    
+    
 
     const eliminarSolicitud = () => {
         setShowConfirmModal(true);
     };
-
+    
     const handleConfirmEliminar = () => {
         fetch(`http://localhost:3000/solicitud/${solicitud.id}`, {
             method: "DELETE",
         })
             .then((response) => response.json())
             .then((data) => {
-                setSolicitud(data);
-                toast({
+                console.log(data);
+                toast({ 
                     title: "Solicitud eliminada",
-                    description:
-                        "La solicitud ha sido eliminada correctamente.",
+                    description: "La solicitud ha sido eliminada correctamente.",
                     status: "success",
                     position: "top-right",
                     duration: 3000,
@@ -160,45 +159,39 @@ export const Solicitud = ({ solicitud, setSolicitud }) => {
                         </FormControl>
                     </CardBody>
                     <CardFooter>
-                        {solicitud.estado === "pendiente" && (
-                            <Badge
-                                colorScheme="yellow"
-                                variant="solid"
-                                fontSize="md"
-                                padding={2.5}
-                                borderRadius={15}
-                                position="absolute"
-                                right={10}
-                                bottom={5}
-                            >
+                        {solicitud.estado === 'pendiente' && (
+                            <Badge colorScheme='yellow'
+                                    variant="solid"
+                                    fontSize="md"
+                                    padding={2.5}
+                                    borderRadius={15}
+                                    position="absolute"
+                                    right={10}
+                                    bottom={5}>
                                 Pendiente
                             </Badge>
                         )}
-                        {solicitud.estado === "Aceptado" && (
-                            <Badge
-                                colorScheme="green"
-                                variant="solid"
-                                fontSize="md"
-                                padding={2.5}
-                                borderRadius={15}
-                                position="absolute"
-                                right={10}
-                                bottom={5}
-                            >
+                        {solicitud.estado === 'Aceptado' && (
+                            <Badge colorScheme='green'
+                                    variant="solid"
+                                    fontSize="md"
+                                    padding={2.5}
+                                    borderRadius={15}
+                                    position="absolute"
+                                    right={10}
+                                    bottom={5}>
                                 Aceptado
                             </Badge>
                         )}
-                        {solicitud.estado === "Rechazado" && (
-                            <Badge
-                                colorScheme="red"
-                                variant="solid"
-                                fontSize="md"
-                                padding={2.5}
-                                borderRadius={15}
-                                position="absolute"
-                                right={10}
-                                bottom={5}
-                            >
+                        {solicitud.estado === 'Rechazado' && (
+                            <Badge colorScheme='red'
+                                    variant="solid"
+                                    fontSize="md"
+                                    padding={2.5}
+                                    borderRadius={15}
+                                    position="absolute"
+                                    right={10}
+                                    bottom={5}>
                                 Rechazado
                             </Badge>
                         )}
@@ -211,82 +204,60 @@ export const Solicitud = ({ solicitud, setSolicitud }) => {
                     <ModalHeader>Información del Evento</ModalHeader>
                     <ModalCloseButton />
                     <ModalBody>
-                        <div
-                            style={{
-                                display: "grid",
-                                gridTemplateColumns: "1fr 1fr",
-                                fontSize: "18px",
-                            }}
-                        >
+                    <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", fontSize: "18px"}}>
                             <FormControl>
                                 <FormLabel mt={3} fontSize="m">
-                                    <b>ID del Evento: </b>
-                                    {solicitud.id}
+                                    <b>ID del Evento: </b>{solicitud.id}
                                 </FormLabel>
                                 <FormLabel mt={3} fontSize="m">
-                                    <b>Nombre del Evento: </b>
-                                    {solicitud.nombre}
+                                    <b>Nombre del Evento: </b>{solicitud.nombre}
                                 </FormLabel>
                                 <FormLabel mt={3} fontSize="m">
-                                    <b>Responsable: </b>
-                                    {solicitud.responsable}
+                                    <b>Responsable: </b>{solicitud.responsable}
                                 </FormLabel>
                                 <FormLabel mt={3} fontSize="m">
-                                    <b>Modalidad: </b>
-                                    {solicitud.modalidad}
+                                    <b>Modalidad: </b>{solicitud.modalidad}
                                 </FormLabel>
                                 <FormLabel mt={3} fontSize="m">
-                                    <b>Capacidad: </b>
-                                    {solicitud.capacidad}
+                                    <b>Capacidad: </b>{solicitud.capacidad}
                                 </FormLabel>
                                 <FormLabel mt={3} fontSize="m">
-                                    <b>Valor en Créditos: </b>{solicitud.valorEnCreditos}
+                                    <b>Valor en Créditos: </b>{solicitud.valorEnCreditos ? "Sí" : "No"}
                                 </FormLabel>
                                 <FormLabel mt={3} fontSize="m">
-                                    <b>Total de Sellos: </b>
-                                    {solicitud.totalSellos}
+                                    <b>Total de Sellos: </b>{solicitud.totalSellos}
                                 </FormLabel>
                                 <FormLabel mt={3} fontSize="m">
-                                    <b>Hora Inicio: </b>
-                                    {solicitud.horaInicio}
+                                    <b>Hora Inicio: </b>{solicitud.horaInicio}
                                 </FormLabel>
                                 <FormLabel mt={3} fontSize="m">
-                                    <b>Hora Fin: </b>
-                                    {solicitud.horaFin}
+                                    <b>Hora Fin: </b>{solicitud.horaFin}
                                 </FormLabel>
                             </FormControl>
                             <FormControl>
                                 <FormLabel mt={3} fontSize="m">
-                                    <b>Descripción: </b>
-                                    {solicitud.descripcion}
+                                    <b>Descripción: </b>{solicitud.descripcion}
                                 </FormLabel>
                                 <FormLabel mt={3} fontSize="m">
-                                    <b>Facultad: </b>
-                                    {solicitud.ubicacion.facultad}
+                                    <b>Facultad: </b>{solicitud.ubicacion.facultad}
                                 </FormLabel>
                                 <FormLabel mt={3} fontSize="m">
-                                    <b>Estado: </b>
-                                    {solicitud.ubicacion.estado}
+                                    <b>Estado: </b>{solicitud.ubicacion.estado}
                                 </FormLabel>
                                 <FormLabel mt={3} fontSize="m">
-                                    <b>Campus: </b>
-                                    {solicitud.ubicacion.campus}
+                                    <b>Campus: </b>{solicitud.ubicacion.campus}
                                 </FormLabel>
                                 <FormLabel mt={3} fontSize="m">
-                                    <b>Ciudad: </b>
-                                    {solicitud.ubicacion.ciudad}
+                                    <b>Ciudad: </b>{solicitud.ubicacion.ciudad}
                                 </FormLabel>
                                 <FormLabel mt={3} fontSize="m">
-                                    <b>Dirección: </b>
-                                    {solicitud.ubicacion.direccion}
+                                    <b>Dirección: </b>{solicitud.ubicacion.direccion}
                                 </FormLabel>
                                 <FormLabel mt={3} fontSize="m">
-                                    <b>Aula: </b>
-                                    {solicitud.ubicacion.aula}
+                                    <b>Aula: </b>{solicitud.ubicacion.aula}
                                 </FormLabel>
                                 <FormLabel mt={3} fontSize="m">
-                                    <b>Fecha: </b>
-                                    {solicitud.fecha}
+                                    <b>Fecha: </b>{solicitud.fecha}
                                 </FormLabel>
                             </FormControl>
                         </div>
@@ -312,34 +283,24 @@ export const Solicitud = ({ solicitud, setSolicitud }) => {
                         >
                             Eliminar
                         </Button>
-                        <Modal
-                            isOpen={showConfirmModal}
-                            onClose={handleCancelEliminar}
-                        >
-                            <ModalOverlay />
-                            <ModalContent>
-                                <ModalHeader>Confirmar eliminacion</ModalHeader>
-                                <ModalCloseButton />
-                                <ModalBody>
-                                    ¿Seguro que quieres eliminar esta solicitud?
-                                </ModalBody>
-                                <ModalFooter>
-                                    <Button
-                                        colorScheme="green"
-                                        mr={3}
-                                        onClick={handleCancelEliminar}
-                                    >
-                                        Cancelar
-                                    </Button>
-                                    <Button
-                                        colorScheme="red"
-                                        onClick={handleConfirmEliminar}
-                                    >
-                                        Eliminar
-                                    </Button>
-                                </ModalFooter>
-                            </ModalContent>
-                        </Modal>
+                        <Modal isOpen={showConfirmModal} onClose={handleCancelEliminar}>
+                <ModalOverlay />
+                <ModalContent>
+                    <ModalHeader>Confirmar eliminacion</ModalHeader>
+                    <ModalCloseButton />
+                    <ModalBody>
+                        ¿Seguro que quieres eliminar esta solicitud?
+                    </ModalBody>
+                    <ModalFooter>
+                        <Button colorScheme="green" mr={3} onClick={handleCancelEliminar}>
+                            Cancelar
+                        </Button>
+                        <Button colorScheme="red" onClick={handleConfirmEliminar}>
+                            Eliminar
+                        </Button>
+                    </ModalFooter>
+                </ModalContent>
+            </Modal>
                         <Button
                             name="Aceptado"
                             colorScheme="green"
