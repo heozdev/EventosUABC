@@ -240,8 +240,7 @@ export const Solicitud = ({ solicitud, setSolicitud }) => {
                                     {solicitud.capacidad}
                                 </FormLabel>
                                 <FormLabel mt={3} fontSize="m">
-                                    <b>Valor en Créditos: </b>
-                                    {solicitud.valorEnCreditos}
+                                    <b>Valor en Créditos: </b>{solicitud.valorEnCreditos}
                                 </FormLabel>
                                 <FormLabel mt={3} fontSize="m">
                                     <b>Total de Sellos: </b>
