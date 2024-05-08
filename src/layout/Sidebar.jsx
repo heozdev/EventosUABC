@@ -4,8 +4,21 @@ import { LuFolderEdit } from "react-icons/lu";
 import { AiFillHome } from "react-icons/ai";
 import { BsCalendar } from "react-icons/bs";
 import { FaUserCircle } from "react-icons/fa";
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 export const Sidebar = ({ gridArea }) => {
+    const [rol, setRol] = useState("");
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        setRol(localStorage.getItem("rol"));
+    }, []);
+
+    const logout = () => {
+        localStorage.setItem("rol", "");
+    };
+
     return (
         <GridItem bg="#00723F" area={gridArea}>
             <Grid
@@ -40,7 +53,7 @@ export const Sidebar = ({ gridArea }) => {
                                 Eventos
                             </Link>
                         </Flex>
-                        <Flex>
+                        <Flex display={rol === "Alumno" ? "none" : "flex"}>
                             <LuFolderEdit
                                 size={37}
                                 style={{ color: "white" }}
@@ -74,6 +87,7 @@ export const Sidebar = ({ gridArea }) => {
                             <ImExit size={35} style={{ color: "white" }} />
                             <Link
                                 paddingLeft="10px"
+                                onClick={logout}
                                 color="white"
                                 href="/login"
                             >

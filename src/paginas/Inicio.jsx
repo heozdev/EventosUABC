@@ -30,7 +30,12 @@ const Carrusel = ({ images }) => {
                 alt={`Image ${currentIndex + 1}`}
                 style={{ width: "100%", height: "300px", objectFit: "cover" }}
             />
-            <Flex justifyContent="space-between" position="absolute" w="100%" top={120}>
+            <Flex
+                justifyContent="space-between"
+                position="absolute"
+                w="100%"
+                top={120}
+            >
                 <IconButton
                     icon={<FaChevronLeft style={{ color: "green" }} />}
                     aria-label="Previous"
@@ -55,10 +60,11 @@ const Carrusel = ({ images }) => {
 };
 
 export const Inicio = () => {
+    const [rol, setRol] = useState(localStorage.getItem("rol"));
     return (
         <Box>
             <Heading size="xl" color="black" mt={5} textAlign="center">
-                Bienvenido Encargado
+                Bienvenido {rol}
             </Heading>
             <Text textAlign="center" mt={2} color="black" paddingTop={5}>
                 Más importantes
@@ -73,7 +79,11 @@ export const Inicio = () => {
                         <img
                             src={image}
                             alt={`Image ${index + 1}`}
-                            style={{ width: "300px", height: "200px", objectFit: "cover" }}
+                            style={{
+                                width: "300px",
+                                height: "200px",
+                                objectFit: "cover",
+                            }}
                         />
                     </Box>
                 ))}

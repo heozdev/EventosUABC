@@ -17,7 +17,11 @@ app.use((req, res, next) => {
     res.setHeader("Access-Control-Allow-Credentials", "true");
     next();
 });
+
+app.use(express.urlencoded({ extended: true }));
+
 app.use(express.json());
+
 app.listen(3000, (error) => {
     if (error) console.log(error);
 
@@ -32,7 +36,6 @@ app.get("/solicitudes", async (req, res) => {
     });
     res.json(solicitudes);
 });
-
 
 app.post("/solicitudes", async (req, res) => {
     const {
@@ -49,7 +52,6 @@ app.post("/solicitudes", async (req, res) => {
         ubicacionData,
         capacidad,
     } = req.body;
-
 
     const nuevoUbicacion = await prisma.ubicacion.create({
         data: ubicacionData,
@@ -97,4 +99,45 @@ app.delete(`/solicitud/:id`, async (req, res) => {
     });
 
     res.json(solicitud);
+});
+
+app.post("/auth", async (req, res) => {
+    const { correo: correoIngresado, contrasena: contrasenaIngresada } =
+        await req.body;
+
+    const usuario = await prisma.usuario.findFirst({
+        where: {
+            correo: correoIngresado,
+        },
+    });
+
+    if (usuario) {
+        if (
+            correoIngresado === usuario.correo &&
+            contrasenaIngresada === usuario.contrasena
+        ) {
+            const rol = await prisma.tipoDeUsuario.findUnique({
+                where: {
+                    IdTipoUsuario: usuario.idTipoUsuario,
+                },
+            });
+
+            res.json({ status: "200", rol: rol.rol });
+        }
+
+        if (
+            correoIngresado === usuario.correo &&
+            contrasenaIngresada != usuario.contrasena
+        ) {
+            res.json({
+                status: "400",
+                mensaje: "Contrasena incorrecta, intentelo de nuevo.",
+            });
+        }
+    } else {
+        res.json({
+            status: "400",
+            mensaje: "Usuario no encontrado, intentelo de nuevo.",
+        });
+    }
 });
