@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useToast } from "@chakra-ui/react";
 import {
     Badge,
@@ -160,7 +160,7 @@ export const Solicitud = ({ solicitud, setSolicitud }) => {
                         </FormControl>
                     </CardBody>
                     <CardFooter>
-                        {solicitud.estado === "pendiente" && (
+                        {solicitud.estado === "Pendiente" && (
                             <Badge
                                 colorScheme="yellow"
                                 variant="solid"
@@ -240,7 +240,8 @@ export const Solicitud = ({ solicitud, setSolicitud }) => {
                                     {solicitud.capacidad}
                                 </FormLabel>
                                 <FormLabel mt={3} fontSize="m">
-                                    <b>Valor en Créditos: </b>{solicitud.valorEnCreditos}
+                                    <b>Valor en Créditos: </b>
+                                    {solicitud.valorEnCreditos}
                                 </FormLabel>
                                 <FormLabel mt={3} fontSize="m">
                                     <b>Total de Sellos: </b>
