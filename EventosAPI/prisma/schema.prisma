@@ -25,6 +25,11 @@ model Usuario {
   idTipoUsuario Int @unique
   correo String 
   contrasena String
+  matricula Int @unique
+  nombres String
+  apellidos String
+  carrera String
+  facultad String
   
   tipoUsuario TipoDeUsuario @relation(fields: [idTipoUsuario], references: [IdTipoUsuario])
 }
@@ -45,7 +50,7 @@ model Solicitud {
   responsable String
   capacidad Int
 
-  ubicacion Ubicacion @relation(fields: [ubicacionId], references: [id])
+  ubicacion Ubicacion? @relation(fields: [ubicacionId], references: [id])
 }
 
 model Ubicacion {

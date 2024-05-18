@@ -70,16 +70,31 @@ const usuarios = [
         correo: "hosuna2900@gmail.com",
         contrasena: "hosuna2900",
         idTipoUsuario: 1,
+        matricula: 1183231,
+        nombres: "Hector Eduardo",
+        apellidos: "Osuna",
+        carrera: "Lic. en Sistemas",
+        facultad: "Facultad de Ingeniería",
     },
     {
         correo: "leo.canett@gmail.com",
         contrasena: "leo.canett",
         idTipoUsuario: 2,
+        matricula: 1183233,
+        nombres: "Leonardo Javier",
+        apellidos: "Canett Gómez",
+        carrera: "Lic. en Arquitectura",
+        facultad: "Facultad de Arquitectura",
     },
     {
         correo: "alberto.guevara@gmail.com",
         contrasena: "alberto.guevara",
         idTipoUsuario: 3,
+        matricula: 1183235,
+        nombres: "Alberto",
+        apellidos: "Guevara",
+        carrera: "Lic. en Derecho",
+        facultad: "Facultad de Derecho",
     },
 ];
 
@@ -97,7 +112,7 @@ async function main() {
         const rol = await prisma.tipoDeUsuario.create({
             data: r,
         });
-        console.log(`Se creo rol con el id: ${rol.id}`);
+        console.log(`Se creo rol con el id: ${rol.idTipoUsuario}`);
     }
 
     for (const u of usuarios) {

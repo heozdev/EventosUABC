@@ -5,11 +5,9 @@ import { AiFillHome } from "react-icons/ai";
 import { BsCalendar } from "react-icons/bs";
 import { FaUserCircle } from "react-icons/fa";
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
 
 export const Sidebar = ({ gridArea }) => {
     const [rol, setRol] = useState("");
-    const navigate = useNavigate();
 
     useEffect(() => {
         setRol(localStorage.getItem("rol"));
@@ -35,11 +33,7 @@ export const Sidebar = ({ gridArea }) => {
                     <Flex flexDirection={"column"} gap={5}>
                         <Flex>
                             <AiFillHome size={35} style={{ color: "white" }} />
-                            <Link
-                                paddingLeft="10px"
-                                color="white"
-                                href="/inicio"
-                            >
+                            <Link paddingLeft="10px" color="white" href="/">
                                 Inicio
                             </Link>
                         </Flex>

@@ -26,7 +26,7 @@ const router = createBrowserRouter([
                 element: <Eventos />,
             },
             {
-                path: "/inicio",
+                path: "/",
                 element: <Inicio />,
             },
             {

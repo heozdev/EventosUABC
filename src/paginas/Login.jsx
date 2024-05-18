@@ -36,7 +36,7 @@ export const Login = () => {
                     localStorage.setItem("rol", data.rol);
                     console.log(localStorage.getItem("rol"));
 
-                    navigate("/inicio");
+                    navigate("/");
                 } else {
                     setError(data.mensaje);
                     //Aqui se implementa la logica para manejar los errores
