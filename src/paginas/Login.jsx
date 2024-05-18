@@ -7,19 +7,39 @@ import {
     Heading,
     Input,
     Stack,
+    useToast,
 } from "@chakra-ui/react";
+import { useEffect } from "react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 export const Login = () => {
     const [correo, setCorreo] = useState("");
     const [contrasena, setContrasena] = useState("");
-    const [erro, setError] = useState("");
+    const [intentos, setIntentos] = useState(0);
+
     const navigate = useNavigate();
+    const toast = useToast();
+
+    useEffect(() => {
+        if (intentos == 5) {
+            setTimeout(() => {
+                setIntentos(0);
+            }, 10000);
+
+            toast({
+                title: "Error",
+                description:
+                    "Ha llegado al limite de intentos, intentelo de nuevo dentro de 1 minuto.",
+                status: "error",
+                position: "top",
+                duration: 2000,
+                isClosable: true,
+            });
+        }
+    }, [intentos]);
 
     const handleLogin = () => {
-        console.log(correo, contrasena);
-
         fetch("http://localhost:3000/auth", {
             method: "POST",
             headers: {
@@ -36,11 +56,26 @@ export const Login = () => {
                     localStorage.setItem("rol", data.rol);
                     console.log(localStorage.getItem("rol"));
 
+                    toast({
+                        title: "Login exitoso!",
+                        status: "success",
+                        position: "top",
+                        duration: 2000,
+                        isClosable: true,
+                    });
+
                     navigate("/");
                 } else {
-                    setError(data.mensaje);
-                    //Aqui se implementa la logica para manejar los errores
-                    console.log(data.mensaje);
+                    toast({
+                        title: "Error",
+                        description: data.mensaje,
+                        status: "error",
+                        position: "top",
+                        duration: 2000,
+                        isClosable: true,
+                    });
+
+                    setIntentos(intentos + 1);
                 }
             });
     };
@@ -67,7 +102,11 @@ export const Login = () => {
                         />
                     </Box>
                     <Box>
-                        <Button onClick={handleLogin} w={"100%"}>
+                        <Button
+                            onClick={handleLogin}
+                            isDisabled={intentos == 5}
+                            w={"100%"}
+                        >
                             Iniciar sesion
                         </Button>
                     </Box>
