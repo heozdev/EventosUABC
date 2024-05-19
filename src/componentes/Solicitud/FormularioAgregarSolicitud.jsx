@@ -43,7 +43,7 @@ export const FormularioAgregarSolicitud = () => {
         horaInicio: "",
         horaFin: "",
         valorEnCreditos: false,
-        estado: "pendiente",
+        estado: "Pendiente",
         responsable: "",
         totalSellos: 1,
         ubicacionData: {
@@ -101,25 +101,26 @@ export const FormularioAgregarSolicitud = () => {
         if (!inputValues.fecha.trim()) {
             newErrors.fecha = "La fecha es obligatoria";
         }
+        if (inputValues.modalidad === "Presencial") {
+            if (!inputValues.ubicacionData.facultad.trim()) {
+                newErrors.facultad = "La facultad es obligatoria";
+            }
 
-        if (!inputValues.ubicacionData.facultad.trim()) {
-            newErrors.facultad = "La facultad es obligatoria";
-        }
+            if (!inputValues.ubicacionData.estado.trim()) {
+                newErrors.estado = "El estado es obligatoria";
+            }
 
-        if (!inputValues.ubicacionData.estado.trim()) {
-            newErrors.estado = "El estado es obligatoria";
-        }
+            if (!inputValues.ubicacionData.campus.trim()) {
+                newErrors.campus = "El campus es obligatoria";
+            }
 
-        if (!inputValues.ubicacionData.campus.trim()) {
-            newErrors.campus = "El campus es obligatoria";
-        }
+            if (!inputValues.ubicacionData.ciudad.trim()) {
+                newErrors.ciudad = "La ciudad es obligatoria";
+            }
 
-        if (!inputValues.ubicacionData.ciudad.trim()) {
-            newErrors.ciudad = "La ciudad es obligatoria";
-        }
-
-        if (!inputValues.ubicacionData.direccion.trim()) {
-            newErrors.direccion = "La dirección es obligatoria";
+            if (!inputValues.ubicacionData.direccion.trim()) {
+                newErrors.direccion = "La dirección es obligatoria";
+            }
         }
 
         if (!inputValues.ubicacionData.aula.trim()) {
@@ -191,7 +192,7 @@ export const FormularioAgregarSolicitud = () => {
                         horaInicio: "",
                         horaFin: "",
                         valorEnCreditos: false,
-                        estado: "pendiente",
+                        estado: "Pendiente",
                         responsable: "",
                         totalSellos: 1,
                         ubicacionData: {
