@@ -11,6 +11,7 @@ import { App } from "./App";
 import { SolicitudesDocente } from "./paginas/SolicitudesDocente";
 import { Login } from "./paginas/Login";
 import { CrearSolicitud } from "./paginas/CrearSolicitud";
+import { RestablecerContrasena } from "./paginas/RestablecerContrasena";
 
 const router = createBrowserRouter([
     {
@@ -18,16 +19,20 @@ const router = createBrowserRouter([
         element: <Login />,
     },
     {
+        path: "/login/restablecer-contrasena",
+        element: <RestablecerContrasena />,
+    },
+    {
         path: "/",
         element: <App />,
         children: [
             {
-                path: "/eventos",
-                element: <Eventos />,
-            },
-            {
                 path: "/",
                 element: <Inicio />,
+            },
+            {
+                path: "/eventos",
+                element: <Eventos />,
             },
             {
                 path: "/solicitudes",

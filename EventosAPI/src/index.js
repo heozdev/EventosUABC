@@ -1,5 +1,5 @@
 const express = require("express");
-const { PrismaClient } = require("@prisma/client");
+const { PrismaClient, Prisma } = require("@prisma/client");
 
 const prisma = new PrismaClient();
 const app = express();
@@ -139,5 +139,34 @@ app.post("/auth", async (req, res) => {
             status: "400",
             mensaje: "Usuario no encontrado, intentelo de nuevo.",
         });
+    }
+});
+
+app.put("/usuario/:correo", async (req, resp) => {
+    const { correo: correoUsuario } = req.params;
+    const { contrasena: contrasenaUsuario } = req.body;
+
+    try {
+        await prisma.usuario.update({
+            where: {
+                correo: correoUsuario,
+            },
+
+            data: {
+                contrasena: contrasenaUsuario,
+            },
+        });
+
+        resp.json({
+            status: 200,
+            mensaje: "Contraseña actualizada correctamente",
+        });
+    } catch (e) {
+        if (
+            e instanceof Prisma.PrismaClientKnownRequestError &&
+            e.code === "P2025"
+        ) {
+            resp.json({ status: 404, mensaje: "Usuario no encontrado." });
+        }
     }
 });

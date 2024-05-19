@@ -23,7 +23,7 @@ model TipoDeUsuario {
 model Usuario {
   id Int @id @default(autoincrement())
   idTipoUsuario Int @unique
-  correo String 
+  correo String @unique
   contrasena String
   matricula Int @unique
   nombres String
