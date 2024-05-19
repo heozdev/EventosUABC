@@ -144,6 +144,21 @@ export const FormularioAgregarSolicitud = () => {
             newErrors.modalidad = "La modalidad es obligatoria";
         }
 
+        if (new Date(inputValues.fecha) < new Date()) {
+            newErrors.fecha = "Seleccione una fecha posterior al dia de hoy.";
+        }
+
+        console.log(inputValues.horaInicio, inputValues.horaFi);
+        if (inputValues.horaInicio > inputValues.horaFin) {
+            newErrors.horaFin =
+                "La hora de fin tiene que ser posterior a la hora de inicio.";
+        }
+
+        if (inputValues.capacidad < 0) {
+            newErrors.capacidad =
+                "La capacidad no puede contener numeros negativos.";
+        }
+
         setErrors(newErrors);
         return Object.keys(newErrors).length === 0;
     };
@@ -159,7 +174,6 @@ export const FormularioAgregarSolicitud = () => {
             })
                 .then((response) => response.json())
                 .then((data) => {
-                    console.log(data);
                     toast({
                         title: "Solicitud enviada",
                         description:
@@ -206,6 +220,10 @@ export const FormularioAgregarSolicitud = () => {
     };
 
     const handleInputsChange = (e) => {
+        if (e.target.value === "-") {
+            e.preventDefault();
+        }
+
         setInputValues((prevState) => {
             if (e.target.name.includes(".")) {
                 const [padre, hijo] = e.target.name.split(".");
@@ -289,96 +307,123 @@ export const FormularioAgregarSolicitud = () => {
                 </TabList>
                 <TabPanels>
                     <TabPanel>
-                    <Grid my={10} gap="10px" gridTemplateColumns={"repeat(2, 1fr)"}>
-                        <FormControl isRequired isInvalid={errors.nombre}>
-                            <FormLabel>Nombre del evento</FormLabel>
-                            <Input
-                                placeholder="Evento"
-                                value={inputValues.nombre}
-                                name="nombre"
-                                onChange={handleInputsChange}
-                            />
-                            <FormErrorMessage>{errors.nombre}</FormErrorMessage>
-                        </FormControl>
-                        <FormControl isRequired isInvalid={errors.modalidad}>
-                            <FormLabel>Modalidad</FormLabel>
-                            <Select
-                                placeholder="Seleccionar"
-                                name="modalidad"
-                                value={inputValues.modalidad}
-                                onChange={handleInputsChange}
-                            >
-                                <option>Presencial</option>
-                                <option>Online</option>
-                            </Select>
-                            <FormErrorMessage>{errors.modalidad}</FormErrorMessage>
-                        </FormControl>
-                        <FormControl isRequired isInvalid={errors.responsable}>
-                            <FormLabel>Responsable</FormLabel>
-                            <Input
-                                placeholder="Responsable"
-                                value={inputValues.responsable}
-                                name="responsable"
-                                onChange={handleInputsChange}
-                            />
-                            <FormErrorMessage>{errors.responsable}</FormErrorMessage>
-                        </FormControl>
-                        <FormControl>
-                            <FormLabel>Valor en créditos</FormLabel>
-                            <HStack paddingLeft={"5px"}>
-                                <span>Si</span>
-                                <Checkbox
-                                size="lg"
-                                colorScheme="green"
-                                borderColor="green"
-                                checked={inputValues.valorEnCreditos}
-                                name="valorEnCreditos"
-                                onChange={handleInputsChange}
+                        <Grid
+                            my={10}
+                            gap="10px"
+                            gridTemplateColumns={"repeat(2, 1fr)"}
+                        >
+                            <FormControl isRequired isInvalid={errors.nombre}>
+                                <FormLabel>Nombre del evento</FormLabel>
+                                <Input
+                                    placeholder="Evento"
+                                    value={inputValues.nombre}
+                                    name="nombre"
+                                    onChange={handleInputsChange}
                                 />
-                            </HStack>
-                        </FormControl>
-                        <FormControl>
-                            <GridItem>
-                                <FormLabel>Total de sellos</FormLabel>
-                                <NumberInput
-                                    defaultValue={inputValues.totalSellos}
-                                    min={0}
-                                    max={3}
+                                <FormErrorMessage>
+                                    {errors.nombre}
+                                </FormErrorMessage>
+                            </FormControl>
+                            <FormControl
+                                isRequired
+                                isInvalid={errors.modalidad}
+                            >
+                                <FormLabel>Modalidad</FormLabel>
+                                <Select
+                                    placeholder="Seleccionar"
+                                    name="modalidad"
+                                    value={inputValues.modalidad}
+                                    onChange={handleInputsChange}
                                 >
-                                    <NumberInputField
-                                        name="totalSellos"
+                                    <option>Presencial</option>
+                                    <option>Online</option>
+                                </Select>
+                                <FormErrorMessage>
+                                    {errors.modalidad}
+                                </FormErrorMessage>
+                            </FormControl>
+                            <FormControl
+                                isRequired
+                                isInvalid={errors.responsable}
+                            >
+                                <FormLabel>Responsable</FormLabel>
+                                <Input
+                                    placeholder="Responsable"
+                                    value={inputValues.responsable}
+                                    name="responsable"
+                                    onChange={handleInputsChange}
+                                />
+                                <FormErrorMessage>
+                                    {errors.responsable}
+                                </FormErrorMessage>
+                            </FormControl>
+                            <FormControl>
+                                <FormLabel>Valor en créditos</FormLabel>
+                                <HStack paddingLeft={"5px"}>
+                                    <span>Si</span>
+                                    <Checkbox
+                                        size="lg"
+                                        colorScheme="green"
+                                        borderColor="green"
+                                        checked={inputValues.valorEnCreditos}
+                                        name="valorEnCreditos"
                                         onChange={handleInputsChange}
                                     />
-                                    <NumberInputStepper>
-                                        <NumberIncrementStepper />
-                                        <NumberDecrementStepper />
-                                    </NumberInputStepper>
-                                </NumberInput>
-                            </GridItem>
-                        </FormControl>
-                        <FormControl>
-                            <GridItem>
-                                <FormLabel>Capacidad</FormLabel>
-                                <NumberInput defaultValue={inputValues.capacidad}>
-                                    <NumberInputField
-                                        name="capacidad"
-                                        onChange={handleInputsChange}
-                                    />
-                                </NumberInput>
-                            </GridItem>
-                        </FormControl>
-                        <FormControl isRequired isInvalid={errors.descripcion} gridColumn="span 2">
-                            <FormLabel>Descripción</FormLabel>
-                            <Textarea
-                                placeholder="Descripción"
-                                value={inputValues.descripcion}
-                                name="descripcion"
-                                onChange={handleInputsChange}
-                            />
-                            <FormErrorMessage>{errors.descripcion}</FormErrorMessage>
-                        </FormControl>
-                    </Grid>
-                    <TabPanelContent index={tabIndex} setTabIndex={setTabIndex}/>
+                                </HStack>
+                            </FormControl>
+                            <FormControl>
+                                <GridItem>
+                                    <FormLabel>Total de sellos</FormLabel>
+                                    <NumberInput
+                                        defaultValue={inputValues.totalSellos}
+                                        min={0}
+                                        max={3}
+                                    >
+                                        <NumberInputField
+                                            name="totalSellos"
+                                            onChange={handleInputsChange}
+                                        />
+                                        <NumberInputStepper>
+                                            <NumberIncrementStepper />
+                                            <NumberDecrementStepper />
+                                        </NumberInputStepper>
+                                    </NumberInput>
+                                </GridItem>
+                            </FormControl>
+                            <FormControl>
+                                <GridItem>
+                                    <FormLabel>Capacidad</FormLabel>
+                                    <NumberInput
+                                        defaultValue={inputValues.capacidad}
+                                    >
+                                        <NumberInputField
+                                            name="capacidad"
+                                            onChange={handleInputsChange}
+                                        />
+                                    </NumberInput>
+                                </GridItem>
+                            </FormControl>
+                            <FormControl
+                                isRequired
+                                isInvalid={errors.descripcion}
+                                gridColumn="span 2"
+                            >
+                                <FormLabel>Descripción</FormLabel>
+                                <Textarea
+                                    placeholder="Descripción"
+                                    value={inputValues.descripcion}
+                                    name="descripcion"
+                                    onChange={handleInputsChange}
+                                />
+                                <FormErrorMessage>
+                                    {errors.descripcion}
+                                </FormErrorMessage>
+                            </FormControl>
+                        </Grid>
+                        <TabPanelContent
+                            index={tabIndex}
+                            setTabIndex={setTabIndex}
+                        />
                     </TabPanel>
                     <TabPanel>
                         <Grid
@@ -389,6 +434,9 @@ export const FormularioAgregarSolicitud = () => {
                             <FormControl isRequired isInvalid={errors.facultad}>
                                 <FormLabel>Facultad</FormLabel>
                                 <Select
+                                    isDisabled={
+                                        inputValues.modalidad === "Online"
+                                    }
                                     placeholder="Seleccionar"
                                     name="ubicacionData.facultad"
                                     value={inputValues.ubicacionData.facultad}
@@ -407,6 +455,9 @@ export const FormularioAgregarSolicitud = () => {
                             <FormControl isRequired isInvalid={errors.estado}>
                                 <FormLabel>Estado</FormLabel>
                                 <Select
+                                    isDisabled={
+                                        inputValues.modalidad === "Online"
+                                    }
                                     placeholder="Seleccionar"
                                     name="ubicacionData.estado"
                                     value={inputValues.ubicacionData.estado}
@@ -422,6 +473,9 @@ export const FormularioAgregarSolicitud = () => {
                             <FormControl isRequired isInvalid={errors.campus}>
                                 <FormLabel>Campus</FormLabel>
                                 <Select
+                                    isDisabled={
+                                        inputValues.modalidad === "Online"
+                                    }
                                     placeholder="Seleccionar"
                                     name="ubicacionData.campus"
                                     value={inputValues.ubicacionData.campus}
@@ -438,6 +492,9 @@ export const FormularioAgregarSolicitud = () => {
                             <FormControl isRequired isInvalid={errors.ciudad}>
                                 <FormLabel>Ciudad</FormLabel>
                                 <Select
+                                    isDisabled={
+                                        inputValues.modalidad === "Online"
+                                    }
                                     placeholder="Seleccionar"
                                     name="ubicacionData.ciudad"
                                     value={inputValues.ubicacionData.ciudad}
@@ -459,6 +516,9 @@ export const FormularioAgregarSolicitud = () => {
                             >
                                 <FormLabel>Dirección</FormLabel>
                                 <Input
+                                    isDisabled={
+                                        inputValues.modalidad === "Online"
+                                    }
                                     placeholder="Dirección"
                                     value={inputValues.ubicacionData.direccion}
                                     name="ubicacionData.direccion"
@@ -469,9 +529,17 @@ export const FormularioAgregarSolicitud = () => {
                                 </FormErrorMessage>
                             </FormControl>
                             <FormControl isRequired isInvalid={errors.aula}>
-                                <FormLabel>Aula</FormLabel>
+                                <FormLabel>
+                                    {inputValues.modalidad === "Online"
+                                        ? "Link de la reunion"
+                                        : "Aula"}
+                                </FormLabel>
                                 <Input
-                                    placeholder="Aula"
+                                    placeholder={
+                                        inputValues.modalidad === "Online"
+                                            ? "Link de la reunion"
+                                            : "Aula"
+                                    }
                                     value={inputValues.ubicacionData.aula}
                                     name="ubicacionData.aula"
                                     onChange={handleInputsChange}
@@ -563,7 +631,8 @@ export const FormularioAgregarSolicitud = () => {
                                     <br /> {inputValues.capacidad}
                                 </FormLabel>
                                 <FormLabel mt={3} fontSize="m">
-                                    <b>Valor en Créditos</b><br/> {inputValues.valorEnCreditos}
+                                    <b>Valor en Créditos</b>
+                                    <br /> {inputValues.valorEnCreditos}
                                 </FormLabel>
                                 <FormLabel mt={3} fontSize="m">
                                     <b>Total de Sellos</b>
@@ -604,7 +673,11 @@ export const FormularioAgregarSolicitud = () => {
                                     <br /> {inputValues.ubicacionData.direccion}
                                 </FormLabel>
                                 <FormLabel mt={3} fontSize="m">
-                                    <b>Aula</b>
+                                    <b>
+                                        {inputValues.modalidad === "Online"
+                                            ? "Link de la reunion"
+                                            : "Aula"}
+                                    </b>
                                     <br /> {inputValues.ubicacionData.aula}
                                 </FormLabel>
                                 <FormLabel mt={3} fontSize="m">
