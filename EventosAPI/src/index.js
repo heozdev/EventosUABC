@@ -130,13 +130,13 @@ app.post("/auth", async (req, res) => {
             contrasenaIngresada != usuario.contrasena
         ) {
             res.json({
-                status: "400",
+                status: "404",
                 mensaje: "Contrasena incorrecta, intentelo de nuevo.",
             });
         }
     } else {
         res.json({
-            status: "400",
+            status: "404",
             mensaje: "Usuario no encontrado, intentelo de nuevo.",
         });
     }

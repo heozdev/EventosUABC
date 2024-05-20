@@ -101,6 +101,15 @@ export const RestablecerContrasena = () => {
                         });
 
                         navigate("/login");
+                    } else {
+                        toast({
+                            title: "Error",
+                            description: mensaje,
+                            status: "success",
+                            position: "top-right",
+                            duration: 2000,
+                            isClosable: true,
+                        });
                     }
                 });
         }
