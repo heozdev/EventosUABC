@@ -32,11 +32,28 @@ function FiltroEventos({ isOpenModalFilter, onCloseModalFilter, solicitudes, set
     setFilteredSolicitudes(filterSolicitudes());
   }, [filtro, solicitudes]);
 
-  const handleChangeFiltro = (e) => {
-    const { name, value, type, checked } = e.target;
-    const val = type === "checkbox" ? checked : value;
-    setFiltro({ ...filtro, [name]: val });
+  const handleChangeFiltro = (event) => {
+    const { name, value, type, checked } = event.target;
+    const newValue = type === 'checkbox' ? checked : value;
+    setFiltro({ ...filtro, [name]: newValue });
   };
+
+  const[solicitudesFiltradas, setSolicitudesFiltradas] = useState([])
+  const[solicitudesOriginales, setSolicitudesOriginales] = useState([])
+
+  useEffect(() => {
+    fetch("http://localhost:3000/solicitudes")
+      .then(response => response.json())
+      .then(data => {
+        setSolicitudesOriginales(data);
+        setSolicitudesFiltradas(data); // Inicialmente, mostramos todas las solicitudes
+      })
+      .catch(error => {
+        console.error('Error al obtener datos:', error);
+      });
+  }, []);
+
+
 
   const filterSolicitudes = () => {
     return solicitudes.filter((evento) => {
@@ -58,6 +75,23 @@ function FiltroEventos({ isOpenModalFilter, onCloseModalFilter, solicitudes, set
   const handleFilter = () => {
     onCloseModalFilter();
     setSolicitudes(filterSolicitudes());
+
+    // Filtramos las solicitudes originales con los criterios del filtro
+    const nuevasSolicitudesFiltradas = solicitudesOriginales.filter(solicitud => {
+      if (
+        (filtro.ciudad && solicitud.ciudad.toLowerCase() !== filtro.ciudad.toLowerCase()) ||
+        (filtro.facultad && solicitud.facultad !== filtro.facultad) ||
+        (filtro.valorEnCreditos && !solicitud.valorEnCreditos) ||
+        (filtro.fecha && solicitud.fecha !== filtro.fecha) ||
+        (filtro.categoria && solicitud.categoria.toLowerCase() !== filtro.categoria.toLowerCase())
+      ) {
+        return false; // No cumple con los criterios de filtro, excluimos la solicitud
+      }
+      return true; // Cumple con todos los criterios de filtro, incluimos la solicitud
+    });
+  
+    // Actualizamos el estado de solicitudesFiltradas con las nuevas solicitudes filtradas
+    setSolicitudesFiltradas(nuevasSolicitudesFiltradas);
   };
 
   const opcionesCiudad = ["Mexicali", "Tijuana", "Ensenada", "Tecate" ]
