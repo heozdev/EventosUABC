@@ -170,3 +170,28 @@ app.put("/usuario/:correo", async (req, resp) => {
         }
     }
 });
+
+app.post("/evento"), async(req,res) =>{
+
+    const solicitudAceptada = await prisma.solicitud.findFirst({
+        where: {
+             estado:"Aceptado"
+        }
+    });
+
+    const crearEvento = await prisma.evento.create({
+        data:{
+            solicitudId: solicitudAceptada.id,
+            
+            estado: "Activa"
+        }
+    });
+
+    await prisma.solicitud.delete({
+        where:{
+            id:solicitudAceptada.id
+        }
+    })
+
+    res.json(crearEvento)
+}

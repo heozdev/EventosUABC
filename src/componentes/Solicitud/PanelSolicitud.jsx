@@ -63,6 +63,8 @@ function PanelSolicitud({ enviarSolicitud }) {
         onClose();
     };
 
+    
+
     // const mostrarAlertaR =
 
     const [modalSize, setModalSize] = useState("x1"); // Estado para el tamaño del modal
