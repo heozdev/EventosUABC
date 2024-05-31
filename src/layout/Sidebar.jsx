@@ -1,10 +1,11 @@
 import { GridItem, Link, Flex, Image, Grid } from "@chakra-ui/react";
 import { ImExit } from "react-icons/im";
-import { LuFolderEdit } from "react-icons/lu";
 import { AiFillHome } from "react-icons/ai";
-import { BsCalendar } from "react-icons/bs";
 import { FaUserCircle } from "react-icons/fa";
 import { useEffect, useState } from "react";
+import { IoIosNotifications } from "react-icons/io";
+import { FaFolder } from "react-icons/fa";
+import { FaCalendarAlt } from "react-icons/fa";
 
 export const Sidebar = ({ gridArea }) => {
     const [rol, setRol] = useState("");
@@ -38,7 +39,7 @@ export const Sidebar = ({ gridArea }) => {
                             </Link>
                         </Flex>
                         <Flex>
-                            <BsCalendar size={35} style={{ color: "white" }} />
+                            <FaCalendarAlt size={32} style={{ color: "white" }} />
                             <Link
                                 paddingLeft="10px"
                                 color="white"
@@ -48,8 +49,8 @@ export const Sidebar = ({ gridArea }) => {
                             </Link>
                         </Flex>
                         <Flex display={rol === "Alumno" ? "none" : "flex"}>
-                            <LuFolderEdit
-                                size={37}
+                            <FaFolder
+                                size={35}
                                 style={{ color: "white" }}
                             />
                             <Link
@@ -58,6 +59,16 @@ export const Sidebar = ({ gridArea }) => {
                                 href="/solicitudes"
                             >
                                 Solicitudes
+                            </Link>
+                        </Flex>
+                        <Flex>
+                            <IoIosNotifications size={35} style={{ color: "white" }} />
+                            <Link
+                                paddingLeft="10px"
+                                color="white"
+                                href="/eventos"
+                            >
+                                Notificaciones
                             </Link>
                         </Flex>
                     </Flex>

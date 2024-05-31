@@ -182,8 +182,8 @@ app.post("/evento"), async(req,res) =>{
     const crearEvento = await prisma.evento.create({
         data:{
             solicitudId: solicitudAceptada.id,
-            
-            estado: "Activa"
+
+            estado: "Vigente"
         }
     });
 
