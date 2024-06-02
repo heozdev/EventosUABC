@@ -31,6 +31,8 @@ export const Solicitud = ({ solicitud, setSolicitud }) => {
         const estadoEvento = e.target.name;
         const solicitudId = solicitud.id;
 
+        
+
         if (estadoEvento === "Rechazado" && !value.trim()) {
             // Verificar si se ha ingresado alguna nota antes de rechazar la solicitud
             toast({
@@ -44,32 +46,7 @@ export const Solicitud = ({ solicitud, setSolicitud }) => {
             });
             return; // Detener si no se ingresan observaciones
         }
-
-        if(estadoEvento === "Aceptado" && !value.trim()) {
-            toast({
-                title: "Evento creado",
-                description: "El evento se ha creado correctamente",
-                status: "success",
-                position:"top-right",
-                duration:3000,
-                isClosable: true,
-            });
-
-            fetch(`http://localhost:5173/evento`, {
-                method: "POST",
-                headers:{
-                    'Content-Type' : 'application/json'
-                },
-                body:JSON.stringify({solicitudId})
-            })
-            .then(response => response.json())
-            .then(data=> {
-                console.log(data)
-            })
-            .catch(error=> {
-                console.error("Error: ", error)
-            })
-        }
+        
 
         fetch(`http://localhost:3000/solicitudes/${solicitudId}`, {
             method: "PUT",
