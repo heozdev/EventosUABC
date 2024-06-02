@@ -170,3 +170,44 @@ app.put("/usuario/:correo", async (req, resp) => {
         }
     }
 });
+
+async function crearEvento(solicitudAceptada){
+    try{
+        const nuevoEvento = await prisma.evento.create({
+            data:{
+                solicitudId:solicitudAceptada.id,
+                estado:"Vigente"
+            }
+        });
+        return nuevoEvento
+    } catch(error) {
+        console.error("Error al crear el evento: ", error);
+        throw error;
+    }
+}
+
+app.post("/evento"), async(req,res) =>{
+
+    const solicitudAceptada= req.body.solicitudAceptada;
+
+    const nuevoEvento = await crearEvento(solicitudAceptada)
+    res.json(nuevoEvento)
+
+    await prisma.solicitud.delete({
+        where:{
+            id:solicitudAceptada.id
+        }
+    })
+
+    res.json(nuevoEvento)
+}
+
+app.get("/evento") , async(req,res ) => {
+    const eventos = await prisma.evento.findMany({
+        include :{
+            estado: "Vigente"
+        }
+    })
+    res.json(eventos)
+}
+
