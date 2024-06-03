@@ -27,14 +27,8 @@ export const Solicitudes = () => {
             <MostrarSolicitudes
                 solicitudes={solicitudes}
                 setSolicitudes={setSolicitudes}
+                getSolicitudes={getSolicitudes}
             />
-            {solicitudes.map((solicitud) => (
-                <Solicitud
-                    key={solicitud.id}
-                    solicitud={solicitud}
-                    setSolicitud={setSolicitud}
-                />
-            ))}
         </>
     );
 };

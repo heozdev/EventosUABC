@@ -1,26 +1,27 @@
-import { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Heading, Flex, useDisclosure, Button } from "@chakra-ui/react";
 import { SearchIcon } from "@chakra-ui/icons";
+import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 import { AddIcon } from "@chakra-ui/icons";
 import { BiSolidFilterAlt } from "react-icons/bi";
 import FiltroEventos from "../Filtros/FiltroEventos";
 import FiltroBarraBusqueda from "../Filtros/FiltroBarraBusqueda";
 import { FormularioAgregarSolicitud } from "./FormularioAgregarSolicitud";
+import { Solicitud } from "/Users/marce/OneDrive/Documents/NetBeansProjects/Avanti/EventosUABC/src/modelos/Solicitud";
 
-function MostrarSolicitudes({ solicitudes, setSolicitudes }) {
-    const {
-        isOpen: isOpenModalFilter,
-        onOpen: onOpenModalFilter,
-        onClose: onCloseModalFilter,
-    } = useDisclosure();
-
-    const {
-        isOpen: isOpenModalSearch,
-        onOpen: onOpenModalSearch,
-        onClose: onCloseModalSearch,
-    } = useDisclosure();
-
+function MostrarSolicitudes({ solicitudes, getSolicitudes }) {
+    const [pagina, setPagina] = useState(1);
+    const [solicitudesP] = useState(6);
     const [mostrarFormulario, setMostrarFormulario] = useState(false);
+    const { isOpen: isOpenModalFilter, onOpen: onOpenModalFilter, onClose: onCloseModalFilter } = useDisclosure();
+    const { isOpen: isOpenModalSearch, onOpen: onOpenModalSearch, onClose: onCloseModalSearch } = useDisclosure();
+
+    const ultimasolicitud = pagina * solicitudesP;
+    const primerasolicitud = ultimasolicitud - solicitudesP;
+    const currentSolicitudes = solicitudes.slice(primerasolicitud, ultimasolicitud);
+
+    // Cambia a la siguiente pagina
+    const paginate = (pag) => setPagina(pag);
 
     const AgregarSolicitud = () => {
         setMostrarFormulario(!mostrarFormulario);
@@ -32,47 +33,53 @@ function MostrarSolicitudes({ solicitudes, setSolicitudes }) {
                 Solicitudes
             </Heading>
             <Flex justifyContent="center" alignItems="center" mt={10} ml={600}>
-                <Button
-                    color="#004928"
-                    colorScheme="white"
-                    leftIcon={<AddIcon />}
-                    onClick={AgregarSolicitud}
-                >
-                    {mostrarFormulario
-                        ? "Cerrar Formulario"
-                        : "Agregar Solicitud"}
+                <Button color="#004928" colorScheme="white" leftIcon={<AddIcon />} onClick={AgregarSolicitud}>
+                    {mostrarFormulario ? "Cerrar Formulario" : "Agregar Solicitud"}
                 </Button>
                 <BiSolidFilterAlt
-                    style={{
-                        color: "#004928",
-                        fontSize: "45px",
-                        marginRight: "8px",
-                        cursor: "pointer",
-                    }}
+                    style={{ color: "#004928", fontSize: "45px", marginRight: "8px", cursor: "pointer" }}
                     onClick={onOpenModalFilter}
                 />
                 <SearchIcon
-                    style={{
-                        color: "#004928",
-                        fontSize: "45px",
-                        cursor: "pointer",
-                    }}
+                    style={{ color: "#004928", fontSize: "45px", cursor: "pointer" }}
                     onClick={onOpenModalSearch}
                 />
-                <FiltroEventos
-                    isOpenModalFilter={isOpenModalFilter}
-                    onCloseModalFilter={onCloseModalFilter}
-                    solicitudes={solicitudes}
-                    setSolicitudes={setSolicitudes}
-                />
-                <FiltroBarraBusqueda
-                    isOpenModalSearch={isOpenModalSearch}
-                    onCloseModalSearch={onCloseModalSearch}
-                    solicitudes={solicitudes}
-                    setSolicitudes={setSolicitudes}
-                />
+                <FiltroEventos isOpenModalFilter={isOpenModalFilter} onCloseModalFilter={onCloseModalFilter} solicitudes={solicitudes} />
+                <FiltroBarraBusqueda isOpenModalSearch={isOpenModalSearch} onCloseModalSearch={onCloseModalSearch} solicitudes={solicitudes} />
             </Flex>
             {mostrarFormulario && <FormularioAgregarSolicitud />}
+
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gridGap: "10px", marginTop: "20px" }}>
+                {currentSolicitudes.map((solicitud, index) => (
+                    <Solicitud key={index} solicitud={solicitud} updateSolicitudes={getSolicitudes}/>
+                ))}
+            </div>
+            
+
+<div style={{ display: "flex", justifyContent: "center", alignItems: "center", marginTop: "20px" }}>
+    <Button
+        colorScheme="teal"
+        variant="outline"
+        onClick={() => setCurrentPage(pagina === 1 ? 1 : pagina - 1)}
+        style={{ margin: "0 5px" }}
+    >
+        <FaChevronLeft />
+    </Button>
+    {Array.from({ length: Math.ceil(solicitudes.length / solicitudesP) }).map((_, index) => (
+        <Button key={index} colorScheme="teal" variant="outline" onClick={() => paginate(index + 1)} style={{ margin: "0 5px" }}>
+            {index + 1}
+        </Button>
+    ))}
+    <Button
+        colorScheme="teal"
+        variant="outline"
+        onClick={() => setCurrentPage(pagina === Math.ceil(solicitudes.length / solicitudesP) ? Math.ceil(solicitudes.length / solicitudesP) : pagina + 1)}
+        style={{ margin: "0 5px" }}
+    >
+        <FaChevronRight />
+    </Button>
+</div>
+
         </center>
     );
 }

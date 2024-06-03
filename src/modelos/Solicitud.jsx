@@ -21,7 +21,7 @@ import {
     Textarea,
 } from "@chakra-ui/react";
 
-export const Solicitud = ({ solicitud, setSolicitud }) => {
+export const Solicitud = ({ solicitud, setSolicitud, updateSolicitudes }) => {
     const [isOpen, setIsOpen] = useState(false);
     const [value, setValue] = useState("");
     const [showConfirmModal, setShowConfirmModal] = useState(false);
@@ -54,7 +54,7 @@ export const Solicitud = ({ solicitud, setSolicitud }) => {
         })
             .then((response) => response.json())
             .then((data) => {
-                setSolicitud(data);
+                updateSolicitudes();
                 if (estadoEvento === "Rechazado") {
                     // Mostrar mensaje de exito solo si se rechaza la solicitud
                     toast({
@@ -92,7 +92,7 @@ export const Solicitud = ({ solicitud, setSolicitud }) => {
         })
             .then((response) => response.json())
             .then((data) => {
-                setSolicitud(data);
+                updateSolicitudes();
                 toast({
                     title: "Solicitud eliminada",
                     description:
@@ -130,8 +130,8 @@ export const Solicitud = ({ solicitud, setSolicitud }) => {
                 variant="outline"
                 borderRadius={10}
                 bgColor={"#F5F5F5"}
-                width={{ base: "100%", sm: "400px", md: "500px", lg: "50%" }}
-                height={{ base: "200px", sm: "300px", md: "240px" }}
+                width={{ base: "10%", sm: "10%", md: "10%", lg: "90%" }}
+                height={{ base: "auto", sm: "200px", md: "290px" }}
                 onClick={handleOpen}
                 cursor="pointer"
             >
