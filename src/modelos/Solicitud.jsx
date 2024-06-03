@@ -53,8 +53,6 @@ export const Solicitud = ({ solicitud, setSolicitud, updateSolicitudes }) => {
         })
             .then((response) => response.json())
             .then((data) => {
-                setSolicitud(data);
-
                 if (data) {
                     crearEvento(solicitud.id);
                     toast({
