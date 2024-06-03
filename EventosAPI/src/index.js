@@ -193,7 +193,11 @@ app.post("/evento", async (req, res) => {
 app.get("/eventos", async (req, res) => {
     const eventos = await prisma.evento.findMany({
         include: {
-            solicitud: true,
+            solicitud: {
+                include: {
+                    ubicacion: true,
+                },
+            },
         },
     });
 
