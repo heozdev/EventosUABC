@@ -10,6 +10,7 @@ import {
 } from "@chakra-ui/react";
 import { MisEventosPerfil } from "./MisEventosPerfil";
 import { MisSolicitudesPerfil } from "./MisSolicitudesPerfil";
+import {AgregarSolicitud} from "./AgregarSolicitud";
 
 
 
@@ -21,6 +22,7 @@ export const AccionesPerfil = () => {
                     <TabList justifyContent="center">
                         <Tab>Mis solicitudes</Tab>
                         <Tab>Mis eventos</Tab>
+                        <Tab>Agregar solicitud</Tab>
                     </TabList>
                     <TabIndicator
                         mt="-1.5px"
@@ -34,6 +36,9 @@ export const AccionesPerfil = () => {
                         </TabPanel>
                         <TabPanel>
                             <MisEventosPerfil />
+                        </TabPanel>
+                        <TabPanel>
+                            <AgregarSolicitud/>
                         </TabPanel>
                     </TabPanels>
                 </Tabs>

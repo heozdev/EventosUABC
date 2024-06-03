@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
-import { Card, Text, Badge, Stack, Box, Button } from "@chakra-ui/react";
-import { Link } from "react-router-dom";
+import { Card, Text, Badge, Stack, Box } from "@chakra-ui/react";
 
 export const MisSolicitudesPerfil = () => {
     const [solicitudes, setSolicitudes] = useState([]);
@@ -18,11 +17,6 @@ export const MisSolicitudesPerfil = () => {
     }, []);
     return (
         <Stack spacing={4}>
-        <Link to={"/perfil/crear-solicitud"}>
-            <Button bgColor="#00723F" color="white">
-                Crear solicitud
-            </Button>
-        </Link>
         {solicitudes.map((solicitud) => (
             <Card
                 key={solicitud.id}
