@@ -175,15 +175,15 @@ export const Solicitud = ({ solicitud, setSolicitud, updateSolicitudes }) => {
                 variant="outline"
                 borderRadius={10}
                 bgColor={"#F5F5F5"}
-                width={{ base: "10%", sm: "10%", md: "10%", lg: "90%" }}
+                width={{ base: "10%", sm: "10%", md: "10%", lg: "95%" }}
                 height={{ base: "auto", sm: "200px", md: "250px" }}
                 onClick={handleOpen}
                 cursor="pointer"
             >
                 <Image
                     objectFit="cover"
-                    maxW={{ base: "100%", sm: "200px", md: "200px" }}
-                    maxH={{ base: "200px", sm: "300px", md: "250px" }}
+                    maxW={{ base: "100%", sm: "200px", md: "40%" }}
+                    maxH={{ base: "200px", sm: "300px", md: "100%" }}
                     src="src/recursos/imagenes/ejemploEvento.jpg"
                     alt="Evento"
                 />
