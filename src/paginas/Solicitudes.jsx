@@ -22,17 +22,13 @@ export const Solicitudes = () => {
         getSolicitudes();
     }, [solicitud]);
 
-    const solicitudesPendientes = solicitudes.filter(
-        (solicitud) => solicitud.estado === 'Pendiente'
-      );
-
     return (
         <>
             <MostrarSolicitudes
                 solicitudes={solicitudes}
                 setSolicitudes={setSolicitudes}
             />
-            {solicitudesPendientes.map((solicitud) => (
+            {solicitudes.map((solicitud) => (
                 <Solicitud
                     key={solicitud.id}
                     solicitud={solicitud}
