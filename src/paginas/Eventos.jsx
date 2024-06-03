@@ -15,6 +15,7 @@ export const Eventos = () => {
             .then((response) => response.json())
             .then((data) => {
                 setEventos(data);
+                console.log(data);
             })
             .catch((error) => {
                 console.error("Error recuperando los eventos:", error);
@@ -23,7 +24,6 @@ export const Eventos = () => {
 
     useEffect(() => {
         getEventos();
-        console.log(eventos);
     }, []);
 
     return (

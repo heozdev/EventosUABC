@@ -11,7 +11,9 @@ export const MisSolicitudesPerfil = () => {
             .then((data) => {
                 // Filtrar las solicitudes para mostrar solo las que tienen estado "Pendiente"
                 const pendientes = data.filter(
-                    (solicitud) => solicitud.estado === "Pendiente" || solicitud.estado === "Rechazado"
+                    (solicitud) =>
+                        solicitud.estado === "Pendiente" ||
+                        solicitud.estado === "Rechazado"
                 );
                 setSolicitudes(pendientes);
             });
@@ -21,7 +23,10 @@ export const MisSolicitudesPerfil = () => {
         <Stack spacing={4}>
             {solicitudes.map((solicitud) => {
                 const fechaCreacion = solicitud.fechaCreacion;
-                const fechaFormateada = format(new Date(fechaCreacion), 'dd/MM/yyyy HH:mm:ss');
+                const fechaFormateada = format(
+                    new Date(fechaCreacion),
+                    "dd/MM/yyyy HH:mm:ss"
+                );
                 return (
                     <Card
                         key={solicitud.id}
@@ -54,7 +59,11 @@ export const MisSolicitudesPerfil = () => {
                             )}
                             {solicitud.estado === "Rechazado" && (
                                 <>
-                                    <Text fontSize="xl" fontWeight="bold" mb={2}>
+                                    <Text
+                                        fontSize="xl"
+                                        fontWeight="bold"
+                                        mb={2}
+                                    >
                                         Motivo de rechazo: {solicitud.notas}
                                     </Text>
                                     <Badge
@@ -76,5 +85,3 @@ export const MisSolicitudesPerfil = () => {
         </Stack>
     );
 };
-
-

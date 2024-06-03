@@ -11,7 +11,7 @@ export const MisEventosPerfil = () => {
             .then((data) => {
                 // Filtrar las solicitudes para mostrar solo las que tienen estado "Pendiente"
                 const pendientes = data.filter(
-                    (solicitud) => solicitud.estado === "Aceptado" 
+                    (solicitud) => solicitud.estado === "Aceptado"
                 );
                 setSolicitudes(pendientes);
             });
@@ -20,8 +20,11 @@ export const MisEventosPerfil = () => {
     return (
         <Stack spacing={4}>
             {solicitudes.map((solicitud) => {
-                const fechaCreacion = solicitud.fechaCreacion;
-                const fechaFormateada = format(new Date(fechaCreacion), 'dd/MM/yyyy HH:mm:ss');
+                const fechaCreacion = solicitud.fecha;
+                const fechaFormateada = format(
+                    new Date(fechaCreacion),
+                    "dd/MM/yyyy HH:mm:ss"
+                );
 
                 return (
                     <Card

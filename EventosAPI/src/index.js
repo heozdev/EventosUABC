@@ -199,13 +199,3 @@ app.get("/eventos", async (req, res) => {
 
     res.json(eventos);
 });
-
-// app.get("/evento"),
-//     async (req, res) => {
-//         const eventos = await prisma.evento.findMany({
-//             include: {
-//                 estado: "Vigente",
-//             },
-//         });
-//         res.json(eventos);
-//     };
