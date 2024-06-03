@@ -8,7 +8,11 @@ export const MisEventosPerfil = () => {
         fetch("http://localhost:3000/solicitudes")
             .then((response) => response.json())
             .then((data) => {
-                setSolicitudes(data);
+                // Filtrar las solicitudes para mostrar solo las que tienen estado "Pendiente"
+                const pendientes = data.filter(
+                    (solicitud) => solicitud.estado === "Aceptado" 
+                );
+                setSolicitudes(pendientes);
             });
     }, []);
 
@@ -34,13 +38,7 @@ export const MisEventosPerfil = () => {
                     <Box>
                         <Badge
                             display="inline-block"
-                            colorScheme={
-                                solicitud.estado === "Pendiente"
-                                    ? "yellow"
-                                    : solicitud.estado === "Aceptado"
-                                    ? "green"
-                                    : "red"
-                            }
+                            colorScheme= "green"
                             variant="solid"
                             fontSize="md"
                             padding={2.5}
@@ -54,3 +52,4 @@ export const MisEventosPerfil = () => {
         </Stack>
     );
 };
+

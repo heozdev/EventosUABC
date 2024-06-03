@@ -7,7 +7,7 @@ import { BiSolidFilterAlt } from "react-icons/bi";
 import FiltroEventos from "../Filtros/FiltroEventos";
 import FiltroBarraBusqueda from "../Filtros/FiltroBarraBusqueda";
 import { FormularioAgregarSolicitud } from "./FormularioAgregarSolicitud";
-import { Solicitud } from "/Users/marce/OneDrive/Documents/NetBeansProjects/Avanti/EventosUABC/src/modelos/Solicitud";
+import { Solicitud } from "../../modelos/Solicitud";
 
 function MostrarSolicitudes({ solicitudes, getSolicitudes }) {
     const [pagina, setPagina] = useState(1);
