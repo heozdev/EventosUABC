@@ -22,7 +22,6 @@ export const MisSolicitudesPerfil = () => {
             {solicitudes.map((solicitud) => {
                 const fechaCreacion = solicitud.fechaCreacion;
                 const fechaFormateada = format(new Date(fechaCreacion), 'dd/MM/yyyy HH:mm:ss');
-                console.log(solicitud.notas);
                 return (
                     <Card
                         key={solicitud.id}
