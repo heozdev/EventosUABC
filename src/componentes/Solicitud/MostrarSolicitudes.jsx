@@ -7,7 +7,7 @@ import { BiSolidFilterAlt } from "react-icons/bi";
 import FiltroEventos from "../Filtros/FiltroEventos";
 import FiltroBarraBusqueda from "../Filtros/FiltroBarraBusqueda";
 import { FormularioAgregarSolicitud } from "./FormularioAgregarSolicitud";
-import { Solicitud } from "/Users/marce/OneDrive/Documents/NetBeansProjects/Avanti/EventosUABC/src/modelos/Solicitud";
+import { Solicitud } from "../../modelos/Solicitud";
 
 function MostrarSolicitudes({ solicitudes, getSolicitudes }) {
     const [pagina, setPagina] = useState(1);
@@ -54,32 +54,30 @@ function MostrarSolicitudes({ solicitudes, getSolicitudes }) {
                     <Solicitud key={index} solicitud={solicitud} updateSolicitudes={getSolicitudes}/>
                 ))}
             </div>
-            
 
-<div style={{ display: "flex", justifyContent: "center", alignItems: "center", marginTop: "20px" }}>
-    <Button
-        colorScheme="teal"
-        variant="outline"
-        onClick={() => setCurrentPage(pagina === 1 ? 1 : pagina - 1)}
-        style={{ margin: "0 5px" }}
-    >
-        <FaChevronLeft />
-    </Button>
-    {Array.from({ length: Math.ceil(solicitudes.length / solicitudesP) }).map((_, index) => (
-        <Button key={index} colorScheme="teal" variant="outline" onClick={() => paginate(index + 1)} style={{ margin: "0 5px" }}>
-            {index + 1}
-        </Button>
-    ))}
-    <Button
-        colorScheme="teal"
-        variant="outline"
-        onClick={() => setCurrentPage(pagina === Math.ceil(solicitudes.length / solicitudesP) ? Math.ceil(solicitudes.length / solicitudesP) : pagina + 1)}
-        style={{ margin: "0 5px" }}
-    >
-        <FaChevronRight />
-    </Button>
-</div>
-
+            <div style={{ display: "flex", justifyContent: "center", alignItems: "center", marginTop: "20px" }}>
+                <Button
+                    colorScheme="teal"
+                    variant="outline"
+                    onClick={() => setPagina(pagina === 1 ? 1 : pagina - 1)}
+                    style={{ margin: "0 5px" }}
+                >
+                    <FaChevronLeft />
+                </Button>
+                {Array.from({ length: Math.ceil(solicitudes.length / solicitudesP) }).map((_, index) => (
+                    <Button key={index} colorScheme="teal" variant="outline" onClick={() => paginate(index + 1)} style={{ margin: "0 5px" }}>
+                        {index + 1}
+                    </Button>
+                ))}
+                <Button
+                    colorScheme="teal"
+                    variant="outline"
+                    onClick={() => setPagina(pagina === Math.ceil(solicitudes.length / solicitudesP) ? Math.ceil(solicitudes.length / solicitudesP) : pagina + 1)}
+                    style={{ margin: "0 5px" }}
+                >
+                    <FaChevronRight />
+                </Button>
+            </div>
         </center>
     );
 }
