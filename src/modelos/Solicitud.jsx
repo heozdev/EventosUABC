@@ -27,11 +27,51 @@ export const Solicitud = ({ solicitud, setSolicitud, updateSolicitudes }) => {
     const [showConfirmModal, setShowConfirmModal] = useState(false);
     const toast = useToast();
 
-    const aceptarORechazarEvento = (e) => {
-        const estadoEvento = e.target.name;
-        const solicitudId = solicitud.id;
+    const crearEvento = (solicitudId) => {
+        fetch("http://localhost:3000/evento", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                estado: "Vigente",
+                solicitudId,
+            }),
+        })
+            .then((response) => response.json())
+            .then((data) => console.log(data));
+    };
 
-        if (estadoEvento === "Rechazado" && !value.trim()) {
+    const aceptarSolicitud = () => {
+        fetch(`http://localhost:3000/solicitudes/${solicitud.id}`, {
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ estado: "Aceptado" }),
+        })
+            .then((response) => response.json())
+            .then((data) => {
+                setSolicitud(data);
+
+                if (data) {
+                    crearEvento(solicitud.id);
+                    toast({
+                        title: "Solicitud aceptada",
+                        description: "La solicitud fue aceptada correctamente.",
+                        status: "success",
+                        position: "top-right",
+                        duration: 3000,
+                        isClosable: true,
+                    });
+                }
+            });
+
+        handleClose();
+    };
+
+    const rechazarSolicitud = () => {
+        if (!value.trim()) {
             // Verificar si se ha ingresado alguna nota antes de rechazar la solicitud
             toast({
                 title: "Error",
@@ -45,12 +85,12 @@ export const Solicitud = ({ solicitud, setSolicitud, updateSolicitudes }) => {
             return; // Detener si no se ingresan observaciones
         }
 
-        fetch(`http://localhost:3000/solicitudes/${solicitudId}`, {
+        fetch(`http://localhost:3000/solicitudes/${solicitud.id}`, {
             method: "PUT",
             headers: {
                 "Content-Type": "application/json",
             },
-            body: JSON.stringify({ estado: estadoEvento }),
+            body: JSON.stringify({ estado: "Rechazado" }),
         })
             .then((response) => response.json())
             .then((data) => {
@@ -345,7 +385,7 @@ export const Solicitud = ({ solicitud, setSolicitud, updateSolicitudes }) => {
                             name="Aceptado"
                             colorScheme="green"
                             mr={3}
-                            onClick={aceptarORechazarEvento}
+                            onClick={aceptarSolicitud}
                         >
                             Aceptar
                         </Button>
@@ -353,7 +393,7 @@ export const Solicitud = ({ solicitud, setSolicitud, updateSolicitudes }) => {
                             name="Rechazado"
                             colorScheme="red"
                             mr={3}
-                            onClick={aceptarORechazarEvento}
+                            onClick={rechazarSolicitud}
                         >
                             Rechazar
                         </Button>

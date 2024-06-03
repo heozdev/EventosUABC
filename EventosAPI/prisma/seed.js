@@ -116,11 +116,23 @@ async function main() {
     }
 
     for (const u of usuarios) {
-        const usuario = await prisma.usuario.create({
-            data: u,
-        });
-        console.log(`Se creo usuario con el id: ${usuario.id}`);
+        try {
+            const existingUser = await prisma.usuario.findUnique({
+                where: { correo: u.correo }
+            });
+            if (!existingUser) {
+                const usuario = await prisma.usuario.create({
+                    data: u,
+                });
+                console.log(`Se creó usuario con el id: ${usuario.id}`);
+            } else {
+                console.log(`Usuario con el correo ${u.correo} ya existe.`);
+            }
+        } catch (e) {
+            console.error(`Error al crear usuario con correo ${u.correo}:`, e);
+        }
     }
+    
 
     console.log(`Seeding finished.`);
 

@@ -170,3 +170,42 @@ app.put("/usuario/:correo", async (req, resp) => {
         }
     }
 });
+
+//Asi no es la sintaxis para crear un endpoint
+app.post("/evento", async (req, res) => {
+    const { estado, solicitudId } = req.body;
+
+    try {
+        const nuevoEvento = await prisma.evento.create({
+            data: {
+                solicitudId,
+                estado,
+            },
+        });
+
+        res.json(nuevoEvento);
+    } catch (error) {
+        console.error("Error al crear el evento: ", error);
+        throw error;
+    }
+});
+
+app.get("/eventos", async (req, res) => {
+    const eventos = await prisma.evento.findMany({
+        include: {
+            solicitud: true,
+        },
+    });
+
+    res.json(eventos);
+});
+
+// app.get("/evento"),
+//     async (req, res) => {
+//         const eventos = await prisma.evento.findMany({
+//             include: {
+//                 estado: "Vigente",
+//             },
+//         });
+//         res.json(eventos);
+//     };
