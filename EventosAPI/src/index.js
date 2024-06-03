@@ -79,11 +79,11 @@ app.post("/solicitudes", async (req, res) => {
 
 app.put("/solicitudes/:id", async (req, res) => {
     const { id } = req.params;
-    const { estado } = req.body;
+    const { estado, notas } = req.body;
 
     const solicitud = await prisma.solicitud.update({
         where: { id: Number(id) },
-        data: { estado },
+        data: { estado, notas },
     });
 
     res.json(solicitud);

@@ -90,7 +90,7 @@ export const Solicitud = ({ solicitud, setSolicitud, updateSolicitudes }) => {
             headers: {
                 "Content-Type": "application/json",
             },
-            body: JSON.stringify({ estado: "Rechazado" }),
+            body: JSON.stringify({ estado: "Rechazado", notas: value }),
         })
             .then((response) => response.json())
             .then((data) => {

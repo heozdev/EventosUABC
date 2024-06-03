@@ -37,7 +37,7 @@ export const MisEventosPerfil = () => {
                         <Text fontSize="xl" fontWeight="bold" mb={2}>
                             Responsable del evento: {solicitud.responsable}
                         </Text>
-                        <Text fontSize="md" mb={2}>
+                        <Text fontSize="xl" mb={2}>
                             Fecha de Creación: {fechaFormateada}
                         </Text>
                         <Box>

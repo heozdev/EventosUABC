@@ -40,9 +40,6 @@ export const MisSolicitudesPerfil = () => {
                         <Text fontSize="xl" mb={2}>
                             Fecha de Creación: {fechaFormateada}
                         </Text>
-                        <Text fontSize="xl" fontWeight="bold" mb={2}>
-                            Motivo de rechazo: {solicitud.notas}
-                        </Text>
                         <Box>
                             {solicitud.estado === "Pendiente" && (
                                 <Badge
@@ -57,16 +54,21 @@ export const MisSolicitudesPerfil = () => {
                                 </Badge>
                             )}
                             {solicitud.estado === "Rechazado" && (
-                                <Badge
-                                    display="inline-block"
-                                    variant="solid"
-                                    fontSize="md"
-                                    padding={2.5}
-                                    borderRadius={15}
-                                    colorScheme="red"
-                                >
-                                    Rechazado
-                                </Badge>
+                                <>
+                                    <Text fontSize="xl" fontWeight="bold" mb={2}>
+                                        Motivo de rechazo: {solicitud.notas}
+                                    </Text>
+                                    <Badge
+                                        display="inline-block"
+                                        variant="solid"
+                                        fontSize="md"
+                                        padding={2.5}
+                                        borderRadius={15}
+                                        colorScheme="red"
+                                    >
+                                        Rechazado
+                                    </Badge>
+                                </>
                             )}
                         </Box>
                     </Card>
