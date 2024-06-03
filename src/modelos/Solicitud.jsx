@@ -20,6 +20,7 @@ import {
     Text,
     Textarea,
 } from "@chakra-ui/react";
+import { format } from "date-fns";
 
 export const Solicitud = ({ solicitud, setSolicitud, updateSolicitudes }) => {
     const [isOpen, setIsOpen] = useState(false);
@@ -161,6 +162,10 @@ export const Solicitud = ({ solicitud, setSolicitud, updateSolicitudes }) => {
     };
 
     const [modalSize] = useState("5xl");
+
+    const fechaCreacion = solicitud.fechaCreacion;
+    const fechaFormateada = format(new Date(fechaCreacion), 'dd/MM/yyyy HH:mm:ss');
+
     return (
         <center>
             <Card
@@ -170,15 +175,15 @@ export const Solicitud = ({ solicitud, setSolicitud, updateSolicitudes }) => {
                 variant="outline"
                 borderRadius={10}
                 bgColor={"#F5F5F5"}
-                width={{ base: "10%", sm: "10%", md: "10%", lg: "90%" }}
-                height={{ base: "auto", sm: "200px", md: "290px" }}
+                width={{ base: "10%", sm: "10%", md: "10%", lg: "95%" }}
+                height={{ base: "auto", sm: "200px", md: "250px" }}
                 onClick={handleOpen}
                 cursor="pointer"
             >
                 <Image
                     objectFit="cover"
-                    maxW={{ base: "100%", sm: "200px", md: "200px" }}
-                    maxH={{ base: "200px", sm: "300px", md: "250px" }}
+                    maxW={{ base: "100%", sm: "200px", md: "40%" }}
+                    maxH={{ base: "200px", sm: "300px", md: "100%" }}
                     src="src/recursos/imagenes/ejemploEvento.jpg"
                     alt="Evento"
                 />
@@ -208,8 +213,8 @@ export const Solicitud = ({ solicitud, setSolicitud, updateSolicitudes }) => {
                                 padding={2.5}
                                 borderRadius={15}
                                 position="absolute"
-                                right={10}
-                                bottom={5}
+                                right={3}
+                                bottom={3}
                             >
                                 Pendiente
                             </Badge>
@@ -222,8 +227,8 @@ export const Solicitud = ({ solicitud, setSolicitud, updateSolicitudes }) => {
                                 padding={2.5}
                                 borderRadius={15}
                                 position="absolute"
-                                right={10}
-                                bottom={5}
+                                right={3}
+                                bottom={3}
                             >
                                 Aceptado
                             </Badge>
@@ -236,8 +241,8 @@ export const Solicitud = ({ solicitud, setSolicitud, updateSolicitudes }) => {
                                 padding={2.5}
                                 borderRadius={15}
                                 position="absolute"
-                                right={10}
-                                bottom={5}
+                                right={3}
+                                bottom={3}
                             >
                                 Rechazado
                             </Badge>
@@ -328,6 +333,10 @@ export const Solicitud = ({ solicitud, setSolicitud, updateSolicitudes }) => {
                                 <FormLabel mt={3} fontSize="m">
                                     <b>Fecha: </b>
                                     {solicitud.fecha}
+                                </FormLabel>
+                                <FormLabel mt={3} fontSize="m">
+                                    <b>Fecha de envio: </b>
+                                    {fechaFormateada}
                                 </FormLabel>
                             </FormControl>
                         </div>
