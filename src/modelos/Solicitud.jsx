@@ -164,7 +164,10 @@ export const Solicitud = ({ solicitud, setSolicitud, updateSolicitudes }) => {
     const [modalSize] = useState("5xl");
 
     const fechaCreacion = solicitud.fechaCreacion;
-    const fechaFormateada = format(new Date(fechaCreacion), 'dd/MM/yyyy HH:mm:ss');
+    const fechaFormateada = format(
+        new Date(fechaCreacion),
+        "dd/MM/yyyy HH:mm:ss"
+    );
 
     return (
         <center>
