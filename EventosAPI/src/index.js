@@ -1,8 +1,11 @@
 const express = require("express");
+const cors = require('cors');
 const { PrismaClient, Prisma } = require("@prisma/client");
 
 const prisma = new PrismaClient();
 const app = express();
+app.use(cors({ origin: 'http://localhost:5173' }));
+app.use(express.json());
 
 app.use((req, res, next) => {
     res.setHeader("Access-Control-Allow-Origin", "http://localhost:5173");
@@ -17,6 +20,8 @@ app.use((req, res, next) => {
     res.setHeader("Access-Control-Allow-Credentials", "true");
     next();
 });
+
+
 
 app.use(express.urlencoded({ extended: true }));
 
@@ -218,4 +223,17 @@ app.get("/eventos", async (req, res) => {
     });
 
     res.json(eventos);
+});
+
+app.delete('/eventos/:id', async (req, res) => {
+    const { id } = req.params;
+    try {
+        const evento = await prisma.evento.delete({
+            where: { id: Number(id) }
+        });
+        res.json({ message: 'Evento eliminado', evento });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'Error al eliminar el evento' });
+    }
 });
