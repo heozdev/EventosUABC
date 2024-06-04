@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useEffect, useState } from "react";
 import {
     Center,
     Card,
@@ -38,9 +38,28 @@ export const Evento = ({ evento }) => {
         setShowConfirmModal(true);
     };
 
-    const handleConfirmEliminar = () => {
+    useEffect(() => {
+        
+    },[])
+
+    const handleConfirmEliminar =  async() => {
         setShowConfirmModal(false);
         onClose();
+
+        try {
+            const response = await fetch(`http://localhost:3000/eventos/${evento.id}`, {
+                method: 'DELETE',
+            });
+
+            if (!response.ok) {
+                throw new Error('Error al eliminar el evento');
+            }
+
+            const data = await response.json();
+            console.log(data.message);
+        } catch (error) {
+            console.error( error);
+        }
     };
 
     const handleCancelEliminar = () => {
