@@ -21,10 +21,11 @@ import {
     useToast
 } from "@chakra-ui/react";
 
-export const Evento = ({ evento,onDelete }) => {
+export const Evento = ({ evento, onDelete }) => {
     const { isOpen, onOpen, onClose } = useDisclosure();
     const [modalSize, setModalSize] = useState("xl");
     const [showConfirmModal, setShowConfirmModal] = useState(false);
+    const [showRegistrarModal, setShowRegistrarModal] = useState(false);
     const toast = useToast();
 
     const handleOpen = () => {
@@ -40,7 +41,9 @@ export const Evento = ({ evento,onDelete }) => {
         setShowConfirmModal(true);
     };
 
-    
+    const RegistrarEvento = () => {
+        setShowRegistrarModal(true);
+    };
     
     const handleConfirmEliminar =  async() => {
         setShowConfirmModal(false);
@@ -51,6 +54,15 @@ export const Evento = ({ evento,onDelete }) => {
                 method: 'DELETE',
             });
 
+            if (!response.ok) {
+                throw new Error('Error al eliminar el evento');
+            }
+
+            const data = await response.json();
+            console.log(data.message);
+
+            onDelete(evento.id);
+
             toast({
                 title: "Solicitud eliminada.",
                 description: "La solicitud ha sido eliminada correctamente.",
@@ -60,19 +72,8 @@ export const Evento = ({ evento,onDelete }) => {
                 position: "top-right",
             });
 
-            if (!response.ok) {
-                throw new Error('Error al eliminar el evento');
-                
-            }
-
-            const data = await response.json();
-            console.log(data.message);
-
-            onDelete(evento.id)
-
-            
         } catch (error) {
-            console.error( error);
+            console.error(error);
             toast({
                 title: "Error",
                 description: "Hubo un problema al eliminar la solicitud.",
@@ -84,13 +85,84 @@ export const Evento = ({ evento,onDelete }) => {
         }
     };
 
+    const handleConfirmRegistrar = async () => {
+        setShowRegistrarModal(false);
+        onClose();
 
-    
+        try {
+            // Fetch the current number of registered participants
+            const responseCapacity = await fetch(`http://localhost:3000/eventos/${evento.id}/registrados`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+            });
+
+            if (!responseCapacity.ok) {
+                throw new Error('Error al verificar la capacidad del evento');
+            }
+
+            const dataCapacity = await responseCapacity.json();
+            const numeroRegistrados = dataCapacity.numeroRegistrados;
+
+            if (numeroRegistrados >= evento.solicitud.capacidad) {
+                toast({
+                    title: "Capacidad llena.",
+                    description: "No hay cupo disponible para este evento.",
+                    status: "warning",
+                    duration: 3000,
+                    isClosable: true,
+                    position: "top-right",
+                });
+                return;
+            }
+
+            // Proceed to register the user if there is capacity
+            const responseRegister = await fetch(`http://localhost:3000/eventos/${evento.id}/registrar`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+            });
+
+            if (!responseRegister.ok) {
+                const data = await responseRegister.json();
+                throw new Error(data.message || 'Error al registrarse en el evento');
+            }
+
+            const data = await responseRegister.json();
+            console.log(data.message);
+
+            toast({
+                title: "Registro exitoso.",
+                description: "Te has registrado correctamente en el evento.",
+                status: "success",
+                duration: 3000,
+                isClosable: true,
+                position: "top-right",
+            });
+
+        } catch (error) {
+            console.error(error);
+            toast({
+                title: "Error",
+                description: "Hubo un problema al registrarse en el evento.",
+                status: "error",
+                duration: 3000,
+                isClosable: true,
+                position: "top-right",
+            });
+        }
+    };
+
     const handleCancelEliminar = () => {
         setShowConfirmModal(false);
     };
 
-    
+    const handleCancelRegistrar = () => {
+        setShowRegistrarModal(false);
+    };
+
     return (
         <Center>
             <Card
@@ -186,9 +258,7 @@ export const Evento = ({ evento,onDelete }) => {
                                 </FormLabel>
                                 <FormLabel mt={3} fontSize="m">
                                     <b>Valor en Créditos: </b>
-                                    {evento.solicitud.valorEnCreditos
-                                        ? "Sí"
-                                        : "No"}
+                                    {evento.solicitud.valorEnCreditos ? "Sí" : "No"}
                                 </FormLabel>
                                 <FormLabel mt={3} fontSize="m">
                                     <b>Total de Sellos: </b>
@@ -221,68 +291,70 @@ export const Evento = ({ evento,onDelete }) => {
                                     {evento.solicitud.ubicacion?.campus}
                                 </FormLabel>
                                 <FormLabel mt={3} fontSize="m">
-                                    <b>Ciudad: </b>
-                                    {evento.solicitud.ubicacion?.ciudad}
+                                    <b>Salón: </b>
+                                    {evento.solicitud.ubicacion?.salon}
                                 </FormLabel>
                                 <FormLabel mt={3} fontSize="m">
                                     <b>Dirección: </b>
                                     {evento.solicitud.ubicacion?.direccion}
                                 </FormLabel>
                                 <FormLabel mt={3} fontSize="m">
-                                    <b>Aula: </b>
-                                    {evento.solicitud.ubicacion?.aula}
-                                </FormLabel>
-                                <FormLabel mt={3} fontSize="m">
                                     <b>Fecha: </b>
                                     {evento.solicitud.fecha}
-                                </FormLabel>
-                                <FormLabel mt={3} fontSize="m">
-                                    <b>Fecha de creación: </b>
-                                    {evento.solicitud.fechaCreacion}
                                 </FormLabel>
                             </FormControl>
                         </div>
                     </ModalBody>
                     <ModalFooter>
-                        <Button
-                            name="Eliminar"
-                            colorScheme="red"
-                            mr={10}
-                            onClick={eliminarEvento}
-                            position="absolute"
-                            left={10}
-                            bottom={5}
-                        >
+                        <Button colorScheme="blue" mr={3} onClick={RegistrarEvento}>
+                            Registrar
+                        </Button>
+                        <Button colorScheme="red" mr={3} onClick={eliminarEvento}>
                             Eliminar
                         </Button>
-                        <Modal
-                            isOpen={showConfirmModal}
-                            onClose={handleCancelEliminar}
-                        >
-                            <ModalOverlay />
-                            <ModalContent>
-                                <ModalHeader>Confirmar eliminación</ModalHeader>
-                                <ModalCloseButton />
-                                <ModalBody>
-                                    ¿Seguro que quieres eliminar este evento?
-                                </ModalBody>
-                                <ModalFooter>
-                                    <Button
-                                        colorScheme="green"
-                                        mr={3}
-                                        onClick={handleCancelEliminar}
-                                    >
-                                        Cancelar
-                                    </Button>
-                                    <Button
-                                        colorScheme="red"
-                                        onClick={handleConfirmEliminar}
-                                    >
-                                        Eliminar
-                                    </Button>
-                                </ModalFooter>
-                            </ModalContent>
-                        </Modal>
+                        <Button variant="ghost" onClick={handleClose}>
+                            Cerrar
+                        </Button>
+                    </ModalFooter>
+                </ModalContent>
+            </Modal>
+
+            {/* Confirmación de Eliminación */}
+            <Modal isOpen={showConfirmModal} onClose={handleCancelEliminar}>
+                <ModalOverlay />
+                <ModalContent>
+                    <ModalHeader>Confirmar Eliminación</ModalHeader>
+                    <ModalCloseButton />
+                    <ModalBody>
+                        ¿Estás seguro de que deseas eliminar este evento?
+                    </ModalBody>
+                    <ModalFooter>
+                        <Button colorScheme="red" onClick={handleConfirmEliminar}>
+                            Confirmar
+                        </Button>
+                        <Button variant="ghost" onClick={handleCancelEliminar}>
+                            Cancelar
+                        </Button>
+                    </ModalFooter>
+                </ModalContent>
+            </Modal>
+
+            {/* Confirmación de Registro */}
+            <Modal isOpen={showRegistrarModal} onClose={handleCancelRegistrar}>
+                <ModalOverlay />
+                <ModalContent>
+                    <ModalHeader>Confirmar Registro</ModalHeader>
+                    <ModalCloseButton />
+                    <ModalBody>
+                        ¿Estás seguro de que deseas registrarte en este evento?
+                    </ModalBody>
+                    <ModalFooter>
+                        <Button colorScheme="blue" onClick={handleConfirmRegistrar}>
+                            Confirmar
+                        </Button>
+                        <Button variant="ghost" onClick={handleCancelRegistrar}>
+                            Cancelar
+                        </Button>
                     </ModalFooter>
                 </ModalContent>
             </Modal>
