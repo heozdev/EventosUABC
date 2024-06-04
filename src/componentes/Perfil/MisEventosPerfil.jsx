@@ -21,11 +21,15 @@ import {
 import { format } from "date-fns";
 import { DeleteIcon, EditIcon } from "@chakra-ui/icons";
 import { FaUserPlus } from "react-icons/fa6";
+import { Link as RouterLink } from "react-router-dom";
+import { Link as ChakraLink } from "@chakra-ui/react";
+import { FormularioEditarSolicitud } from "../Solicitud/FormularioEditarSolicitud";
 
 export const MisEventosPerfil = () => {
     const [solicitudes, setSolicitudes] = useState([]);
     const [selectedSolicitud, setSelectedSolicitud] = useState(null);
     const [isRegistroModalOpen, setIsRegistroModalOpen] = useState(false);
+    const [showEditarFormulario, setShowEditarFormulario] = useState(false);
 
     useEffect(() => {
         fetch("http://localhost:3000/solicitudes")
@@ -37,6 +41,16 @@ export const MisEventosPerfil = () => {
                 setSolicitudes(pendientes);
             });
     }, []);
+
+    const handleEditarEvento = (solicitud) => {
+        setSelectedSolicitud(solicitud);
+        setShowEditarFormulario(true);
+    };
+
+    const handleCloseEditarFormulario = () => {
+        setSelectedSolicitud(null);
+        setShowEditarFormulario(false);
+    };
 
     const handleOpen = (solicitud) => setSelectedSolicitud(solicitud);
     const handleClose = () => setSelectedSolicitud(null);
@@ -84,13 +98,18 @@ export const MisEventosPerfil = () => {
                                     </FormControl>
                                 </CardBody>
                             </Stack>
-                            <EditIcon
-                                position={"absolute"}
+                            <ChakraLink
+                                as={RouterLink}
+                                to={`editar-evento`}
+                                position="absolute"
                                 top={3}
                                 right={10}
-                                color={"#00723F"}
-                                fontSize={"xl"}
-                            />
+                                color="#00723F"
+                                cursor="pointer"
+                                onClick={(e) => e.stopPropagation()}
+                            >
+                                <EditIcon fontSize="26px" />
+                            </ChakraLink>
                             <DeleteIcon
                                 position={"absolute"}
                                 top={3}
@@ -236,7 +255,6 @@ export const MisEventosPerfil = () => {
                             <FormLabel>Matrícula</FormLabel>
                             <Input placeholder="Ingrese la matrícula del alumno" />
                         </FormControl>
-                        {/* Agrega más campos de entrada según tus necesidades */}
                     </ModalBody>
                     <ModalFooter>
                         <Button colorScheme="blue" mr={3} onClick={handleRegistroAlumno}>
@@ -248,6 +266,12 @@ export const MisEventosPerfil = () => {
                     </ModalFooter>
                 </ModalContent>
             </Modal>
+            {showEditarFormulario && (
+                <FormularioEditarSolicitud
+                    solicitud={selectedSolicitud}
+                    onClose={handleCloseEditarFormulario}
+                />
+            )}
         </Stack>
     );
 };

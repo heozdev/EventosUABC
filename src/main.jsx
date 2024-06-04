@@ -11,6 +11,7 @@ import { App } from "./App";
 import { SolicitudesDocente } from "./paginas/SolicitudesDocente";
 import { Login } from "./paginas/Login";
 import { CrearSolicitud } from "./paginas/CrearSolicitud";
+import { EditarEvento } from "./paginas/EditarEvento";
 import { RestablecerContrasena } from "./paginas/RestablecerContrasena";
 
 const router = createBrowserRouter([
@@ -53,6 +54,10 @@ const router = createBrowserRouter([
             {
                 path: "/perfil/crear-solicitud",
                 element: <CrearSolicitud />,
+            },
+            {
+                path: "/perfil/editar-evento/:id",
+                element: <EditarEvento />,
             },
         ],
     },
