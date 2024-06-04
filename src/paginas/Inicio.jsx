@@ -63,21 +63,25 @@ const images = [
     },
 ];
 
+// Componente Carrusel
 const Carrusel = ({ images, onOpen, setSelectedEvent }) => {
     const [currentIndex, setCurrentIndex] = useState(0);
 
+    // Función para ir a la imagen anterior
     const goToPrevious = () => {
         setCurrentIndex((prevIndex) =>
             prevIndex === 0 ? images.length - 1 : prevIndex - 1
         );
     };
 
+    // Función para ir a la imagen siguiente
     const goToNext = () => {
         setCurrentIndex((prevIndex) =>
             prevIndex === images.length - 1 ? 0 : prevIndex + 1
         );
     };
 
+    // Función para abrir el modal del evento seleccionado
     const openModal = (event) => {
         setSelectedEvent(event);
         onOpen();
@@ -137,16 +141,21 @@ export const Inicio = () => {
 
     return (
         <Box>
+            {/* Mensaje de bienvenida */}
             <Heading size="xl" color="black" mt={5} textAlign="center">
                 Bienvenido {rol}
             </Heading>
+            {/* Título para el carrusel */}
             <Text textAlign="center" mt={2} color="black" paddingTop={5}>
                 Más importantes
             </Text>
+            {/* Renderizado del Carrusel */}
             <Carrusel images={images} onOpen={onOpen} setSelectedEvent={setSelectedEvent} />
+            {/* Título para la lista de eventos del día */}
             <Text textAlign="center" mt={10} color="black">
                 Eventos del día
             </Text>
+            {/* Lista de eventos */}
             <Flex justifyContent="center" mt={5}>
                 {images.map((image, index) => (
                     <Box key={index} mx={4}>
@@ -165,12 +174,14 @@ export const Inicio = () => {
                 ))}
             </Flex>
 
+            {/* Modal de detalles del evento seleccionado */}
             <Modal isOpen={isOpen} onClose={onClose} size={"xl"}>
                 <ModalOverlay />
                 <ModalContent>
                     <ModalHeader>{selectedEvent?.title}</ModalHeader>
                     <ModalCloseButton />
                     <ModalBody>
+                        {/* Detalles del evento seleccionado */}
                         <img
                             src={selectedEvent?.src}
                             alt={selectedEvent?.alt}
@@ -180,6 +191,7 @@ export const Inicio = () => {
                                 objectFit: "cover",
                             }}
                         />
+                        {/* Información detallada del evento */}
                         <Text mt={4} textAlign={"justify"}><b>Descripción:</b> {selectedEvent?.description}</Text>
                         <Text mt={4} textAlign={"justify"}><b>Responsable:</b> {selectedEvent?.responsable}</Text>
                         <Text mt={4} textAlign={"justify"}><b>Modalidad:</b> {selectedEvent?.modalidad}</Text>
