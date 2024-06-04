@@ -237,3 +237,20 @@ app.delete('/eventos/:id', async (req, res) => {
         res.status(500).json({ error: 'Error al eliminar el evento' });
     }
 });
+
+app.get('/usuario', async (req, res) => {
+    try {
+        const userId = req.user.id; // Suponiendo que has configurado middleware para extraer el ID del usuario del token de autenticación
+        const usuario = await prisma.usuario.findUnique({
+            where: {
+                id: userId,
+            },
+        });
+        if (!usuario) {
+            return res.status(404).json({ error: 'Usuario no encontrado' });
+        }
+        res.json(usuario);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
