@@ -18,12 +18,14 @@ import {
     ModalFooter,
     Button,
     useDisclosure,
+    useToast
 } from "@chakra-ui/react";
 
-export const Evento = ({ evento }) => {
+export const Evento = ({ evento,onDelete }) => {
     const { isOpen, onOpen, onClose } = useDisclosure();
     const [modalSize, setModalSize] = useState("xl");
     const [showConfirmModal, setShowConfirmModal] = useState(false);
+    const toast = useToast();
 
     const handleOpen = () => {
         setModalSize("xl");
@@ -38,11 +40,10 @@ export const Evento = ({ evento }) => {
         setShowConfirmModal(true);
     };
 
-    useEffect(() => {
-        
-    },[])
-
+    
+    
     const handleConfirmEliminar =  async() => {
+        toast
         setShowConfirmModal(false);
         onClose();
 
@@ -51,21 +52,46 @@ export const Evento = ({ evento }) => {
                 method: 'DELETE',
             });
 
+            toast({
+                title: "Solicitud eliminada.",
+                description: "La solicitud ha sido eliminada correctamente.",
+                status: "success",
+                duration: 3000,
+                isClosable: true,
+                position: "top-right",
+            });
+
             if (!response.ok) {
                 throw new Error('Error al eliminar el evento');
+                
             }
 
             const data = await response.json();
             console.log(data.message);
+
+            onDelete(evento.id)
+
+            
         } catch (error) {
             console.error( error);
+            toast({
+                title: "Error",
+                description: "Hubo un problema al eliminar la solicitud.",
+                status: "error",
+                duration: 3000,
+                isClosable: true,
+                position: "top-right",
+            });
         }
     };
 
+
+    
     const handleCancelEliminar = () => {
         setShowConfirmModal(false);
     };
 
+    
     return (
         <Center>
             <Card

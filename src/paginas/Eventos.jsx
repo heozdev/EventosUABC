@@ -1,19 +1,6 @@
 import { useState, useEffect } from "react";
 import {
     Heading,
-    Box,
-    Card,
-    CardHeader,
-    CardBody,
-    Button,
-    Modal,
-    ModalOverlay,
-    ModalContent,
-    ModalHeader,
-    ModalCloseButton,
-    ModalBody,
-    ModalFooter,
-    Text,
 } from "@chakra-ui/react";
 import { Evento } from "../modelos/Evento";
 
@@ -37,6 +24,10 @@ export const Eventos = () => {
             });
     };
 
+    const handleDeleteEvento = (id) => {
+        setEventos((prevEventos) => prevEventos.filter((evento) => evento.id !== id));
+    };
+
     useEffect(() => {
         getEventos();
     }, []);
@@ -47,7 +38,7 @@ export const Eventos = () => {
                 Eventos
             </Heading>
             {eventos.map((evento) => (
-                <Evento key={evento.id} evento={evento} />
+                <Evento key={evento.id} evento={evento}  onDelete={handleDeleteEvento}/>
             ))}
         </>
     );
