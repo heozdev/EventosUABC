@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Heading, Flex, useDisclosure, Button } from "@chakra-ui/react";
+import { Heading, Flex, useDisclosure, Button, Center, Box } from "@chakra-ui/react";
 import { SearchIcon } from "@chakra-ui/icons";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 import { AddIcon } from "@chakra-ui/icons";
@@ -9,7 +9,7 @@ import FiltroBarraBusqueda from "../Filtros/FiltroBarraBusqueda";
 import { FormularioAgregarSolicitud } from "./FormularioAgregarSolicitud";
 import { Solicitud } from "../../modelos/Solicitud";
 
-function MostrarSolicitudes({ solicitudes, getSolicitudes }) {
+function MostrarSolicitudes({ solicitudes, setSolicitudes, getSolicitudes }) {
     const [pagina, setPagina] = useState(1);
     const [solicitudesP] = useState(6);
     const [mostrarFormulario, setMostrarFormulario] = useState(false);
@@ -31,7 +31,6 @@ function MostrarSolicitudes({ solicitudes, getSolicitudes }) {
         ultimasolicitud
     );
 
-    // Cambia a la siguiente pagina
     const paginate = (pag) => setPagina(pag);
 
     const AgregarSolicitud = () => {
@@ -44,16 +43,15 @@ function MostrarSolicitudes({ solicitudes, getSolicitudes }) {
                 Solicitudes
             </Heading>
             <Flex justifyContent="center" alignItems="center" mt={10} ml={600}>
-                <Button
-                    color="#004928"
-                    colorScheme="white"
-                    leftIcon={<AddIcon />}
-                    onClick={AgregarSolicitud}
-                >
-                    {mostrarFormulario
-                        ? "Cerrar Formulario"
-                        : "Agregar Solicitud"}
-                </Button>
+            <Button
+            color="#004928"
+            colorScheme="white"
+            leftIcon={<AddIcon />}
+            onClick={AgregarSolicitud}
+            >
+            {mostrarFormulario ? "Cerrar Formulario" : "Agregar Solicitud"}
+            </Button>
+            {mostrarFormulario && <FormularioAgregarSolicitud />}
                 <BiSolidFilterAlt
                     style={{
                         color: "#004928",
@@ -80,6 +78,7 @@ function MostrarSolicitudes({ solicitudes, getSolicitudes }) {
                     isOpenModalSearch={isOpenModalSearch}
                     onCloseModalSearch={onCloseModalSearch}
                     solicitudes={solicitudes}
+                    setSolicitudes={setSolicitudes} 
                 />
             </Flex>
 
