@@ -100,7 +100,7 @@ export const MisEventosPerfil = () => {
                             </Stack>
                             <ChakraLink
                                 as={RouterLink}
-                                to={`editar-evento`}
+                                to={`editar-evento/${solicitud.id}`}
                                 position="absolute"
                                 top={3}
                                 right={10}
