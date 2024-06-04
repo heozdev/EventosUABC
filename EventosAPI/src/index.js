@@ -79,11 +79,27 @@ app.post("/solicitudes", async (req, res) => {
 
 app.put("/solicitudes/:id", async (req, res) => {
     const { id } = req.params;
-    const { estado, notas } = req.body;
+    const { estado, notas, mensaje } = req.body;
 
     const solicitud = await prisma.solicitud.update({
         where: { id: Number(id) },
-        data: { estado, notas },
+        data: { estado, notas, mensaje },
+    });
+
+    res.json(solicitud);
+});
+
+app.put("/solicitudes/:id/recordatorio", async (req, res) => {
+    const { id } = req.params;
+
+    const solicitud = await prisma.solicitud.update({
+        where: { id: Number(id) },
+
+        data: {
+            recordatorio: {
+                increment: 1,
+            },
+        },
     });
 
     res.json(solicitud);

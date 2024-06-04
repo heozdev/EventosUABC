@@ -15,6 +15,10 @@ import {
     ModalHeader,
     ModalCloseButton,
     ModalBody,
+    Button,
+    Input,
+    useToast,
+    ModalFooter,
 } from "@chakra-ui/react";
 import { format } from "date-fns";
 
@@ -22,6 +26,9 @@ export const MisSolicitudesPerfil = () => {
     const [solicitudes, setSolicitudes] = useState([]);
     const [selectedSolicitud, setSelectedSolicitud] = useState(null);
     const [modalSize] = useState("5xl");
+    const [mensajeModal, setMensajeModal] = useState(false);
+    const [mensaje, setMensaje] = useState("");
+    const toast = useToast();
 
     useEffect(() => {
         fetch("http://localhost:3000/solicitudes")
@@ -40,6 +47,54 @@ export const MisSolicitudesPerfil = () => {
     const handleOpen = (solicitud) => setSelectedSolicitud(solicitud);
     const handleClose = () => setSelectedSolicitud(null);
 
+    const handleMensajeModalOpen = () => setMensajeModal(true);
+    const handleMensajeModalClose = () => setMensajeModal(false);
+
+    const handleMensajeChange = (e) => setMensaje(e.target.value);
+
+    const enviarMensaje = (solicitudId) => {
+        fetch(`http://localhost:3000/solicitudes/${solicitudId}`, {
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ mensaje }),
+        })
+            .then((response) => response.json())
+            .then((data) => {
+                toast({
+                    title: "Mensaje enviado",
+                    description: "El mensaje se ha enviado con éxito.",
+                    status: "success",
+                    duration: 3000,
+                    isClosable: true,
+                    position: "top-right",
+                });
+                handleMensajeModalClose();
+            });
+    };
+
+    const aumentarRecordatorio = (solicitudId) => {
+        fetch(`http://localhost:3000/solicitudes/${solicitudId}/recordatorio`, {
+            method: "PUT",
+        })
+            .then((response) => response.json())
+            .then((data) => {
+                // Actualizar la solicitud en el estado local
+                setSolicitudes((prevSolicitudes) =>
+                    prevSolicitudes.map((solicitud) =>
+                        solicitud.id === solicitudId
+                            ? { ...solicitud, recordatorio: solicitud.recordatorio + 1 }
+                            : solicitud
+                    )
+                );
+            });
+    };
+
+    const handleOpenDetalleModal = (solicitud) => {
+        setSelectedSolicitud(solicitud);
+    };
+
     return (
         <Stack spacing={4}>
             {solicitudes.map((solicitud) => {
@@ -57,7 +112,7 @@ export const MisSolicitudesPerfil = () => {
                         variant="outline"
                         borderRadius={10}
                         bgColor={"#F5F5F5"}
-                        onClick={() => handleOpen(solicitud)}
+                        onClick={() => handleOpenDetalleModal(solicitud)}
                         cursor="pointer"
                     >
                         <Image
@@ -79,16 +134,40 @@ export const MisSolicitudesPerfil = () => {
                                 </FormControl>
                                 <Box>
                                     {solicitud.estado === "Pendiente" && (
-                                        <Badge
-                                            display="inline-block"
-                                            variant="solid"
-                                            fontSize="md"
-                                            padding={2.5}
-                                            borderRadius={15}
-                                            colorScheme="yellow"
-                                        >
-                                            Pendiente
-                                        </Badge>
+                                        <>
+                                            <Badge
+                                                display="inline-block"
+                                                variant="solid"
+                                                fontSize="md"
+                                                padding={2.5}
+                                                borderRadius={15}
+                                                colorScheme="yellow"
+                                            >
+                                                Pendiente
+                                            </Badge>
+                                            <br />
+                                            <Button
+                                                colorScheme="blue"
+                                                mt={3}
+                                                onClick={(e) => {
+                                                    e.stopPropagation();
+                                                    handleMensajeModalOpen();
+                                                }}
+                                            >
+                                                Mensaje
+                                            </Button>
+                                            <Button
+                                                colorScheme="orange"
+                                                mt={3}
+                                                ml={3}
+                                                onClick={(e) => {
+                                                    e.stopPropagation();
+                                                    aumentarRecordatorio(solicitud.id);
+                                                }}
+                                            >
+                                                Recordatorio ({solicitud.recordatorio})
+                                            </Button>
+                                        </>
                                     )}
                                     {solicitud.estado === "Rechazado" && (
                                         <>
@@ -121,7 +200,7 @@ export const MisSolicitudesPerfil = () => {
 
             {selectedSolicitud && (
                 <Modal
-                    isOpen={!!selectedSolicitud}
+                    isOpen={selectedSolicitud !== null}
                     onClose={handleClose}
                     size={modalSize}
                 >
@@ -223,6 +302,26 @@ export const MisSolicitudesPerfil = () => {
                     </ModalContent>
                 </Modal>
             )}
+
+            <Modal isOpen={mensajeModal} onClose={handleMensajeModalClose}>
+                <ModalOverlay />
+                <ModalContent>
+                    <ModalHeader>Enviar mensaje</ModalHeader>
+                    <ModalCloseButton />
+                    <ModalBody>
+                        <Input
+                            value={mensaje}
+                            onChange={handleMensajeChange}
+                            placeholder="Escribe tu mensaje"
+                        />
+                    </ModalBody>
+                    <ModalFooter>
+                        <Button colorScheme="blue" onClick={() => enviarMensaje(selectedSolicitud.id)}>
+                            Enviar
+                        </Button>
+                    </ModalFooter>
+                </ModalContent>
+            </Modal>
         </Stack>
     );
 };

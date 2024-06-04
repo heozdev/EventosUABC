@@ -12,19 +12,25 @@ import {
     ModalHeader,
     ModalCloseButton,
     ModalBody,
+    ModalFooter,
+    Flex,
+    Box,
+    Input,
+    Button,
 } from "@chakra-ui/react";
 import { format } from "date-fns";
 import { DeleteIcon, EditIcon } from "@chakra-ui/icons";
+import { FaUserPlus } from "react-icons/fa6";
 
 export const MisEventosPerfil = () => {
     const [solicitudes, setSolicitudes] = useState([]);
     const [selectedSolicitud, setSelectedSolicitud] = useState(null);
+    const [isRegistroModalOpen, setIsRegistroModalOpen] = useState(false);
 
     useEffect(() => {
         fetch("http://localhost:3000/solicitudes")
             .then((response) => response.json())
             .then((data) => {
-                // Filtrar las solicitudes para mostrar solo las que tienen estado "Pendiente"
                 const pendientes = data.filter(
                     (solicitud) => solicitud.estado === "Aceptado"
                 );
@@ -35,53 +41,78 @@ export const MisEventosPerfil = () => {
     const handleOpen = (solicitud) => setSelectedSolicitud(solicitud);
     const handleClose = () => setSelectedSolicitud(null);
 
+    const handleOpenRegistroModal = () => setIsRegistroModalOpen(true);
+    const handleCloseRegistroModal = () => setIsRegistroModalOpen(false);
+
+    const handleRegistroAlumno = () => {
+        // Lógica para registrar al alumno en el evento
+        // ...
+
+        handleCloseRegistroModal();
+    };
+
     return (
         <Stack spacing={4}>
             {solicitudes.map((solicitud) => {
                 return (
-                    <Card
-                        key={solicitud.id}
-                        mt={3}
-                        direction={{ base: "column", sm: "row" }}
-                        overflow="hidden"
-                        variant="outline"
-                        borderRadius={10}
-                        bgColor={"#F5F5F5"}
-                        onClick={() => handleOpen(solicitud)}
-                        cursor="pointer"
-                        position="relative"
-                    >
-                        <Image
-                            objectFit="cover"
-                            maxW={{ base: "100%", sm: "200px", md: "20%" }}
-                            maxH={{ base: "200px", sm: "300px", md: "100%" }}
-                            src="src/recursos/imagenes/ejemploEvento.jpg"
-                            alt="Evento"
-                        />
-                        <Stack>
-                            <CardBody>
-                                <FormControl>
-                                    <FormLabel mt={6} fontSize="xl">
-                                        {solicitud.nombre}
-                                    </FormLabel>
-                                </FormControl>
-                            </CardBody>
-                        </Stack>
-                        <EditIcon
-                            position={"absolute"}
-                            top={3}
-                            right={10}
-                            color={"#00723F"}
-                            fontSize={"xl"}
-                        />
-                        <DeleteIcon
-                            position={"absolute"}
-                            top={3}
-                            right={3}
-                            color={"#00723F"}
-                            fontSize={"xl"}
-                        />
-                    </Card>
+                    <Flex key={solicitud.id} alignItems="stretch">
+                        <Card
+                            mt={3}
+                            direction={{ base: "column", sm: "row" }}
+                            overflow="hidden"
+                            variant="outline"
+                            borderRadius={10}
+                            bgColor={"#F5F5F5"}
+                            onClick={() => handleOpen(solicitud)}
+                            cursor="pointer"
+                            position="relative"
+                            flex={1}
+                        >
+                            <Image
+                                objectFit="cover"
+                                maxW={{ base: "100%", sm: "200px", md: "20%" }}
+                                maxH={{ base: "200px", sm: "300px", md: "100%" }}
+                                src="src/recursos/imagenes/ejemploEvento.jpg"
+                                alt="Evento"
+                            />
+                            <Stack>
+                                <CardBody>
+                                    <FormControl>
+                                        <FormLabel mt={6} fontSize="xl">
+                                            {solicitud.nombre}
+                                        </FormLabel>
+                                    </FormControl>
+                                </CardBody>
+                            </Stack>
+                            <EditIcon
+                                position={"absolute"}
+                                top={3}
+                                right={10}
+                                color={"#00723F"}
+                                fontSize={"xl"}
+                            />
+                            <DeleteIcon
+                                position={"absolute"}
+                                top={3}
+                                right={3}
+                                color={"#00723F"}
+                                fontSize={"xl"}
+                            />
+                        </Card>
+                        <Box
+                            bg="#00723F"
+                            width="50px"
+                            ml={3}
+                            display="flex"
+                            justifyContent="center"
+                            alignItems="center"
+                            borderRadius={10}
+                            cursor="pointer"
+                            onClick={handleOpenRegistroModal}
+                        >
+                            <FaUserPlus color="white" fontSize="26px" />
+                        </Box>
+                    </Flex>
                 );
             })}
 
@@ -187,6 +218,36 @@ export const MisEventosPerfil = () => {
                     </ModalContent>
                 </Modal>
             )}
+
+            <Modal
+                isOpen={isRegistroModalOpen}
+                onClose={handleCloseRegistroModal}
+            >
+                <ModalOverlay />
+                <ModalContent>
+                    <ModalHeader>Registro de Alumno</ModalHeader>
+                    <ModalCloseButton />
+                    <ModalBody>
+                        <FormControl>
+                            <FormLabel>Nombre del Alumno</FormLabel>
+                            <Input placeholder="Ingrese el nombre del alumno" />
+                        </FormControl>
+                        <FormControl mt={4}>
+                            <FormLabel>Matrícula</FormLabel>
+                            <Input placeholder="Ingrese la matrícula del alumno" />
+                        </FormControl>
+                        {/* Agrega más campos de entrada según tus necesidades */}
+                    </ModalBody>
+                    <ModalFooter>
+                        <Button colorScheme="blue" mr={3} onClick={handleRegistroAlumno}>
+                            Registrar
+                        </Button>
+                        <Button onClick={handleCloseRegistroModal}>
+                            Cancelar
+                        </Button>
+                    </ModalFooter>
+                </ModalContent>
+            </Modal>
         </Stack>
     );
 };

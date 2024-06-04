@@ -301,6 +301,18 @@ export const Solicitud = ({ solicitud, setSolicitud, updateSolicitudes }) => {
                                     <b>Hora Fin: </b>
                                     {solicitud.horaFin}
                                 </FormLabel>
+                                {solicitud.estado === "Pendiente" && (
+                                    <>
+                                        <FormLabel mt={3} fontSize="xl" color={"red"}>
+                                            <b>Mensaje Responsable: </b>
+                                            {solicitud.mensaje}
+                                        </FormLabel>
+                                        <FormLabel mt={3} fontSize="xl" color={"red"}>
+                                            <b>Recordatorio: </b>
+                                            {solicitud.recordatorio}
+                                        </FormLabel>
+                                    </>
+                                )}
                             </FormControl>
                             <FormControl>
                                 <FormLabel mt={3} fontSize="m">

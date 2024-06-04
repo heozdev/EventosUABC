@@ -51,6 +51,8 @@ model Solicitud {
   capacidad Int
   fechaCreacion DateTime @default(now())
   notas String?
+  mensaje String?
+  recordatorio Int @default(0)
 
   ubicacion Ubicacion? @relation(fields: [ubicacionId], references: [id])
 }
