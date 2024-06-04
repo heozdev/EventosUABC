@@ -44,14 +44,15 @@ export const MisSolicitudesPerfil = () => {
             });
     }, []);
 
-    const handleOpen = (solicitud) => setSelectedSolicitud(solicitud);
     const handleClose = () => setSelectedSolicitud(null);
 
+    //Funciones para abrir y cerrar los Modal
     const handleMensajeModalOpen = () => setMensajeModal(true);
     const handleMensajeModalClose = () => setMensajeModal(false);
 
     const handleMensajeChange = (e) => setMensaje(e.target.value);
 
+    //Funcion para guardar el mensaje enviado por el responsable del evento en la base de datos
     const enviarMensaje = (solicitudId) => {
         fetch(`http://localhost:3000/solicitudes/${solicitudId}`, {
             method: "PUT",
