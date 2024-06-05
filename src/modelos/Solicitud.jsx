@@ -186,6 +186,13 @@ export const Solicitud = ({ solicitud, setSolicitud, updateSolicitudes }) => {
                     boxShadow: "lg",
                 }}
             >
+                {solicitud.valorEnCreditos && <Text 
+                        position="absolute"
+                        right={3}
+                        top={3}
+                        fontWeight="bold"
+                    >8=1</Text> 
+                }
                 <Image
                     objectFit="cover"
                     maxW={{ base: "100%", sm: "200px", md: "40%" }}
@@ -292,7 +299,7 @@ export const Solicitud = ({ solicitud, setSolicitud, updateSolicitudes }) => {
                                 </FormLabel>
                                 <FormLabel mt={3} fontSize="m">
                                     <b>Valor en Créditos: </b>
-                                    {solicitud.valorEnCreditos}
+                                    {solicitud.valorEnCreditos ? "Sí" : "No"}
                                 </FormLabel>
                                 <FormLabel mt={3} fontSize="m">
                                     <b>Total de Sellos: </b>

@@ -20,6 +20,7 @@ import {
     useDisclosure,
     useToast,
     Textarea,
+    Text,
 } from "@chakra-ui/react";
 import { format } from "date-fns";
 import { DeleteIcon, EditIcon } from "@chakra-ui/icons";
@@ -172,6 +173,13 @@ export const MisEventosPerfil = () => {
                                 boxShadow: "lg",
                             }}
                         >
+                            {solicitud.valorEnCreditos && <Text 
+                                    position="absolute"
+                                    right={20}
+                                    top={3}
+                                    fontWeight="bold"
+                                >8=1</Text> 
+                            }
                             <Image
                                 objectFit="cover"
                                 maxW={{ base: "100%", sm: "200px", md: "20%" }}
@@ -275,7 +283,7 @@ export const MisEventosPerfil = () => {
                                     </FormLabel>
                                     <FormLabel mt={3} fontSize="m">
                                         <b>Valor en Créditos: </b>
-                                        {selectedSolicitud.valorEnCreditos}
+                                        {selectedSolicitud.valorEnCreditos ? "Sí" : "No"}
                                     </FormLabel>
                                     <FormLabel mt={3} fontSize="m">
                                         <b>Total de Sellos: </b>

@@ -47,17 +47,46 @@ export const MisSolicitudesPerfil = () => {
     const handleOpen = (solicitud) => setSelectedSolicitud(solicitud);
     const handleClose = () => setSelectedSolicitud(null);
 
-    //Funciones para abrir y cerrar los Modal
+    //Funciones para abrir y cerrar los Modal de mensajes
     const handleMensajeModalOpen = (solicitud) => {
         setSelectedSolicitud(solicitud);
         setMensajeModal(true);
+        setMensaje(""); // Restablecer el valor de mensaje al abrir el modal
     };
-    const handleMensajeModalClose = () => setMensajeModal(false);
+    const handleMensajeModalClose = (solicitud) => {
+        setSelectedSolicitud(solicitud);
+        setMensajeModal(false);
+        setMensaje(""); // Restablecer el valor de mensaje al cerrar el modal
+    };
 
     const handleMensajeChange = (e) => setMensaje(e.target.value);
 
     //Funcion para guardar el mensaje enviado por el responsable del evento en la base de datos
     const enviarMensaje = (solicitudId) => {
+        if (mensaje.trim().length === 0) {
+            toast({
+                title: "Error",
+                description: "El mensaje no puede estar vacío.",
+                status: "error",
+                duration: 3000,
+                isClosable: true,
+                position: "top-right",
+            });
+            return;
+        }
+    
+        if (!/^[a-zA-Z0-9\s.,?!]*$/.test(mensaje)) {
+            toast({
+                title: "Error",
+                description: "El mensaje no puede contener caracteres especiales.",
+                status: "error",
+                duration: 3000,
+                isClosable: true,
+                position: "top-right",
+            });
+            return;
+        }
+    
         fetch(`http://localhost:3000/solicitudes/${solicitudId}`, {
             method: "PUT",
             headers: {
@@ -98,6 +127,7 @@ export const MisSolicitudesPerfil = () => {
 
     const handleOpenDetalleModal = (solicitud) => {
         setSelectedSolicitud(solicitud);
+        setMensajeModal(false); // Cerrar el modal de mensaje si estaba abierto
     };
 
     return (
@@ -125,6 +155,13 @@ export const MisSolicitudesPerfil = () => {
                             boxShadow: "lg",
                         }}
                     >
+                        {solicitud.valorEnCreditos && <Text 
+                                position="absolute"
+                                right={3}
+                                top={3}
+                                fontWeight="bold"
+                            >8=1</Text> 
+                        }
                         <Image
                             objectFit="cover"
                             maxW={{ base: "100%", sm: "200px", md: "25%" }}
@@ -210,7 +247,7 @@ export const MisSolicitudesPerfil = () => {
 
             {selectedSolicitud && (
                 <Modal
-                    isOpen={selectedSolicitud !== null}
+                    isOpen={selectedSolicitud !== null && !mensajeModal}
                     onClose={handleClose}
                     size={modalSize}
                 >
@@ -249,7 +286,7 @@ export const MisSolicitudesPerfil = () => {
                                     </FormLabel>
                                     <FormLabel mt={3} fontSize="m">
                                         <b>Valor en Créditos: </b>
-                                        {selectedSolicitud.valorEnCreditos}
+                                        {selectedSolicitud.valorEnCreditos ? "Sí" : "No"}
                                     </FormLabel>
                                     <FormLabel mt={3} fontSize="m">
                                         <b>Total de Sellos: </b>
