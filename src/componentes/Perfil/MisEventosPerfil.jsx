@@ -173,13 +173,16 @@ export const MisEventosPerfil = () => {
                                 boxShadow: "lg",
                             }}
                         >
-                            {solicitud.valorEnCreditos && <Text 
+                            {solicitud.valorEnCreditos && (
+                                <Text
                                     position="absolute"
                                     right={20}
                                     top={3}
                                     fontWeight="bold"
-                                >8=1</Text> 
-                            }
+                                >
+                                    8=1
+                                </Text>
+                            )}
                             <Image
                                 objectFit="cover"
                                 maxW={{ base: "100%", sm: "200px", md: "20%" }}
@@ -283,7 +286,9 @@ export const MisEventosPerfil = () => {
                                     </FormLabel>
                                     <FormLabel mt={3} fontSize="m">
                                         <b>Valor en Créditos: </b>
-                                        {selectedSolicitud.valorEnCreditos ? "Sí" : "No"}
+                                        {selectedSolicitud.valorEnCreditos
+                                            ? "Sí"
+                                            : "No"}
                                     </FormLabel>
                                     <FormLabel mt={3} fontSize="m">
                                         <b>Total de Sellos: </b>

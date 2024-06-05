@@ -90,8 +90,10 @@ export const Login = () => {
                 .then((resp) => resp.json())
                 .then((data) => {
                     if (data.status === "200") {
-                        localStorage.setItem("rol", data.rol);
-                        console.log(localStorage.getItem("rol"));
+                        localStorage.setItem(
+                            "usuario",
+                            JSON.stringify(data.usuario)
+                        );
 
                         toast({
                             title: "Login exitoso!",

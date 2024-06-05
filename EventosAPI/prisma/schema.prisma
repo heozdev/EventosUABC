@@ -24,7 +24,7 @@ model Notificacion {
   usuarioId Int
   mensaje String
   leida Boolean
-  
+
   usuario Usuario @relation(fields: [usuarioId], references: [id])
 }
 
@@ -40,13 +40,15 @@ model Usuario {
   carrera String
   facultad String
   notificaciones Notificacion[]
-  
+  solicitudes Solicitud[]
+
   tipoUsuario TipoDeUsuario @relation(fields: [idTipoUsuario], references: [IdTipoUsuario])
 }
 
 model Solicitud {
   id Int @id @default(autoincrement())
   ubicacionId Int @unique
+  responsableId Int 
   evento Evento?
   nombre String
   descripcion String
@@ -57,13 +59,13 @@ model Solicitud {
   totalSellos Int
   modalidad String
   estado String
-  responsable String
   capacidad Int
   fechaCreacion DateTime @default(now())
   notas String?
   mensaje String?
   recordatorio Int @default(0)
 
+  responsable Usuario @relation(fields: [responsableId], references: [id])
   ubicacion Ubicacion? @relation(fields: [ubicacionId], references: [id])
 }
 

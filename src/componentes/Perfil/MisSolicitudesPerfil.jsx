@@ -74,11 +74,12 @@ export const MisSolicitudesPerfil = () => {
             });
             return;
         }
-    
+
         if (!/^[a-zA-Z0-9\s.,?!]*$/.test(mensaje)) {
             toast({
                 title: "Error",
-                description: "El mensaje no puede contener caracteres especiales.",
+                description:
+                    "El mensaje no puede contener caracteres especiales.",
                 status: "error",
                 duration: 3000,
                 isClosable: true,
@@ -86,7 +87,7 @@ export const MisSolicitudesPerfil = () => {
             });
             return;
         }
-    
+
         fetch(`http://localhost:3000/solicitudes/${solicitudId}`, {
             method: "PUT",
             headers: {
@@ -118,7 +119,10 @@ export const MisSolicitudesPerfil = () => {
                 setSolicitudes((prevSolicitudes) =>
                     prevSolicitudes.map((solicitud) =>
                         solicitud.id === solicitudId
-                            ? { ...solicitud, recordatorio: solicitud.recordatorio + 1 }
+                            ? {
+                                  ...solicitud,
+                                  recordatorio: solicitud.recordatorio + 1,
+                              }
                             : solicitud
                     )
                 );
@@ -155,13 +159,16 @@ export const MisSolicitudesPerfil = () => {
                             boxShadow: "lg",
                         }}
                     >
-                        {solicitud.valorEnCreditos && <Text 
+                        {solicitud.valorEnCreditos && (
+                            <Text
                                 position="absolute"
                                 right={3}
                                 top={3}
                                 fontWeight="bold"
-                            >8=1</Text> 
-                        }
+                            >
+                                8=1
+                            </Text>
+                        )}
                         <Image
                             objectFit="cover"
                             maxW={{ base: "100%", sm: "200px", md: "25%" }}
@@ -198,7 +205,9 @@ export const MisSolicitudesPerfil = () => {
                                                 mt={3}
                                                 onClick={(e) => {
                                                     e.stopPropagation();
-                                                    handleMensajeModalOpen(solicitud);
+                                                    handleMensajeModalOpen(
+                                                        solicitud
+                                                    );
                                                 }}
                                             >
                                                 Mensaje
@@ -209,10 +218,13 @@ export const MisSolicitudesPerfil = () => {
                                                 ml={3}
                                                 onClick={(e) => {
                                                     e.stopPropagation();
-                                                    aumentarRecordatorio(solicitud.id);
+                                                    aumentarRecordatorio(
+                                                        solicitud.id
+                                                    );
                                                 }}
                                             >
-                                                Recordatorio ({solicitud.recordatorio})
+                                                Recordatorio (
+                                                {solicitud.recordatorio})
                                             </Button>
                                         </>
                                     )}
@@ -286,7 +298,9 @@ export const MisSolicitudesPerfil = () => {
                                     </FormLabel>
                                     <FormLabel mt={3} fontSize="m">
                                         <b>Valor en Créditos: </b>
-                                        {selectedSolicitud.valorEnCreditos ? "Sí" : "No"}
+                                        {selectedSolicitud.valorEnCreditos
+                                            ? "Sí"
+                                            : "No"}
                                     </FormLabel>
                                     <FormLabel mt={3} fontSize="m">
                                         <b>Total de Sellos: </b>
@@ -363,7 +377,10 @@ export const MisSolicitudesPerfil = () => {
                         />
                     </ModalBody>
                     <ModalFooter>
-                        <Button colorScheme="blue" onClick={() => enviarMensaje(selectedSolicitud.id)}>
+                        <Button
+                            colorScheme="blue"
+                            onClick={() => enviarMensaje(selectedSolicitud.id)}
+                        >
                             Enviar
                         </Button>
                     </ModalFooter>

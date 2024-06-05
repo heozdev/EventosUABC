@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
     Box,
     Flex,
@@ -20,7 +20,8 @@ const images = [
         src: "src/recursos/imagenes/ejemploEvento.jpg",
         alt: "Evento 1",
         title: "Curso de Programación de JavaScript",
-        description: "Se llevara a cabo un curso hablando de conceptos basicos de JavaScript, como funciona y muchas funcionalidades que se pueden realizar dentro del mismo lenguaje.",
+        description:
+            "Se llevara a cabo un curso hablando de conceptos basicos de JavaScript, como funciona y muchas funcionalidades que se pueden realizar dentro del mismo lenguaje.",
         responsable: "Luis Miguel Castilla",
         modalidad: "Presencial",
         facultad: "Ingeniería",
@@ -35,7 +36,8 @@ const images = [
         src: "src/recursos/imagenes/EventoArt.png",
         alt: "Evento 2",
         title: "Clase de Arte Abstracto",
-        description: "Se dara una conferencia tipo clase, para enseñar sobre como fue el inicio del movimiento",
+        description:
+            "Se dara una conferencia tipo clase, para enseñar sobre como fue el inicio del movimiento",
         responsable: "Pablo Pikazo",
         modalidad: "Presencial",
         facultad: "Arquitectura y Diseño",
@@ -130,9 +132,13 @@ const Carrusel = ({ images, onOpen, setSelectedEvent }) => {
 };
 
 export const Inicio = () => {
-    const [rol, setRol] = useState(localStorage.getItem("rol"));
+    const [usuario, setUsuario] = useState("");
     const { isOpen, onOpen, onClose } = useDisclosure();
     const [selectedEvent, setSelectedEvent] = useState(null);
+
+    useEffect(() => {
+        setUsuario(JSON.parse(localStorage.getItem("usuario")));
+    }, []);
 
     const openModal = (event) => {
         setSelectedEvent(event);
@@ -143,14 +149,18 @@ export const Inicio = () => {
         <Box>
             {/* Mensaje de bienvenida */}
             <Heading size="xl" color="black" mt={5} textAlign="center">
-                Bienvenido {rol}
+                Bienvenido {usuario.nombres}
             </Heading>
             {/* Título para el carrusel */}
             <Text textAlign="center" mt={2} color="black" paddingTop={5}>
                 Más importantes
             </Text>
             {/* Renderizado del Carrusel */}
-            <Carrusel images={images} onOpen={onOpen} setSelectedEvent={setSelectedEvent} />
+            <Carrusel
+                images={images}
+                onOpen={onOpen}
+                setSelectedEvent={setSelectedEvent}
+            />
             {/* Título para la lista de eventos del día */}
             <Text textAlign="center" mt={10} color="black">
                 Eventos del día
@@ -192,16 +202,36 @@ export const Inicio = () => {
                             }}
                         />
                         {/* Información detallada del evento */}
-                        <Text mt={4} textAlign={"justify"}><b>Descripción:</b> {selectedEvent?.description}</Text>
-                        <Text mt={4} textAlign={"justify"}><b>Responsable:</b> {selectedEvent?.responsable}</Text>
-                        <Text mt={4} textAlign={"justify"}><b>Modalidad:</b> {selectedEvent?.modalidad}</Text>
-                        <Text mt={4} textAlign={"justify"}><b>Facultad:</b> {selectedEvent?.facultad}</Text>
-                        <Text mt={4} textAlign={"justify"}><b>Ciudad:</b> {selectedEvent?.ciudad}</Text>
-                        <Text mt={4} textAlign={"justify"}><b>Aula:</b> {selectedEvent?.aula}</Text>
-                        <Text mt={4} textAlign={"justify"}><b>Fecha:</b> {selectedEvent?.fecha}</Text>
-                        <Text mt={4} textAlign={"justify"}><b>Hora Inicio:</b> {selectedEvent?.horaInicio}</Text>
-                        <Text mt={4} textAlign={"justify"}><b>Hora Fin:</b> {selectedEvent?.horaFin}</Text>
-                        <Text mt={4} textAlign={"justify"}><b>Hora Sellos:</b> {selectedEvent?.sellos}</Text>
+                        <Text mt={4} textAlign={"justify"}>
+                            <b>Descripción:</b> {selectedEvent?.description}
+                        </Text>
+                        <Text mt={4} textAlign={"justify"}>
+                            <b>Responsable:</b> {selectedEvent?.responsable}
+                        </Text>
+                        <Text mt={4} textAlign={"justify"}>
+                            <b>Modalidad:</b> {selectedEvent?.modalidad}
+                        </Text>
+                        <Text mt={4} textAlign={"justify"}>
+                            <b>Facultad:</b> {selectedEvent?.facultad}
+                        </Text>
+                        <Text mt={4} textAlign={"justify"}>
+                            <b>Ciudad:</b> {selectedEvent?.ciudad}
+                        </Text>
+                        <Text mt={4} textAlign={"justify"}>
+                            <b>Aula:</b> {selectedEvent?.aula}
+                        </Text>
+                        <Text mt={4} textAlign={"justify"}>
+                            <b>Fecha:</b> {selectedEvent?.fecha}
+                        </Text>
+                        <Text mt={4} textAlign={"justify"}>
+                            <b>Hora Inicio:</b> {selectedEvent?.horaInicio}
+                        </Text>
+                        <Text mt={4} textAlign={"justify"}>
+                            <b>Hora Fin:</b> {selectedEvent?.horaFin}
+                        </Text>
+                        <Text mt={4} textAlign={"justify"}>
+                            <b>Hora Sellos:</b> {selectedEvent?.sellos}
+                        </Text>
                     </ModalBody>
                 </ModalContent>
             </Modal>
