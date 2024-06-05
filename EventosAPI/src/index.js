@@ -1,10 +1,10 @@
 const express = require("express");
-const cors = require('cors');
+const cors = require("cors");
 const { PrismaClient, Prisma } = require("@prisma/client");
 
 const prisma = new PrismaClient();
 const app = express();
-app.use(cors({ origin: 'http://localhost:5173' }));
+app.use(cors({ origin: "http://localhost:5173" }));
 app.use(express.json());
 
 app.use((req, res, next) => {
@@ -20,8 +20,6 @@ app.use((req, res, next) => {
     res.setHeader("Access-Control-Allow-Credentials", "true");
     next();
 });
-
-
 
 app.use(express.urlencoded({ extended: true }));
 
@@ -225,16 +223,16 @@ app.get("/eventos", async (req, res) => {
     res.json(eventos);
 });
 
-app.delete('/eventos/:id', async (req, res) => {
+app.delete("/eventos/:id", async (req, res) => {
     const { id } = req.params;
     try {
         const evento = await prisma.evento.delete({
-            where: { id: Number(id) }
+            where: { id: Number(id) },
         });
-        res.json({ message: 'Evento eliminado', evento });
+        res.json({ message: "Evento eliminado", evento });
     } catch (error) {
         console.error(error);
-        res.status(500).json({ error: 'Error al eliminar el evento' });
+        res.status(500).json({ error: "Error al eliminar el evento" });
     }
 });
 
@@ -257,23 +255,126 @@ app.get("/eventos/:id", async (req, res) => {
         res.json(evento);
     } catch (error) {
         console.error(error);
-        res.status(500).json({ error: "Error al obtener los detalles del evento" });
+        res.status(500).json({
+            error: "Error al obtener los detalles del evento",
+        });
     }
 });
 
-app.get('/usuario', async (req, res) => {
+app.get("/usuario", async (req, res) => {
     try {
-        const userId = req.user.id; // Suponiendo que has configurado middleware para extraer el ID del usuario del token de autenticación
+        const userId = req.user.id;
         const usuario = await prisma.usuario.findUnique({
             where: {
                 id: userId,
             },
         });
         if (!usuario) {
-            return res.status(404).json({ error: 'Usuario no encontrado' });
+            return res.status(404).json({ error: "Usuario no encontrado" });
         }
         res.json(usuario);
     } catch (error) {
         res.status(500).json({ error: error.message });
+    }
+});
+
+app.get("/usuarios", async (req, res) => {
+    try {
+        const usuarios = await prisma.usuario.findMany({
+            include: {
+                tipoUsuario: true,
+                notificaciones: true,
+            },
+        });
+        res.json(usuarios);
+    } catch (error) {
+        console.error("Error al obtener los usuarios: ", error);
+        res.status(500).json({ error: "Error al obtener los usuarios" });
+    }
+});
+
+// Obtener todos los usuarios con el rol "Encargado"
+app.get("/usuarios/encargados", (req, res) => {
+    prisma.usuario
+        .findMany({
+            where: {
+                idTipoUsuario: 3,
+            },
+        })
+        .then((encargados) => {
+            res.json(encargados);
+        })
+        .catch((error) => {
+            console.error("Error al obtener los usuarios encargados: ", error);
+            res.status(500).json({
+                error: "Error al obtener los usuarios encargados",
+            });
+        });
+});
+
+// Crear una nueva notificación
+app.post("/notificaciones", (req, res) => {
+    const { usuarioId, mensaje, leida } = req.body;
+
+    prisma.notificacion
+        .create({
+            data: {
+                usuarioId,
+                mensaje,
+                leida,
+            },
+        })
+        .then((nuevaNotificacion) => {
+            res.status(201).json(nuevaNotificacion);
+        })
+        .catch((error) => {
+            console.error("Error al crear la notificación: ", error);
+            res.status(500).json({ error: "Error al crear la notificación" });
+        });
+});
+
+// Obtener todas las notificaciones
+app.get("/notificaciones", async (req, res) => {
+    try {
+        const notificaciones = await prisma.notificacion.findMany();
+        res.json(notificaciones);
+    } catch (error) {
+        console.error("Error al obtener las notificaciones: ", error);
+        res.status(500).json({ error: "Error al obtener las notificaciones" });
+    }
+});
+
+// Actualizar una notificación
+app.put("/notificaciones/:id", async (req, res) => {
+    const { id } = req.params;
+    const { usuarioId, mensaje, leida } = req.body;
+
+    try {
+        const notificacionActualizada = await prisma.notificacion.update({
+            where: { id: Number(id) },
+            data: { usuarioId, mensaje, leida },
+        });
+        res.json(notificacionActualizada);
+    } catch (error) {
+        console.error("Error al actualizar la notificación: ", error);
+        res.status(500).json({ error: "Error al actualizar la notificación" });
+    }
+});
+
+// Eliminar una notificación
+app.delete("/notificaciones/:id", async (req, res) => {
+    const { id } = req.params;
+
+    try {
+        const notificacionEliminada = await prisma.notificacion.delete({
+            where: { id: Number(id) },
+        });
+        res.json({
+            message: "Notificación eliminada",
+            notificacion: notificacionEliminada,
+        });
+    } catch (error) {
+        console.error("Error al eliminar la notificación: ", error);
+        res.status(500).json({ error: "Error al eliminar la notificación" });
     }
 });

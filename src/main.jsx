@@ -14,6 +14,7 @@ import { Login } from "./paginas/Login";
 import { CrearSolicitud } from "./paginas/CrearSolicitud";
 import { EditarEvento } from "./paginas/EditarEvento";
 import { RestablecerContrasena } from "./paginas/RestablecerContrasena";
+import { Notificaciones } from "./paginas/Notificaciones";
 
 const router = createBrowserRouter([
     {
@@ -63,6 +64,10 @@ const router = createBrowserRouter([
             {
                 path: "/perfil/editar-evento/:id",
                 element: <EditarEvento />,
+            },
+            {
+                path: "/notificaciones",
+                element: <Notificaciones />,
             },
         ],
     },

@@ -39,7 +39,10 @@ export const Sidebar = ({ gridArea }) => {
                             </Link>
                         </Flex>
                         <Flex>
-                            <FaCalendarAlt size={32} style={{ color: "white" }} />
+                            <FaCalendarAlt
+                                size={32}
+                                style={{ color: "white" }}
+                            />
                             <Link
                                 paddingLeft="10px"
                                 color="white"
@@ -49,10 +52,7 @@ export const Sidebar = ({ gridArea }) => {
                             </Link>
                         </Flex>
                         <Flex display={rol === "Alumno" ? "none" : "flex"}>
-                            <FaFolder
-                                size={35}
-                                style={{ color: "white" }}
-                            />
+                            <FaFolder size={35} style={{ color: "white" }} />
                             <Link
                                 paddingLeft="10px"
                                 color="white"
@@ -62,11 +62,14 @@ export const Sidebar = ({ gridArea }) => {
                             </Link>
                         </Flex>
                         <Flex>
-                            <IoIosNotifications size={35} style={{ color: "white" }} />
+                            <IoIosNotifications
+                                size={35}
+                                style={{ color: "white" }}
+                            />
                             <Link
                                 paddingLeft="10px"
                                 color="white"
-                                href="/eventos"
+                                href="/notificaciones"
                             >
                                 Notificaciones
                             </Link>

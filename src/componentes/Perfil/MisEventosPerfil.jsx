@@ -17,6 +17,9 @@ import {
     Box,
     Input,
     Button,
+    useDisclosure,
+    useToast,
+    Textarea,
 } from "@chakra-ui/react";
 import { format } from "date-fns";
 import { DeleteIcon, EditIcon } from "@chakra-ui/icons";
@@ -30,6 +33,15 @@ export const MisEventosPerfil = () => {
     const [selectedSolicitud, setSelectedSolicitud] = useState(null);
     const [isRegistroModalOpen, setIsRegistroModalOpen] = useState(false);
     const [showEditarFormulario, setShowEditarFormulario] = useState(false);
+    const [textArea, setTextArea] = useState("");
+
+    const {
+        isOpen: isOpenNotasCancelacion,
+        onOpen: onOpenNotasCancelacion,
+        onClose: onCloseNotasCancelacion,
+    } = useDisclosure();
+
+    const toast = useToast();
 
     useEffect(() => {
         fetch("http://localhost:3000/solicitudes")
@@ -45,6 +57,79 @@ export const MisEventosPerfil = () => {
     const handleEditarEvento = (solicitud) => {
         setSelectedSolicitud(solicitud);
         setShowEditarFormulario(true);
+    };
+
+    const handleCancelarEvento = () => {
+        if (!textArea.trim().length) {
+            toast({
+                title: "Error",
+                description:
+                    "Por favor ingrese una nota antes de enviar la solicitud",
+                status: "error",
+                position: "top",
+                duration: 2000,
+                isClosable: true,
+            });
+
+            return;
+        }
+
+        // Obtener todos los usuarios con el rol "Encargado"
+        fetch("http://localhost:3000/usuarios/encargados")
+            .then((response) => {
+                if (!response.ok) {
+                    throw new Error("Error al obtener los encargados");
+                }
+                return response.json();
+            })
+            .then((encargados) => {
+                // Crear una notificación para cada encargado
+                const promesas = encargados.map((encargado) => {
+                    const notificacion = {
+                        usuarioId: encargado.id,
+                        mensaje: `Un evento ha sido cancelado: ${textArea}`,
+                        leida: false,
+                    };
+
+                    return fetch("http://localhost:3000/notificaciones", {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                        },
+                        body: JSON.stringify(notificacion),
+                    }).then((response) => {
+                        if (!response.ok) {
+                            throw new Error("Error al crear la notificación");
+                        }
+                    });
+                });
+
+                return Promise.all(promesas);
+            })
+            .then(() => {
+                toast({
+                    title: "Solicitud enviada con éxito",
+                    status: "success",
+                    position: "top",
+                    duration: 2000,
+                    isClosable: true,
+                });
+
+                onCloseNotasCancelacion();
+            })
+            .catch((error) => {
+                toast({
+                    title: "Error",
+                    description: error.message,
+                    status: "error",
+                    position: "top",
+                    duration: 2000,
+                    isClosable: true,
+                });
+            });
+
+        setTextArea("");
+        handleClose();
     };
 
     const handleCloseEditarFormulario = () => {
@@ -90,7 +175,11 @@ export const MisEventosPerfil = () => {
                             <Image
                                 objectFit="cover"
                                 maxW={{ base: "100%", sm: "200px", md: "20%" }}
-                                maxH={{ base: "200px", sm: "300px", md: "100%" }}
+                                maxH={{
+                                    base: "200px",
+                                    sm: "300px",
+                                    md: "100%",
+                                }}
                                 src="src/recursos/imagenes/ejemploEvento.jpg"
                                 alt="Evento"
                             />
@@ -244,10 +333,55 @@ export const MisEventosPerfil = () => {
                                 </FormControl>
                             </div>
                         </ModalBody>
+                        <ModalFooter>
+                            <Button
+                                colorScheme="red"
+                                onClick={onOpenNotasCancelacion}
+                            >
+                                Solicitar cancelacion
+                            </Button>
+                        </ModalFooter>
                     </ModalContent>
                 </Modal>
             )}
 
+            <Modal
+                isOpen={isOpenNotasCancelacion}
+                onClose={onCloseNotasCancelacion}
+            >
+                <ModalOverlay />
+                <ModalContent>
+                    <ModalHeader>Solicitar cancelacion del evento.</ModalHeader>
+                    <ModalCloseButton />
+                    <ModalBody>
+                        <Textarea
+                            value={textArea}
+                            onChange={(e) => {
+                                setTextArea(e.target.value);
+                            }}
+                            placeholder="Ingrese aqui, el motivo por el cual desea cancelar el evento"
+                        />
+                    </ModalBody>
+
+                    <ModalFooter>
+                        <Button
+                            colorScheme="red"
+                            mr={3}
+                            variant={"outline"}
+                            onClick={handleCancelarEvento}
+                        >
+                            Enviar solicitud
+                        </Button>
+                        <Button
+                            colorScheme="blue"
+                            mr={3}
+                            onClick={onCloseNotasCancelacion}
+                        >
+                            Regresar
+                        </Button>
+                    </ModalFooter>
+                </ModalContent>
+            </Modal>
             <Modal
                 isOpen={isRegistroModalOpen}
                 onClose={handleCloseRegistroModal}
@@ -267,7 +401,11 @@ export const MisEventosPerfil = () => {
                         </FormControl>
                     </ModalBody>
                     <ModalFooter>
-                        <Button colorScheme="blue" mr={3} onClick={handleRegistroAlumno}>
+                        <Button
+                            colorScheme="blue"
+                            mr={3}
+                            onClick={handleRegistroAlumno}
+                        >
                             Registrar
                         </Button>
                         <Button onClick={handleCloseRegistroModal}>
