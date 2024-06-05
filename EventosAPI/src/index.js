@@ -238,6 +238,29 @@ app.delete('/eventos/:id', async (req, res) => {
     }
 });
 
+app.get("/eventos/:id", async (req, res) => {
+    const { id } = req.params;
+    try {
+        const evento = await prisma.evento.findUnique({
+            where: { id: Number(id) },
+            include: {
+                solicitud: {
+                    include: {
+                        ubicacion: true,
+                    },
+                },
+            },
+        });
+        if (!evento) {
+            return res.status(404).json({ error: "Evento no encontrado" });
+        }
+        res.json(evento);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: "Error al obtener los detalles del evento" });
+    }
+});
+
 app.get('/usuario', async (req, res) => {
     try {
         const userId = req.user.id; // Suponiendo que has configurado middleware para extraer el ID del usuario del token de autenticación

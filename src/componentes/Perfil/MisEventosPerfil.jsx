@@ -81,6 +81,11 @@ export const MisEventosPerfil = () => {
                             cursor="pointer"
                             position="relative"
                             flex={1}
+                            transition="transform 0.3s"
+                            _hover={{
+                                transform: "scale(1.02)",
+                                boxShadow: "lg",
+                            }}
                         >
                             <Image
                                 objectFit="cover"
@@ -128,6 +133,11 @@ export const MisEventosPerfil = () => {
                             borderRadius={10}
                             cursor="pointer"
                             onClick={handleOpenRegistroModal}
+                            transition="transform 0.3s"
+                            _hover={{
+                                transform: "scale(1.02)",
+                                boxShadow: "lg",
+                            }}
                         >
                             <FaUserPlus color="white" fontSize="26px" />
                         </Box>

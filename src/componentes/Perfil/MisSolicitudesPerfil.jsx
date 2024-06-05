@@ -119,6 +119,11 @@ export const MisSolicitudesPerfil = () => {
                         bgColor={"#F5F5F5"}
                         onClick={() => handleOpenDetalleModal(solicitud)}
                         cursor="pointer"
+                        transition="transform 0.3s"
+                        _hover={{
+                            transform: "scale(1.02)",
+                            boxShadow: "lg",
+                        }}
                     >
                         <Image
                             objectFit="cover"

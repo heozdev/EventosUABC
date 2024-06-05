@@ -180,6 +180,11 @@ export const Solicitud = ({ solicitud, setSolicitud, updateSolicitudes }) => {
                 height={{ base: "auto", sm: "200px", md: "250px" }}
                 onClick={handleOpen}
                 cursor="pointer"
+                transition="transform 0.3s"
+                _hover={{
+                    transform: "scale(1.02)",
+                    boxShadow: "lg",
+                }}
             >
                 <Image
                     objectFit="cover"

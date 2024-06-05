@@ -3,6 +3,7 @@ import ReactDOM from "react-dom/client";
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
 import { Inicio } from "./paginas/Inicio";
 import { Eventos } from "./paginas/Eventos";
+import { EventoDetalles } from "./paginas/EventoDetalles";
 import { Solicitudes } from "./paginas/Solicitudes";
 import { Perfil } from "./paginas/Perfil";
 import { ChakraProvider } from "@chakra-ui/react";
@@ -34,6 +35,10 @@ const router = createBrowserRouter([
             {
                 path: "/eventos",
                 element: <Eventos />,
+            },
+            {
+                path: "/eventos/evento-detalles/:id",
+                element: <EventoDetalles />,
             },
             {
                 path: "/solicitudes",
