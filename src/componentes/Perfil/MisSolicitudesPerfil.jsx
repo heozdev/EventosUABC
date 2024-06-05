@@ -44,10 +44,14 @@ export const MisSolicitudesPerfil = () => {
             });
     }, []);
 
+    const handleOpen = (solicitud) => setSelectedSolicitud(solicitud);
     const handleClose = () => setSelectedSolicitud(null);
 
     //Funciones para abrir y cerrar los Modal
-    const handleMensajeModalOpen = () => setMensajeModal(true);
+    const handleMensajeModalOpen = (solicitud) => {
+        setSelectedSolicitud(solicitud);
+        setMensajeModal(true);
+    };
     const handleMensajeModalClose = () => setMensajeModal(false);
 
     const handleMensajeChange = (e) => setMensaje(e.target.value);
@@ -152,7 +156,7 @@ export const MisSolicitudesPerfil = () => {
                                                 mt={3}
                                                 onClick={(e) => {
                                                     e.stopPropagation();
-                                                    handleMensajeModalOpen();
+                                                    handleMensajeModalOpen(solicitud);
                                                 }}
                                             >
                                                 Mensaje

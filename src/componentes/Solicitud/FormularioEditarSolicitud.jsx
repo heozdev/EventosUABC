@@ -1,5 +1,5 @@
 // FormularioEditarSolicitud.jsx
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
     Grid,
     GridItem,

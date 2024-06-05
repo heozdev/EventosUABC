@@ -11,8 +11,11 @@ export const EditarEvento = () => {
     useEffect(() => {
         fetch(`http://localhost:3000/solicitudes/${id}`)
             .then((response) => {
-                console.log("Response:", response);
-                return response.json();
+                if (response.ok) {
+                    return response.json();
+                } else {
+                    throw new Error(`Error ${response.status}: ${response.statusText}`);
+                }
             })
             .then((data) => {
                 console.log("Data:", data);
@@ -21,7 +24,7 @@ export const EditarEvento = () => {
             })
             .catch((error) => {
                 console.error("Error al obtener la solicitud:", error);
-                setError("Error al obtener la solicitud. Por favor, intenta nuevamente.");
+                setError(`Error al obtener la solicitud: ${error.message}`);
                 setLoading(false);
             });
     }, [id]);
