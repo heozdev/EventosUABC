@@ -19,6 +19,7 @@ export const Evento = ({ evento }) => {
         navigate(`/eventos/evento-detalles/${evento.id}`);
     };
 
+    console.log(evento);
     return (
         <Center>
             <Card
@@ -39,6 +40,13 @@ export const Evento = ({ evento }) => {
                 }}
                 onClick={handleCardClick}
             >
+                {evento.solicitud.valorEnCreditos && <Text 
+                        position="absolute"
+                        right={3}
+                        top={3}
+                        fontWeight="bold"
+                    >8=1</Text> 
+                }
                 <Image
                     objectFit="cover"
                     maxW={{ base: "100%", sm: "200px", md: "300px" }}
