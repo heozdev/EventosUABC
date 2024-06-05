@@ -128,6 +128,9 @@ app.post("/auth", async (req, res) => {
         where: {
             correo: correoIngresado,
         },
+        include: {
+            tipoUsuario: true,
+        },
     });
 
     if (usuario) {
@@ -135,13 +138,7 @@ app.post("/auth", async (req, res) => {
             correoIngresado === usuario.correo &&
             contrasenaIngresada === usuario.contrasena
         ) {
-            const rol = await prisma.tipoDeUsuario.findUnique({
-                where: {
-                    IdTipoUsuario: usuario.idTipoUsuario,
-                },
-            });
-
-            res.json({ status: "200", rol: rol.rol });
+            res.json({ status: "200", usuario });
         }
 
         if (

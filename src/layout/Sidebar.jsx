@@ -8,14 +8,16 @@ import { FaFolder } from "react-icons/fa";
 import { FaCalendarAlt } from "react-icons/fa";
 
 export const Sidebar = ({ gridArea }) => {
-    const [rol, setRol] = useState("");
+    const [usuario, setUsuario] = useState(
+        JSON.parse(localStorage.getItem("usuario"))
+    );
 
     useEffect(() => {
-        setRol(localStorage.getItem("rol"));
+        setUsuario(JSON.parse(localStorage.getItem("usuario")));
     }, []);
 
     const logout = () => {
-        localStorage.setItem("rol", "");
+        localStorage.setItem("usuario", JSON.stringify(null));
     };
 
     return (
@@ -51,7 +53,13 @@ export const Sidebar = ({ gridArea }) => {
                                 Eventos
                             </Link>
                         </Flex>
-                        <Flex display={rol === "Alumno" ? "none" : "flex"}>
+                        <Flex
+                            display={
+                                usuario.tipoUsuario.rol === "Alumno"
+                                    ? "none"
+                                    : "flex"
+                            }
+                        >
                             <FaFolder size={35} style={{ color: "white" }} />
                             <Link
                                 paddingLeft="10px"
