@@ -89,13 +89,13 @@ model Evento {
 }
 
 model Asistencia{
-  id Int  @default(autoincrement())
+  id Int  @id @default(autoincrement())
   eventoId Int @unique
-  usuarioId Int
+  usuarioId Int @unique
 
   evento  Evento  @relation (fields:[eventoId], references: [id])
   usuario Usuario  @relation (fields:[usuarioId], references:[id])
-  @@unique[eventoId,usuarioId]
+  @@unique([eventoId,usuarioId])
 }
 
 
