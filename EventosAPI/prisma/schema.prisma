@@ -89,7 +89,7 @@ model Evento {
 }
 
 model Asistencia{
-  id Int @ @default(autoincrement())
+  id Int  @default(autoincrement())
   eventoId Int @unique
   usuarioId Int
 
