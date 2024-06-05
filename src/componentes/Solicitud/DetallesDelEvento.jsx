@@ -16,6 +16,19 @@ export const DetallesDelEvento = () => {
     const [evento, setEvento] = useState(null);
     const toast = useToast();
 
+
+    const handleRegistroEvento =  async() => {
+        const response = await fetch ('/registrarEvento', {
+            method:'POST',
+            headers:{
+                'Content-Type' : 'application/json',
+            },
+            body: JSON.stringify({
+
+            })
+        }
+    }
+
     useEffect(() => {
         fetch(`http://localhost:3000/eventos/${id}`)
             .then((response) => response.json())
@@ -83,7 +96,7 @@ export const DetallesDelEvento = () => {
                 <Badge colorScheme="green" fontSize="lg">
                     {evento.estado}
                 </Badge>
-                <Button colorScheme="blue" size="lg">
+                <Button colorScheme="blue" size="lg" onClick={handleRegistroEvento}>
                     Registrarse
                 </Button>
             </VStack>
