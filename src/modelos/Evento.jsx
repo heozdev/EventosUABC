@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import {  useState } from "react";
 import {
     Center,
     Card,
@@ -44,8 +44,8 @@ export const Evento = ({ evento, onDelete }) => {
     const RegistrarEvento = () => {
         setShowRegistrarModal(true);
     };
-
-    const handleConfirmEliminar = async () => {
+    
+    const handleConfirmEliminar =  async() => {
         setShowConfirmModal(false);
         onClose();
 
@@ -172,7 +172,8 @@ export const Evento = ({ evento, onDelete }) => {
                 variant="outline"
                 borderRadius={10}
                 bgColor={"#F5F5F5"}
-                width={{ base: "10%", sm: "10%", md: "10%", lg: "95%" }}
+                width={{ base: "90%", sm: "80%", md: "70%", lg: "60%" }}
+                mx="auto"
                 height={{ base: "auto", sm: "200px", md: "250px" }}
                 onClick={handleOpen}
                 cursor="pointer"
@@ -197,7 +198,7 @@ export const Evento = ({ evento, onDelete }) => {
                                 {evento.solicitud.fecha}
                             </FormLabel>
                             <FormLabel mt={2} fontSize="xl">
-                                {evento.solicitud.responsable}
+                                {evento.solicitud.horaInicio}
                             </FormLabel>
                         </FormControl>
                     </CardBody>
@@ -212,6 +213,8 @@ export const Evento = ({ evento, onDelete }) => {
                                 position="absolute"
                                 right={3}
                                 bottom={3}
+                                mr={5}
+                                mb={3}
                             >
                                 Vigente
                             </Badge>

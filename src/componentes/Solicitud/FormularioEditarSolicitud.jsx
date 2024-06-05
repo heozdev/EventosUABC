@@ -1,5 +1,5 @@
 // FormularioEditarSolicitud.jsx
-import { useEffect, useState } from "react";
+import { useState,useEffect} from "react";
 import {
     Grid,
     GridItem,
@@ -60,12 +60,12 @@ export const FormularioEditarSolicitud = ({ solicitud, onClose }) => {
     const [tabIndex, setTabIndex] = useState(0);
 
     useEffect(() => {
-        fetch(`http://localhost:3000/solicitudes/${id}`)
+        fetch(`http://localhost:3000/solicitudes/${solicitud.id}`)
             .then((response) => response.json())
             .then((data) => {
                 setInputValues(data);
             });
-    }, [id]);
+    }, [solicitud.id]);
 
     function CloseButtonLink() {
         return (

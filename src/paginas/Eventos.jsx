@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import {
-    Heading,
+    Heading,Center
 } from "@chakra-ui/react";
 import { Evento } from "../modelos/Evento";
 
@@ -34,9 +34,11 @@ export const Eventos = () => {
 
     return (
         <>
-            <Heading size="xl" color="black" mt={5} justifyContent="center">
-                Eventos
-            </Heading>
+            <Center>
+                <Heading size="xl" color="black" mt={5} justifyContent="center">
+                    Eventos
+                </Heading>
+            </Center>
             {eventos.map((evento) => (
                 <Evento key={evento.id} evento={evento}  onDelete={handleDeleteEvento}/>
             ))}

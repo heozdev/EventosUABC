@@ -1,8 +1,42 @@
-import { Box, Grid, GridItem, Image, Text } from "@chakra-ui/react";
-import { useState } from "react";
+import { Box, Grid, GridItem, Image, Text,Spinner } from "@chakra-ui/react";
+import { useState,useEffect } from "react";
 
 export const InformacionPerfil = () => {
     const [sesion, setSesion] = useState(localStorage.getItem("rol"));
+    const [perfil, setPerfil] = useState(null);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
+
+    // useEffect(() => {
+    //     fetch("http://localhost:3000/usuario", {
+    //         method: "GET",
+    //         headers: {
+    //             "Content-Type": "application/json",
+    //         },
+    //     })
+    //         .then((response) => {
+    //             if (!response.ok) {
+    //                 throw new Error(Error);
+    //             }
+    //             return response.json();
+    //         })
+    //         .then((data) => {
+    //             setPerfil(data);
+    //             setLoading(false);
+    //         })
+    //         .catch((error) => {
+    //             setError(error);
+    //             setLoading(false);
+    //         });
+    // }, []);
+
+    // if (loading) {
+    //     return <Spinner size="xl" />;
+    // }
+
+    // if (error) {
+    //     return <Text>Error: {error.message}</Text>;
+    // }
 
     return (
         <Box mt={10} bg={"#F5F5F5"} p={10}>
@@ -14,10 +48,10 @@ export const InformacionPerfil = () => {
                     />
                 </GridItem>
                 <GridItem>
-                    <Text></Text>
-                    <Text>17058</Text>
-                    <Text>Facultad de ingenieria</Text>
+                    <Text>Leonardo Canett</Text>
+                    <Text>1183253</Text>
                     <Text>Lic. Sistemas computacionales</Text>
+                    <Text>Facultad de Ingenieria</Text>
                 </GridItem>
             </Grid>
         </Box>

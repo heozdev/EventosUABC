@@ -1,19 +1,19 @@
 import {
-    Modal,
-    ModalOverlay,
-    ModalContent,
-    ModalHeader,
-    ModalFooter,
-    ModalBody,
-    ModalCloseButton,
-    Button,
-    FormLabel,
-    Input,
-    Alert,
-    AlertIcon,
-    FormControl
-  } from '@chakra-ui/react';
-import { useState,useEffect } from 'react';
+  Modal,
+  ModalOverlay,
+  ModalContent,
+  ModalHeader,
+  ModalFooter,
+  ModalBody,
+  ModalCloseButton,
+  Button,
+  FormLabel,
+  Input,
+  Alert,
+  AlertIcon,
+  FormControl,
+} from '@chakra-ui/react';
+import { useState, useEffect } from 'react';
 
 const FiltroBarraBusqueda = ({ isOpenModalSearch, onCloseModalSearch, solicitudes, setSolicitudes }) => {
   const [search, setSearch] = useState("");
@@ -29,14 +29,17 @@ const FiltroBarraBusqueda = ({ isOpenModalSearch, onCloseModalSearch, solicitude
   };
 
   const handleSearch = () => {
+    console.log("Solicitudes originales:", solicitudes);
     const filtered = solicitudes.filter(evento => {
       const nombreIncluido = evento.nombre.toLowerCase().includes(search.toLowerCase());
       const facultadIncluida = evento.ubicacion.facultad.toLowerCase().includes(search.toLowerCase());
       const ciudadIncluida = evento.ubicacion.ciudad.toLowerCase().includes(search.toLowerCase());
-
+  
       return nombreIncluido || ciudadIncluida || facultadIncluida;
     });
-
+  
+    console.log("Solicitudes filtradas:", filtered);
+  
     if (filtered.length === 0) {
       setShowAlert(true);
     } else {
@@ -44,6 +47,7 @@ const FiltroBarraBusqueda = ({ isOpenModalSearch, onCloseModalSearch, solicitude
       setSolicitudes(filtered);
     }
   };
+  
 
   const handleCloseModal = () => {
     setShowAlert(false);
@@ -68,7 +72,7 @@ const FiltroBarraBusqueda = ({ isOpenModalSearch, onCloseModalSearch, solicitude
               />
             </FormControl>
             {showAlert && (
-              <Alert status="warning" mt={4} onClose={() => setShowAlert(false)}>
+              <Alert status="warning" mt={4}>
                 <AlertIcon />
                 No se encontraron resultados.
               </Alert>
