@@ -103,7 +103,7 @@ export const MisSolicitudesPerfil = () => {
     return (
         <Stack spacing={4}>
             {solicitudes.map((solicitud) => {
-                const fechaCreacion = solicitud.fecha;
+                const fechaCreacion = solicitud.fechaCreacion;
                 const fechaFormateada = format(
                     new Date(fechaCreacion),
                     "dd/MM/yyyy HH:mm:ss"

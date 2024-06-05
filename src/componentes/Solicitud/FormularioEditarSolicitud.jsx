@@ -132,7 +132,7 @@ export const FormularioEditarSolicitud = ({ solicitud, onClose }) => {
         }
 
         if (!inputValues.ubicacionData.aula.trim()) {
-            newErrors.aula = "El nombre del evento es obligatorio";
+            newErrors.aula = "El aula donde sera el evento es obligatorio";
         } else if (
             !/^[a-zA-Z0-9\sáéíóúÁÉÍÓÚñÑüÜ]*$/.test(
                 inputValues.ubicacionData.aula
