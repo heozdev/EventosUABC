@@ -55,9 +55,9 @@ export const Sidebar = ({ gridArea }) => {
                         </Flex>
                         <Flex
                             display={
-                                usuario.tipoUsuario.rol === "Alumno"
-                                    ? "none"
-                                    : "flex"
+                                usuario.tipoUsuario.rol === "Encargado"
+                                    ? "flex"
+                                    : "none"
                             }
                         >
                             <FaFolder size={35} style={{ color: "white" }} />
@@ -116,5 +116,3 @@ export const Sidebar = ({ gridArea }) => {
         </GridItem>
     );
 };
-
-

@@ -9,7 +9,7 @@ export const Solicitudes = () => {
 
     const getSolicitudes = () => {
         if (usuario) {
-            fetch(`http://localhost:3000/usuarios/${usuario.id}/solicitudes`)
+            fetch(`http://localhost:3000/solicitudes`)
                 .then((response) => response.json())
                 .then((data) => {
                     const pendientes = data.filter(
