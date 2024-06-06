@@ -22,19 +22,23 @@ import {
     Textarea,
     Text,
 } from "@chakra-ui/react";
-import { format } from "date-fns";
 import { DeleteIcon, EditIcon } from "@chakra-ui/icons";
 import { FaUserPlus } from "react-icons/fa6";
-import { Navigate, Link as RouterLink } from "react-router-dom";
-import { Link as ChakraLink } from "@chakra-ui/react";
+import { useNavigate } from "react-router-dom";
 import { FormularioEditarEvento } from "../Solicitud/FormularioEditarEvento";
 
-export const MisEventosPerfil = ({evento}) => {
-    const [solicitudes, setSolicitudes] = useState([]);
-    const [selectedSolicitud, setSelectedSolicitud] = useState(null);
+
+export const MisEventosPerfil = ({ evento }) => {
+    const [eventos, setEventos] = useState([]);
+    const [selectedEvento, setSelectedEvento] = useState(null);
     const [isRegistroModalOpen, setIsRegistroModalOpen] = useState(false);
     const [showEditarFormulario, setShowEditarFormulario] = useState(false);
     const [textArea, setTextArea] = useState("");
+    const navigate = useNavigate();
+
+    const handleCardClick = (eventoId) => {
+        navigate(`/perfil/editar-evento/${eventoId}`);
+    };
 
     const {
         isOpen: isOpenNotasCancelacion,
@@ -48,7 +52,7 @@ export const MisEventosPerfil = ({evento}) => {
         fetch("http://localhost:3000/eventos")
             .then((response) => response.json())
             .then((data) => {
-                setSolicitudes(data);
+                setEventos(data);
             });
     }, []);
 
@@ -130,8 +134,8 @@ export const MisEventosPerfil = ({evento}) => {
         setShowEditarFormulario(false);
     };
 
-    const handleOpen = (solicitud) => setSelectedSolicitud(solicitud);
-    const handleClose = () => setSelectedSolicitud(null);
+    const handleOpen = (evento) => setSelectedEvento(evento);
+    const handleClose = () => setSelectedEvento(null);
 
     const handleOpenRegistroModal = () => setIsRegistroModalOpen(true);
     const handleCloseRegistroModal = () => setIsRegistroModalOpen(false);
@@ -143,15 +147,11 @@ export const MisEventosPerfil = ({evento}) => {
         handleCloseRegistroModal();
     };
 
-    const handleCardClick = () => {
-        Navigate(`/perfil/editar-evento/${evento.id}`);
-    };
-
     return (
         <Stack spacing={4}>
-            {solicitudes.map((solicitud) => {
+            {eventos.map((evento) => {
                 return (
-                    <Flex key={solicitud.id} alignItems="stretch">
+                    <Flex key={evento.id} alignItems="stretch">
                         <Card
                             mt={3}
                             direction={{ base: "column", sm: "row" }}
@@ -159,7 +159,7 @@ export const MisEventosPerfil = ({evento}) => {
                             variant="outline"
                             borderRadius={10}
                             bgColor={"#F5F5F5"}
-                            onClick={() => handleOpen(solicitud)}
+                            onClick={() => handleOpen(evento)}
                             cursor="pointer"
                             position="relative"
                             flex={1}
@@ -169,7 +169,7 @@ export const MisEventosPerfil = ({evento}) => {
                                 boxShadow: "lg",
                             }}
                         >
-                            {solicitud.valorEnCreditos && (
+                            {evento.solicitud.valorEnCreditos && (
                                 <Text
                                     position="absolute"
                                     right={20}
@@ -194,27 +194,34 @@ export const MisEventosPerfil = ({evento}) => {
                                 <CardBody>
                                     <FormControl>
                                         <FormLabel mt={6} fontSize="xl">
-                                            {solicitud.nombre}
+                                            {evento.solicitud.nombre}
                                         </FormLabel>
                                     </FormControl>
                                 </CardBody>
                             </Stack>
-                            <ChakraLink
-                                position="absolute"
+                            <EditIcon
+                                position={"absolute"}
                                 top={3}
                                 right={10}
-                                color="#00723F"
+                                color={"#00723F"}
+                                fontSize={"xl"}
                                 cursor="pointer"
-                                onClick={handleCardClick}
-                            >
-                                <EditIcon fontSize="26px" />
-                            </ChakraLink>
+                                onClick={(e) => {
+                                    e.stopPropagation();
+                                    handleCardClick(evento.id);
+                                }}
+                            />
                             <DeleteIcon
                                 position={"absolute"}
                                 top={3}
                                 right={3}
                                 color={"#00723F"}
                                 fontSize={"xl"}
+                                cursor="pointer"
+                                onClick={(e) => {
+                                    e.stopPropagation();
+                                    onOpenNotasCancelacion();
+                                }}
                             />
                         </Card>
                         <Box
@@ -239,9 +246,9 @@ export const MisEventosPerfil = ({evento}) => {
                 );
             })}
 
-            {selectedSolicitud && (
+            {selectedEvento && (
                 <Modal
-                    isOpen={!!selectedSolicitud}
+                    isOpen={!!selectedEvento}
                     onClose={handleClose}
                     size="5xl"
                 >
@@ -260,87 +267,87 @@ export const MisEventosPerfil = ({evento}) => {
                                 <FormControl>
                                     <FormLabel mt={3} fontSize="m">
                                         <b>ID del Evento: </b>
-                                        {selectedSolicitud.id}
+                                        {selectedEvento.id}
                                     </FormLabel>
                                     <FormLabel mt={3} fontSize="m">
                                         <b>Nombre del Evento: </b>
-                                        {selectedSolicitud.nombre}
+                                        {selectedEvento.solicitud.nombre}
                                     </FormLabel>
                                     <FormLabel mt={3} fontSize="m">
                                         <b>Responsable: </b>
-                                        {selectedSolicitud.responsable}
+                                        {selectedEvento.solicitud.responsable}
                                     </FormLabel>
                                     <FormLabel mt={3} fontSize="m">
                                         <b>Modalidad: </b>
-                                        {selectedSolicitud.modalidad}
+                                        {selectedEvento.solicitud.modalidad}
                                     </FormLabel>
                                     <FormLabel mt={3} fontSize="m">
                                         <b>Capacidad: </b>
-                                        {selectedSolicitud.capacidad}
+                                        {selectedEvento.solicitud.capacidad}
                                     </FormLabel>
                                     <FormLabel mt={3} fontSize="m">
                                         <b>Valor en Créditos: </b>
-                                        {selectedSolicitud.valorEnCreditos
+                                        {selectedEvento.solicitud.valorEnCreditos
                                             ? "Sí"
                                             : "No"}
                                     </FormLabel>
                                     <FormLabel mt={3} fontSize="m">
                                         <b>Total de Sellos: </b>
-                                        {selectedSolicitud.totalSellos}
+                                        {selectedEvento.solicitud.totalSellos}
                                     </FormLabel>
                                     <FormLabel mt={3} fontSize="m">
                                         <b>Hora Inicio: </b>
-                                        {selectedSolicitud.horaInicio}
+                                        {selectedEvento.solicitud.horaInicio}
                                     </FormLabel>
                                     <FormLabel mt={3} fontSize="m">
                                         <b>Hora Fin: </b>
-                                        {selectedSolicitud.horaFin}
+                                        {selectedEvento.solicitud.horaFin}
                                     </FormLabel>
                                 </FormControl>
                                 <FormControl>
                                     <FormLabel mt={3} fontSize="m">
                                         <b>Descripción: </b>
-                                        {selectedSolicitud.descripcion}
+                                        {selectedEvento.solicitud.descripcion}
                                     </FormLabel>
                                     <FormLabel mt={3} fontSize="m">
                                         <b>Facultad: </b>
-                                        {selectedSolicitud.ubicacion.facultad}
+                                        {selectedEvento.solicitud.ubicacion.facultad}
                                     </FormLabel>
                                     <FormLabel mt={3} fontSize="m">
                                         <b>Estado: </b>
-                                        {selectedSolicitud.ubicacion.estado}
+                                        {selectedEvento.solicitud.ubicacion.estado}
                                     </FormLabel>
                                     <FormLabel mt={3} fontSize="m">
                                         <b>Campus: </b>
-                                        {selectedSolicitud.ubicacion.campus}
+                                        {selectedEvento.solicitud.ubicacion.campus}
                                     </FormLabel>
                                     <FormLabel mt={3} fontSize="m">
                                         <b>Ciudad: </b>
-                                        {selectedSolicitud.ubicacion.ciudad}
+                                        {selectedEvento.solicitud.ubicacion.ciudad}
                                     </FormLabel>
                                     <FormLabel mt={3} fontSize="m">
                                         <b>Dirección: </b>
-                                        {selectedSolicitud.ubicacion.direccion}
+                                        {selectedEvento.solicitud.ubicacion.direccion}
                                     </FormLabel>
                                     <FormLabel mt={3} fontSize="m">
                                         <b>Aula: </b>
-                                        {selectedSolicitud.ubicacion.aula}
+                                        {selectedEvento.solicitud.ubicacion.aula}
                                     </FormLabel>
                                     <FormLabel mt={3} fontSize="m">
                                         <b>Fecha: </b>
-                                        {selectedSolicitud.fecha}
-                                    </FormLabel>
-                                    <FormLabel mt={3} fontSize="m">
-                                        <b>Fecha de envio: </b>
-                                        {format(
-                                            new Date(selectedSolicitud.fecha),
-                                            "dd/MM/yyyy HH:mm:ss"
-                                        )}
+                                        {selectedEvento.solicitud.fecha}
                                     </FormLabel>
                                 </FormControl>
                             </div>
                         </ModalBody>
                         <ModalFooter>
+                        <Button
+                            colorScheme="blue"
+                            onClick={() => handleCardClick(selectedEvento.id)}
+                            mr={5}
+                        >
+                            Editar Eventos
+                        </Button>
                             <Button
                                 colorScheme="red"
                                 onClick={onOpenNotasCancelacion}
