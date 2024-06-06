@@ -20,58 +20,68 @@ export const DetallesDelEvento = () => {
     const [evento, setEvento] = useState(null);
     const toast = useToast();
 
-
-    const handleRegistroEvento = async () => {
+    const handleRegistroEvento = () => {
         try {
-          // Recuperar datos del usuario desde localStorage
-          const usuarioJSON = localStorage.getItem('usuario');
-          if (!usuarioJSON) {
-            throw new Error("No hay datos de usuario almacenados en localStorage")
-          }
-          // Analizar los datos del usuario como JSON
-          const usuario = JSON.parse(usuarioJSON);
-      
-          // Continuar con el proceso de registro al evento utilizando los datos del usuario
-          const response = await fetch('/registroEvento', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(usuario),
-          });
-      
-          if (!response.ok) {
-            throw new Error('Error en la respuesta del servidor');
-          }
-      
-          const data = await response.json();
-          console.log(data);
+            const usuarioJSON = localStorage.getItem("usuario");
+
+            if (!usuarioJSON) {
+                throw new Error(
+                    "No hay datos de usuario almacenados en localStorage"
+                );
+            }
+            const usuario = JSON.parse(usuarioJSON);
+
+            const eventoId = evento.id;
+
+            const data = {
+                usuarioId: usuario.id,
+                eventoId: eventoId,
+            };
+
+            console.log(JSON.stringify(data));
+
+            fetch("http://localhost:3000/asistencias", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(data),
+            })
+                .then((response) => response.json())
+                .then((responseData) => {
+                    console.log(responseData);
+                })
+                .catch((error) => {
+                    console.error("Error al registrar la asistencia:", error);
+                });
         } catch (error) {
-          console.error('Error al registrar el evento:', error);
+            console.error("Error al procesar los datos del usuario:", error);
         }
-      };
-      
-      
-      
+    };
 
     useEffect(() => {
         fetch(`http://localhost:3000/eventos/${id}`)
             .then((response) => response.json())
             .then((data) => {
+                console.log(data);
                 setEvento(data);
             })
             .catch((error) => {
-                console.error("Error al obtener los detalles del evento:", error);
+                console.error(
+                    "Error al obtener los detalles del evento:",
+                    error
+                );
                 toast({
                     title: "Error",
-                    description: "Hubo un problema al obtener los detalles del evento.",
+                    description:
+                        "Hubo un problema al obtener los detalles del evento.",
                     status: "error",
                     duration: 3000,
                     isClosable: true,
                     position: "top-right",
                 });
             });
-    }, [id, toast]);
+    }, []);
 
     if (!evento) {
         return <div>Cargando...</div>;
@@ -95,25 +105,38 @@ export const DetallesDelEvento = () => {
 
     return (
         <Box p={8}>
-            <CloseButtonLink/>
+            <CloseButtonLink />
             <Heading as="h1" size="xl" textAlign={"center"}>
-                    {evento.solicitud.nombre}
-                </Heading>
-                <Center>
-                    <VStack display="grid" gridTemplateColumns={"1fr 1fr"} align="stretch" mt={10} width={"50%"}>
-                        <Image
-                            src="/src/recursos/imagenes/ejemploEvento.jpg"
-                            alt="Imagen del evento"
-                            objectFit="cover"
-                            width="70%"
-                            height="200px"
-                            borderRadius="md"
-                        />
-                        <Text fontSize="xl" textAlign={"justify"}>{evento.solicitud.descripcion}</Text>
-                    </VStack>
-                </Center>
+                {evento.solicitud.nombre}
+            </Heading>
             <Center>
-                <Grid templateColumns="repeat(2, 1fr)" gap={4} width={"50%"} mt={10}>
+                <VStack
+                    display="grid"
+                    gridTemplateColumns={"1fr 1fr"}
+                    align="stretch"
+                    mt={10}
+                    width={"50%"}
+                >
+                    <Image
+                        src="/src/recursos/imagenes/ejemploEvento.jpg"
+                        alt="Imagen del evento"
+                        objectFit="cover"
+                        width="70%"
+                        height="200px"
+                        borderRadius="md"
+                    />
+                    <Text fontSize="xl" textAlign={"justify"}>
+                        {evento.solicitud.descripcion}
+                    </Text>
+                </VStack>
+            </Center>
+            <Center>
+                <Grid
+                    templateColumns="repeat(2, 1fr)"
+                    gap={4}
+                    width={"50%"}
+                    mt={10}
+                >
                     <FormControl>
                         <FormLabel mt={3} fontSize="m">
                             <b>Responsable: </b>
@@ -177,7 +200,12 @@ export const DetallesDelEvento = () => {
                 </Grid>
             </Center>
             <Center>
-                <Button colorScheme="green" size="lg" mt={10} onClick={handleRegistroEvento}>
+                <Button
+                    colorScheme="green"
+                    size="lg"
+                    mt={10}
+                    onClick={handleRegistroEvento}
+                >
                     Asistiré
                 </Button>
             </Center>

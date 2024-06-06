@@ -482,23 +482,73 @@ app.delete("/notificaciones/:id", async (req, res) => {
     }
 });
 
-//Crear asistencia de un usuario a un evento
-app.post("/registrarEvento", async (req, res) => {
-    try {
-        const usuario = req.body;
+app.post("/asistencias", async (req, res) => {
+    const { usuarioId, eventoId } = req.body;
 
-        const nuevaAsistencia = await prisma.asistencia.create({
+    try {
+        const asistencia = await prisma.asistencia.create({
             data: {
-                matricula: usuario.matricula,
-                nombres: usuario.nombres,
-                apellidos: usuario.apellidos,
-                carrera: usuario.carrera,
-                facultad: usuario.facultad,
+                usuario: { connect: { id: usuarioId } },
+                evento: { connect: { id: eventoId } },
             },
         });
-        res.json(nuevaAsistencia);
+
+        res.json(asistencia);
     } catch (error) {
-        console.error("Error al registrar el evento:", error);
-        res.status(500).json({ error: "Error al registrarse el evento" });
+        console.error(error);
+        res.status(500).json({ error: "Error al registrar la asistencia" });
+    }
+});
+
+app.get("/usuarios/:usuarioId/eventos-asistidos", async (req, res) => {
+    const { usuarioId } = req.params;
+
+    try {
+        const eventos = await prisma.evento.findMany({
+            where: {
+                asistencia: {
+                    some: {
+                        usuarioId: parseInt(usuarioId),
+                    },
+                },
+            },
+            include: {
+                solicitud: {
+                    include: {
+                        ubicacion: true,
+                    },
+                },
+            },
+        });
+
+        res.json(eventos);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({
+            error: "Error al obtener los eventos del usuario",
+        });
+    }
+});
+
+app.get("/eventos/:eventoId/usuarios", async (req, res) => {
+    const { eventoId } = req.params;
+
+    try {
+        const usuarios = await prisma.usuario.findMany({
+            where: {
+                asistencias: {
+                    some: {
+                        eventoId: parseInt(eventoId),
+                    },
+                },
+            },
+        });
+
+        res.json(usuarios);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({
+            error: "Error al obtener los usuarios del evento",
+        });
     }
 });

@@ -23,9 +23,7 @@ export const Perfil = () => {
                         <InformacionPerfil />
                     </GridItem>
                     <GridItem>
-                        {usuario.tipoUsuario.rol != "Alumno" && (
-                            <AccionesPerfil />
-                        )}
+                        <AccionesPerfil />
                     </GridItem>
                 </Grid>
             </Container>
