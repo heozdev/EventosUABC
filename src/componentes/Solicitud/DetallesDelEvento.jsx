@@ -19,6 +19,9 @@ export const DetallesDelEvento = () => {
     const { id } = useParams();
     const [evento, setEvento] = useState(null);
     const toast = useToast();
+    const [asistira,setAsistira] = useState(false);
+
+    
 
     const handleRegistroEvento = () => {
         try {
@@ -40,7 +43,7 @@ export const DetallesDelEvento = () => {
 
             console.log(JSON.stringify(data));
 
-            fetch("http://localhost:3000/asistencias", {
+            fetch(`http://localhost:3000/asistencias`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -50,16 +53,114 @@ export const DetallesDelEvento = () => {
                 .then((response) => response.json())
                 .then((responseData) => {
                     console.log(responseData);
+                    toast({
+                        title:"Registro exitoso",
+                        description:"Se ha registrado correctamente al evento",
+                        status:"success",
+                        duration:3000,
+                        isClosable:true,
+                        position:"top-right"
+                    });
+                    setAsistira(true);
                 })
                 .catch((error) => {
                     console.error("Error al registrar la asistencia:", error);
+                    toast({
+                        title: "Error",
+                        description: "Hubo un error al registrar tu asistencia.",
+                        status: "error",
+                        duration: 5000,
+                        isClosable: true,
+                        position:"top-right"
+                    });
                 });
         } catch (error) {
             console.error("Error al procesar los datos del usuario:", error);
+            toast({
+                title: "Error",
+                description: "Hubo un error al procesar los datos del usuario.",
+                status: "error",
+                duration: 5000,
+                isClosable: true,
+                position:"top-right"
+            });
+        }
+    };
+
+    const handleCancelarAsistencia = () => {
+        try {
+            const usuarioJSON = localStorage.getItem("usuario");
+    
+            if (!usuarioJSON) {
+                throw new Error(
+                    "No hay datos de usuario almacenados en localStorage"
+                );
+            }
+            const usuario = JSON.parse(usuarioJSON);
+    
+            fetch("http://localhost:3000/asistencias", {
+                method: "DELETE",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    usuarioId: usuario.id,
+                    eventoId: evento.id
+                }),
+            })
+                .then((response) => {
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! Status: ${response.status}`);
+                    }
+                    return response.json();
+                })
+                .then((responseData) => {
+                    console.log(responseData);
+                    toast({
+                        title: "Cancelación exitosa",
+                        description: "Se ha cancelado tu asistencia al evento.",
+                        status: "success",
+                        duration: 3000,
+                        isClosable: true,
+                        position: "top-right"
+                    });
+                    setAsistira(false); 
+                })
+                .catch((error) => {
+                    console.error("Error al cancelar la asistencia:", error);
+                    toast({
+                        title: "Error",
+                        description: "Hubo un error al cancelar tu asistencia.",
+                        status: "error",
+                        duration: 3000,
+                        isClosable: true,
+                        position: "top-right"
+                    });
+                });
+        } catch (error) {
+            console.error("Error al procesar los datos del usuario:", error);
+            toast({
+                title: "Error",
+                description: "Hubo un error al procesar los datos del usuario.",
+                status: "error",
+                duration: 3000,
+                isClosable: true,
+                position: "top-right"
+            });
+        }
+    };
+    
+      // Maneja el cambio entre botones basado en asistira
+    const handleToggleAsistencia = () => {
+        if (asistira) {
+            handleCancelarAsistencia();
+        } else {
+            handleRegistroEvento();
         }
     };
 
     useEffect(() => {
+        
         fetch(`http://localhost:3000/eventos/${id}`)
             .then((response) => response.json())
             .then((data) => {
@@ -82,6 +183,7 @@ export const DetallesDelEvento = () => {
                 });
             });
     }, []);
+
 
     if (!evento) {
         return <div>Cargando...</div>;
@@ -204,9 +306,20 @@ export const DetallesDelEvento = () => {
                     colorScheme="green"
                     size="lg"
                     mt={10}
-                    onClick={handleRegistroEvento}
+                    onClick={handleToggleAsistencia}
+                    style={{ display: asistira ? "none" : "block" }}
                 >
-                    Asistiré
+                    {asistira ? "Cancelar asistencia" : "Asistiré"}
+                </Button>
+
+                <Button
+                    colorScheme="red"
+                    size="lg"
+                    mt={10}
+                    onClick={handleToggleAsistencia}
+                    style={{ display: asistira ? "block" : "none" }}
+                >
+                   {asistira ? "Cancelar asistencia" : "Asistiré"}
                 </Button>
             </Center>
         </Box>

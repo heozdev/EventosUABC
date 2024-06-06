@@ -55,7 +55,7 @@ export const Sidebar = ({ gridArea }) => {
                         </Flex>
                         <Flex
                             display={
-                                usuario.tipoUsuario.rol === "Encargado"
+                                usuario.tipoUsuario.rol == "Encargado"
                                     ? "flex"
                                     : "none"
                             }
@@ -69,7 +69,15 @@ export const Sidebar = ({ gridArea }) => {
                                 Solicitudes
                             </Link>
                         </Flex>
-                        <Flex>
+                        <Flex
+                            display={
+                                usuario&&(usuario.tipoUsuario.rol === "Encargado" || usuario.tipoUsuario.rol === "Profesor")
+                                ? "flex"
+                                :"none"
+                            }
+                                
+                            
+                        >
                             <IoIosNotifications
                                 size={35}
                                 style={{ color: "white" }}
