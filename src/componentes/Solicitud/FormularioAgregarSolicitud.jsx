@@ -640,7 +640,7 @@ export const FormularioAgregarSolicitud = () => {
                                 </FormLabel>
                                 <FormLabel mt={3} fontSize="m">
                                     <b>Valor en Créditos</b>
-                                    <br /> {inputValues.valorEnCreditos}
+                                    <br /> {inputValues.valorEnCreditos ? "Sí" : "No"}
                                 </FormLabel>
                                 <FormLabel mt={3} fontSize="m">
                                     <b>Total de Sellos</b>

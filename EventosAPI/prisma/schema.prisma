@@ -41,6 +41,7 @@ model Usuario {
   facultad String
   notificaciones Notificacion[]
   solicitudes Solicitud[]
+  asistencia Asistencia?
 
   tipoUsuario TipoDeUsuario @relation(fields: [idTipoUsuario], references: [IdTipoUsuario])
 }
@@ -87,6 +88,17 @@ model Evento {
   estado String
   
   solicitud Solicitud @relation(fields: [solicitudId],references: [id])
+  asistencia Asistencia?
+}
+
+model Asistencia{
+  id Int  @id @default(autoincrement())
+  eventoId Int @unique
+  usuarioId Int @unique
+
+  evento  Evento  @relation (fields:[eventoId], references: [id],onDelete: NoAction, onUpdate: NoAction)
+  usuario Usuario  @relation (fields:[usuarioId], references:[id], onDelete: NoAction, onUpdate: NoAction)
+  @@unique([eventoId,usuarioId])
 }
 
 

@@ -401,3 +401,24 @@ app.delete("/notificaciones/:id", async (req, res) => {
         res.status(500).json({ error: "Error al eliminar la notificación" });
     }
 });
+
+//Crear asistencia de un usuario a un evento
+app.post('/registrarEvento', async (req,res) => {
+    try {
+        const usuario = req.body
+    
+        const nuevaAsistencia = await prisma.asistencia.create({
+            data:{
+                matricula : usuario.matricula,
+                nombres: usuario.nombres,
+                apellidos: usuario.apellidos,
+                carrera: usuario.carrera,
+                facultad: usuario.facultad
+            }
+        })
+        res.json(nuevaAsistencia)
+    } catch (error) {
+        console.error('Error al registrar el evento:', error);
+        res.status(500).json({ error: 'Error al registrarse el evento' });
+    }
+})

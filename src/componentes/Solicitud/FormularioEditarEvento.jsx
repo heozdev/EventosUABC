@@ -16,44 +16,10 @@ import {
 } from "@chakra-ui/react";
 import { format } from "date-fns";
 
-export const DetallesDelEvento = () => {
+export const FormularioEditarEvento = () => {
     const { id } = useParams();
     const [evento, setEvento] = useState(null);
     const toast = useToast();
-
-
-    const handleRegistroEvento = async () => {
-        try {
-          // Recuperar datos del usuario desde localStorage
-          const usuarioJSON = localStorage.getItem('usuario');
-          if (!usuarioJSON) {
-            throw new Error("No hay datos de usuario almacenados en localStorage")
-          }
-          // Analizar los datos del usuario como JSON
-          const usuario = JSON.parse(usuarioJSON);
-      
-          // Continuar con el proceso de registro al evento utilizando los datos del usuario
-          const response = await fetch('/registroEvento', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(usuario),
-          });
-      
-          if (!response.ok) {
-            throw new Error('Error en la respuesta del servidor');
-          }
-      
-          const data = await response.json();
-          console.log(data);
-        } catch (error) {
-          console.error('Error al registrar el evento:', error);
-        }
-      };
-      
-      
-      
 
     useEffect(() => {
         fetch(`http://localhost:3000/eventos/${id}`)
@@ -185,7 +151,7 @@ export const DetallesDelEvento = () => {
                 </Grid>
             </Center>
             <Center>
-                <Button colorScheme="green" size="lg" mt={10} onClick={handleRegistroEvento}>
+                <Button colorScheme="green" size="lg" mt={10}>
                     Asistiré
                 </Button>
             </Center>
