@@ -14,7 +14,6 @@ import {
     FormLabel,
     CloseButton,
 } from "@chakra-ui/react";
-import { format } from "date-fns";
 
 export const DetallesDelEvento = () => {
     const { id } = useParams();
@@ -173,13 +172,6 @@ export const DetallesDelEvento = () => {
                         <FormLabel mt={3} fontSize="m">
                             <b>Fecha: </b>
                             {evento.solicitud.fecha}
-                        </FormLabel>
-                        <FormLabel mt={3} fontSize="m">
-                            <b>Fecha de envio: </b>
-                            {format(
-                                new Date(evento.solicitud.fecha),
-                                "dd/MM/yyyy HH:mm:ss"
-                            )}
                         </FormLabel>
                     </FormControl>
                 </Grid>

@@ -75,6 +75,29 @@ const solicitudes = [
     {
         ubicacion: {
             create: {
+                facultad: "Ingeniería",
+                estado: "Baja California",
+                campus: "Mexicali",
+                ciudad: "Mexicali",
+                direccion: "Av Benito Juarez",
+                aula: "Aula Magna",
+            },
+        },
+        nombre: "Platica sobre Inteligencia Artificial",
+        descripcion: "Se hablara sobre la evolución que ha tenido la IA a lo largo de los años",
+        fecha: "2024-06-07T00:00:00Z",
+        valorEnCreditos: true,
+        horaInicio: "2024-06-07T15:00:00Z",
+        horaFin: "2024-06-07T16:00:00Z",
+        totalSellos: 3,
+        modalidad: "Presencial",
+        estado: "Pendiente",
+        capacidad: 150,
+        responsable: "alberto.guevara@gmail.com",
+    },
+    {
+        ubicacion: {
+            create: {
                 facultad: "Facultad de Artes",
                 estado: "Baja California",
                 campus: "Campus Ensenada",

@@ -220,6 +220,35 @@ app.get("/eventos", async (req, res) => {
     res.json(eventos);
 });
 
+app.put("/eventos/:id", async (req, res) => {
+    const { id } = req.params;
+    const { estado, solicitud } = req.body;
+
+    try {
+        const eventoActualizado = await prisma.evento.update({
+            where: { id: Number(id) },
+            data: {
+                estado,
+                solicitud: {
+                    update: solicitud,
+                },
+            },
+            include: {
+                solicitud: {
+                    include: {
+                        ubicacion: true,
+                    },
+                },
+            },
+        });
+
+        res.json(eventoActualizado);
+    } catch (error) {
+        console.error("Error al actualizar el evento:", error);
+        res.status(500).json({ error: "Error al actualizar el evento" });
+    }
+});
+
 app.delete("/eventos/:id", async (req, res) => {
     const { id } = req.params;
     try {
