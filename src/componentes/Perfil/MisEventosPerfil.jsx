@@ -25,11 +25,11 @@ import {
 import { format } from "date-fns";
 import { DeleteIcon, EditIcon } from "@chakra-ui/icons";
 import { FaUserPlus } from "react-icons/fa6";
-import { Link as RouterLink } from "react-router-dom";
+import { Navigate, Link as RouterLink } from "react-router-dom";
 import { Link as ChakraLink } from "@chakra-ui/react";
-import { FormularioEditarSolicitud } from "../Solicitud/FormularioEditarSolicitud";
+import { FormularioEditarEvento } from "../Solicitud/FormularioEditarEvento";
 
-export const MisEventosPerfil = () => {
+export const MisEventosPerfil = ({evento}) => {
     const [solicitudes, setSolicitudes] = useState([]);
     const [selectedSolicitud, setSelectedSolicitud] = useState(null);
     const [isRegistroModalOpen, setIsRegistroModalOpen] = useState(false);
@@ -45,20 +45,12 @@ export const MisEventosPerfil = () => {
     const toast = useToast();
 
     useEffect(() => {
-        fetch("http://localhost:3000/solicitudes")
+        fetch("http://localhost:3000/eventos")
             .then((response) => response.json())
             .then((data) => {
-                const pendientes = data.filter(
-                    (solicitud) => solicitud.estado === "Aceptado"
-                );
-                setSolicitudes(pendientes);
+                setSolicitudes(data);
             });
     }, []);
-
-    const handleEditarEvento = (solicitud) => {
-        setSelectedSolicitud(solicitud);
-        setShowEditarFormulario(true);
-    };
 
     const handleCancelarEvento = () => {
         if (!textArea.trim().length) {
@@ -151,6 +143,10 @@ export const MisEventosPerfil = () => {
         handleCloseRegistroModal();
     };
 
+    const handleCardClick = () => {
+        Navigate(`/perfil/editar-evento/${evento.id}`);
+    };
+
     return (
         <Stack spacing={4}>
             {solicitudes.map((solicitud) => {
@@ -204,14 +200,12 @@ export const MisEventosPerfil = () => {
                                 </CardBody>
                             </Stack>
                             <ChakraLink
-                                as={RouterLink}
-                                to={`editar-evento/${solicitud.id}`}
                                 position="absolute"
                                 top={3}
                                 right={10}
                                 color="#00723F"
                                 cursor="pointer"
-                                onClick={(e) => e.stopPropagation()}
+                                onClick={handleCardClick}
                             >
                                 <EditIcon fontSize="26px" />
                             </ChakraLink>
@@ -428,7 +422,7 @@ export const MisEventosPerfil = () => {
                 </ModalContent>
             </Modal>
             {showEditarFormulario && (
-                <FormularioEditarSolicitud
+                <FormularioEditarEvento
                     solicitud={selectedSolicitud}
                     onClose={handleCloseEditarFormulario}
                 />

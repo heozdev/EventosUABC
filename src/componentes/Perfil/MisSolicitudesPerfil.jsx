@@ -34,7 +34,6 @@ export const MisSolicitudesPerfil = () => {
         fetch("http://localhost:3000/solicitudes")
             .then((response) => response.json())
             .then((data) => {
-                // Filtrar las solicitudes para mostrar solo las que tienen estado "Pendiente" o "Rechazado"
                 const pendientes = data.filter(
                     (solicitud) =>
                         solicitud.estado === "Pendiente" ||
@@ -47,67 +46,66 @@ export const MisSolicitudesPerfil = () => {
     const handleOpen = (solicitud) => setSelectedSolicitud(solicitud);
     const handleClose = () => setSelectedSolicitud(null);
 
-    //Funciones para abrir y cerrar los Modal de mensajes
     const handleMensajeModalOpen = (solicitud) => {
         setSelectedSolicitud(solicitud);
         setMensajeModal(true);
-        setMensaje(""); // Restablecer el valor de mensaje al abrir el modal
+        setMensaje("");
     };
-    const handleMensajeModalClose = (solicitud) => {
-        setSelectedSolicitud(solicitud);
+    const handleMensajeModalClose = (messageSent = false) => {
         setMensajeModal(false);
-        setMensaje(""); // Restablecer el valor de mensaje al cerrar el modal
+        setMensaje("");
+        if (!messageSent) {
+            setSelectedSolicitud(null); // Cerrar el modal de detalles del evento solo si el mensaje no se envió correctamente
+        }
     };
 
     const handleMensajeChange = (e) => setMensaje(e.target.value);
 
-    //Funcion para guardar el mensaje enviado por el responsable del evento en la base de datos
     const enviarMensaje = (solicitudId) => {
-        if (mensaje.trim().length === 0) {
+    if (mensaje.trim().length === 0) {
+        toast({
+            title: "Error",
+            description: "El mensaje no puede estar vacío.",
+            status: "error",
+            duration: 3000,
+            isClosable: true,
+            position: "top-right",
+        });
+        return;
+    }
+
+    if (!/^[a-zA-Z0-9\s.,?!]*$/.test(mensaje)) {
+        toast({
+            title: "Error",
+            description: "El mensaje no puede contener caracteres especiales.",
+            status: "error",
+            duration: 3000,
+            isClosable: true,
+            position: "top-right",
+        });
+        return;
+    }
+
+    fetch(`http://localhost:3000/solicitudes/${solicitudId}`, {
+        method: "PUT",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ mensaje }),
+    })
+        .then((response) => response.json())
+        .then(() => {
             toast({
-                title: "Error",
-                description: "El mensaje no puede estar vacío.",
-                status: "error",
+                title: "Mensaje enviado",
+                description: "El mensaje se ha enviado con éxito.",
+                status: "success",
                 duration: 3000,
                 isClosable: true,
                 position: "top-right",
             });
-            return;
-        }
-
-        if (!/^[a-zA-Z0-9\s.,?!]*$/.test(mensaje)) {
-            toast({
-                title: "Error",
-                description:
-                    "El mensaje no puede contener caracteres especiales.",
-                status: "error",
-                duration: 3000,
-                isClosable: true,
-                position: "top-right",
-            });
-            return;
-        }
-
-        fetch(`http://localhost:3000/solicitudes/${solicitudId}`, {
-            method: "PUT",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify({ mensaje }),
-        })
-            .then((response) => response.json())
-            .then((data) => {
-                toast({
-                    title: "Mensaje enviado",
-                    description: "El mensaje se ha enviado con éxito.",
-                    status: "success",
-                    duration: 3000,
-                    isClosable: true,
-                    position: "top-right",
-                });
-                handleMensajeModalClose();
-            });
-    };
+            handleMensajeModalClose(true); // Pasar true para indicar que el mensaje se envió correctamente
+        });
+};
 
     const aumentarRecordatorio = (solicitudId) => {
         fetch(`http://localhost:3000/solicitudes/${solicitudId}/recordatorio`, {
@@ -115,13 +113,12 @@ export const MisSolicitudesPerfil = () => {
         })
             .then((response) => response.json())
             .then((data) => {
-                // Actualizar la solicitud en el estado local
                 setSolicitudes((prevSolicitudes) =>
                     prevSolicitudes.map((solicitud) =>
                         solicitud.id === solicitudId
                             ? {
                                   ...solicitud,
-                                  recordatorio: solicitud.recordatorio + 1,
+                                  recordatorio: data.recordatorio,
                               }
                             : solicitud
                     )
@@ -131,7 +128,16 @@ export const MisSolicitudesPerfil = () => {
 
     const handleOpenDetalleModal = (solicitud) => {
         setSelectedSolicitud(solicitud);
-        setMensajeModal(false); // Cerrar el modal de mensaje si estaba abierto
+        setMensajeModal(false);
+        // Obtener el valor actualizado de recordatorio desde la base de datos
+        fetch(`http://localhost:3000/solicitudes/${solicitud.id}`)
+            .then((response) => response.json())
+            .then((data) => {
+                setSelectedSolicitud((prevSolicitud) => ({
+                    ...prevSolicitud,
+                    recordatorio: data.recordatorio,
+                }));
+            });
     };
 
     return (
@@ -186,71 +192,30 @@ export const MisSolicitudesPerfil = () => {
                                         Fecha de Creación: {fechaFormateada}
                                     </FormLabel>
                                 </FormControl>
-                                <Box>
-                                    {solicitud.estado === "Pendiente" && (
-                                        <>
-                                            <Badge
-                                                display="inline-block"
-                                                variant="solid"
-                                                fontSize="md"
-                                                padding={2.5}
-                                                borderRadius={15}
-                                                colorScheme="yellow"
-                                            >
-                                                Pendiente
-                                            </Badge>
-                                            <br />
-                                            <Button
-                                                colorScheme="blue"
-                                                mt={3}
-                                                onClick={(e) => {
-                                                    e.stopPropagation();
-                                                    handleMensajeModalOpen(
-                                                        solicitud
-                                                    );
-                                                }}
-                                            >
-                                                Mensaje
-                                            </Button>
-                                            <Button
-                                                colorScheme="orange"
-                                                mt={3}
-                                                ml={3}
-                                                onClick={(e) => {
-                                                    e.stopPropagation();
-                                                    aumentarRecordatorio(
-                                                        solicitud.id
-                                                    );
-                                                }}
-                                            >
-                                                Recordatorio (
-                                                {solicitud.recordatorio})
-                                            </Button>
-                                        </>
-                                    )}
-                                    {solicitud.estado === "Rechazado" && (
-                                        <>
-                                            <Text
-                                                fontSize="md"
-                                                fontWeight="bold"
-                                                mb={2}
-                                            >
-                                                Motivo de rechazo:{" "}
-                                                {solicitud.notas}
-                                            </Text>
-                                            <Badge
-                                                display="inline-block"
-                                                variant="solid"
-                                                fontSize="md"
-                                                padding={2.5}
-                                                borderRadius={15}
-                                                colorScheme="red"
-                                            >
-                                                Rechazado
-                                            </Badge>
-                                        </>
-                                    )}
-                                </Box>
+                                {solicitud.estado === "Pendiente" && (
+                                    <Badge
+                                        display="inline-block"
+                                        variant="solid"
+                                        fontSize="md"
+                                        padding={2.5}
+                                        borderRadius={15}
+                                        colorScheme="yellow"
+                                    >
+                                        Pendiente
+                                    </Badge>
+                                )}
+                                {solicitud.estado === "Rechazado" && (
+                                    <Badge
+                                        display="inline-block"
+                                        variant="solid"
+                                        fontSize="md"
+                                        padding={2.5}
+                                        borderRadius={15}
+                                        colorScheme="red"
+                                    >
+                                        Rechazado
+                                    </Badge>
+                                )}
                             </CardBody>
                         </Stack>
                     </Card>
@@ -314,6 +279,16 @@ export const MisSolicitudesPerfil = () => {
                                         <b>Hora Fin: </b>
                                         {selectedSolicitud.horaFin}
                                     </FormLabel>
+                                    {selectedSolicitud.estado === "Rechazado" && (
+                                        <FormLabel
+                                            fontSize="m"
+                                            color={"red"}
+                                            mb={2}
+                                        >
+                                            <b>Motivo de rechazo:</b>{" "}
+                                            {selectedSolicitud.notas}
+                                        </FormLabel>
+                                    )}
                                 </FormControl>
                                 <FormControl>
                                     <FormLabel mt={3} fontSize="m">
@@ -360,11 +335,45 @@ export const MisSolicitudesPerfil = () => {
                                 </FormControl>
                             </div>
                         </ModalBody>
+                        <ModalFooter>
+                            <Box>
+                                {selectedSolicitud.estado === "Pendiente" && (
+                                    <>
+                                        <Button
+                                            colorScheme="blue"
+                                            mt={3}
+                                            onClick={(e) => {
+                                                e.stopPropagation();
+                                                handleMensajeModalOpen(
+                                                    selectedSolicitud
+                                                );
+                                            }}
+                                        >
+                                            Mensaje
+                                        </Button>
+                                        <Button
+                                            colorScheme="orange"
+                                            mt={3}
+                                            ml={3}
+                                            onClick={(e) => {
+                                                e.stopPropagation();
+                                                aumentarRecordatorio(
+                                                    selectedSolicitud.id
+                                                );
+                                            }}
+                                        >
+                                            Recordatorio (
+                                            {selectedSolicitud.recordatorio})
+                                        </Button>
+                                    </>
+                                )}
+                            </Box>
+                        </ModalFooter>
                     </ModalContent>
                 </Modal>
             )}
 
-            <Modal isOpen={mensajeModal} onClose={handleMensajeModalClose}>
+            <Modal isOpen={mensajeModal} onClose={() => handleMensajeModalClose(false)}>
                 <ModalOverlay />
                 <ModalContent>
                     <ModalHeader>Enviar mensaje</ModalHeader>
