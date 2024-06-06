@@ -23,21 +23,22 @@ export const DetallesDelEvento = () => {
 
 
     const handleRegistroEvento = async () => {
-        // Recuperar datos del usuario desde localStorage
-        const usuario = JSON.parse(localStorage.getItem('usuario'));
-      
-        if (!usuario) {
-          console.error('No hay datos de usuario almacenados en localStorage.');
-          return;
-        }
-      
         try {
+          // Recuperar datos del usuario desde localStorage
+          const usuarioJSON = localStorage.getItem('usuario');
+          if (!usuarioJSON) {
+            throw new Error("No hay datos de usuario almacenados en localStorage")
+          }
+          // Analizar los datos del usuario como JSON
+          const usuario = JSON.parse(usuarioJSON);
+      
+          // Continuar con el proceso de registro al evento utilizando los datos del usuario
           const response = await fetch('/registroEvento', {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
             },
-            body: JSON.stringify(usuario)  // Enviar datos del usuario como JSON
+            body: JSON.stringify(usuario),
           });
       
           if (!response.ok) {
@@ -49,7 +50,9 @@ export const DetallesDelEvento = () => {
         } catch (error) {
           console.error('Error al registrar el evento:', error);
         }
-    };
+      };
+      
+      
       
 
     useEffect(() => {
