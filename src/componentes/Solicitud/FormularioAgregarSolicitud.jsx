@@ -35,6 +35,10 @@ import { useNavigate } from "react-router-dom";
 
 export const FormularioAgregarSolicitud = () => {
     const navigate = useNavigate();
+    const [usuario, setUsuario] = useState(
+        JSON.parse(localStorage.getItem("usuario"))
+    );
+
     const [inputValues, setInputValues] = useState({
         nombre: "",
         descripcion: "",
@@ -44,7 +48,8 @@ export const FormularioAgregarSolicitud = () => {
         horaFin: "",
         valorEnCreditos: false,
         estado: "Pendiente",
-        responsable: "",
+        nombreResponsable: usuario.nombres,
+        responsableId: usuario.id,
         totalSellos: 1,
         ubicacionData: {
             facultad: "",
@@ -85,12 +90,12 @@ export const FormularioAgregarSolicitud = () => {
                 "El nombre no puede contener caracteres especiales";
         }
 
-        if (!inputValues.responsable.trim()) {
-            newErrors.responsable = "El responsable es obligatorio";
+        if (!inputValues.nombreResponsable.trim()) {
+            newErrors.nombreResponsable = "El responsable es obligatorio";
         } else if (
             !/^[a-zA-Z0-9\sáéíóúÁÉÍÓÚñÑüÜ]*$/.test(inputValues.responsable)
         ) {
-            newErrors.responsable =
+            newErrors.nombreResponsable =
                 "El responsable no puede contener caracteres especiales";
         }
 
@@ -193,7 +198,8 @@ export const FormularioAgregarSolicitud = () => {
                         horaFin: "",
                         valorEnCreditos: false,
                         estado: "Pendiente",
-                        responsable: "",
+                        nombreResponsable: usuario.nombres,
+                        responsableId: usuario.id,
                         totalSellos: 1,
                         ubicacionData: {
                             facultad: "",
@@ -345,17 +351,18 @@ export const FormularioAgregarSolicitud = () => {
                             </FormControl>
                             <FormControl
                                 isRequired
-                                isInvalid={errors.responsable}
+                                isInvalid={errors.nombreResponsable}
                             >
                                 <FormLabel>Responsable</FormLabel>
                                 <Input
                                     placeholder="Responsable"
-                                    value={inputValues.responsable}
-                                    name="responsable"
+                                    value={inputValues.nombreResponsable}
+                                    name="nombreResponsable"
                                     onChange={handleInputsChange}
+                                    isDisabled={true}
                                 />
                                 <FormErrorMessage>
-                                    {errors.responsable}
+                                    {errors.nombreResponsable}
                                 </FormErrorMessage>
                             </FormControl>
                             <FormControl>

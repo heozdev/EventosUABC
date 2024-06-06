@@ -4,11 +4,11 @@ const { PrismaClient, Prisma } = require("@prisma/client");
 
 const prisma = new PrismaClient();
 const app = express();
-app.use(cors({ origin: "http://localhost:5173" }));
+app.use(cors());
 app.use(express.json());
 
 app.use((req, res, next) => {
-    res.setHeader("Access-Control-Allow-Origin", "http://localhost:5173");
+    res.setHeader("Access-Control-Allow-Origin", "*");
     res.setHeader(
         "Access-Control-Allow-Methods",
         "GET, POST, OPTIONS, PUT, PATCH, DELETE"
@@ -50,34 +50,43 @@ app.post("/solicitudes", async (req, res) => {
         horaFin,
         valorEnCreditos,
         estado,
-        responsable,
+        nombreResponsable,
+        responsableId,
         totalSellos,
         ubicacionData,
         capacidad,
     } = req.body;
 
-    const nuevoUbicacion = await prisma.ubicacion.create({
-        data: ubicacionData,
-    });
+    try {
+        // Crear la nueva ubicación
+        const nuevoUbicacion = await prisma.ubicacion.create({
+            data: ubicacionData,
+        });
 
-    const nuevaSolicitud = await prisma.solicitud.create({
-        data: {
-            nombre,
-            descripcion,
-            fecha,
-            modalidad,
-            horaInicio,
-            horaFin,
-            valorEnCreditos,
-            estado,
-            responsable,
-            totalSellos,
-            capacidad,
-            ubicacionId: nuevoUbicacion.id,
-        },
-    });
+        // Crear la nueva solicitud con el responsableId correcto
+        const nuevaSolicitud = await prisma.solicitud.create({
+            data: {
+                nombre,
+                descripcion,
+                fecha,
+                modalidad,
+                horaInicio,
+                horaFin,
+                valorEnCreditos,
+                estado,
+                nombreResponsable,
+                responsableId, // Se usa responsableId en vez de responsable
+                totalSellos,
+                capacidad,
+                ubicacionId: nuevoUbicacion.id,
+            },
+        });
 
-    res.json(nuevaSolicitud);
+        res.json(nuevaSolicitud);
+    } catch (error) {
+        console.error("Error al crear la solicitud: ", error);
+        res.status(500).json({ error: "Error al crear la solicitud" });
+    }
 });
 
 app.put("/solicitudes/:id", async (req, res) => {
@@ -334,6 +343,23 @@ app.post("/notificaciones", (req, res) => {
 app.get("/notificaciones", async (req, res) => {
     try {
         const notificaciones = await prisma.notificacion.findMany();
+        res.json(notificaciones);
+    } catch (error) {
+        console.error("Error al obtener las notificaciones: ", error);
+        res.status(500).json({ error: "Error al obtener las notificaciones" });
+    }
+});
+
+// Obtener todas las notificaciones de un usuario
+app.get("/usuarios/:usuarioId/notificaciones", async (req, res) => {
+    const { usuarioId } = req.params;
+
+    try {
+        const notificaciones = await prisma.notificacion.findMany({
+            where: {
+                usuarioId: parseInt(usuarioId),
+            },
+        });
         res.json(notificaciones);
     } catch (error) {
         console.error("Error al obtener las notificaciones: ", error);

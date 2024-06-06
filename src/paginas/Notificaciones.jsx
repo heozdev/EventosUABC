@@ -4,13 +4,28 @@ import Notificacion from "../modelos/Notificacion";
 
 export const Notificaciones = () => {
     const [notificaciones, setNotificaciones] = useState([]);
+    const [usuario, setUsuario] = useState(
+        JSON.parse(localStorage.getItem("usuario"))
+    );
 
     useEffect(() => {
-        fetch("http://localhost:3000/notificaciones", {
-            method: "GET",
-        })
-            .then((response) => response.json())
-            .then((data) => setNotificaciones(data));
+        console.log(usuario);
+        if (usuario) {
+            fetch(
+                `http://localhost:3000/usuarios/${usuario.id}/notificaciones`,
+                {
+                    method: "GET",
+                }
+            )
+                .then((response) => response.json())
+                .then((data) => setNotificaciones(data))
+                .catch((error) =>
+                    console.error(
+                        "Error al obtener las notificaciones: ",
+                        error
+                    )
+                );
+        }
     }, []);
 
     return (
@@ -19,12 +34,12 @@ export const Notificaciones = () => {
                 {notificaciones.map((notificacion) => (
                     <Notificacion
                         key={notificacion.id}
-                        usuario={notificacion.usuario} // Suponiendo que 'usuario' está anidado en 'notificacion'
+                        usuario={usuario}
                         mensaje={notificacion.mensaje}
                         leida={notificacion.leida}
                         timestamp={new Date(
                             notificacion.createdAt
-                        ).toLocaleString()} // Suponiendo que tienes un campo 'createdAt'
+                        ).toLocaleString()}
                     />
                 ))}
             </VStack>

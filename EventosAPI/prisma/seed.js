@@ -145,6 +145,7 @@ async function main() {
                         modalidad: s.modalidad,
                         estado: s.estado,
                         capacidad: s.capacidad,
+                        nombreResponsable: responsable.nombres,
                         responsable: { connect: { id: responsable.id } },
                     },
                 });

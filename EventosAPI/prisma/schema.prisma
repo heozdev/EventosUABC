@@ -49,6 +49,7 @@ model Solicitud {
   id Int @id @default(autoincrement())
   ubicacionId Int @unique
   responsableId Int 
+  nombreResponsable String
   evento Evento?
   nombre String
   descripcion String

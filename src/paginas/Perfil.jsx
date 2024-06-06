@@ -23,10 +23,9 @@ export const Perfil = () => {
                         <InformacionPerfil />
                     </GridItem>
                     <GridItem>
-                        {usuario.tipoUsuario.rol == "Profesor" ||
-                            (usuario.tipoUsuario.rol == "Encargado" && (
-                                <AccionesPerfil />
-                            ))}
+                        {usuario.tipoUsuario.rol != "Alumno" && (
+                            <AccionesPerfil />
+                        )}
                     </GridItem>
                 </Grid>
             </Container>
