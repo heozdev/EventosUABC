@@ -22,7 +22,7 @@ import {
 } from "@chakra-ui/react";
 import { format } from "date-fns";
 
-export const MisSolicitudesPerfil = () => {
+export const MisSolicitudesPerfil = ({solicitud}) => {
     const [solicitudes, setSolicitudes] = useState([]);
     const [selectedSolicitud, setSelectedSolicitud] = useState(null);
     const [modalSize] = useState("5xl");
@@ -62,69 +62,64 @@ export const MisSolicitudesPerfil = () => {
     const handleMensajeChange = (e) => setMensaje(e.target.value);
 
     const enviarMensaje = (solicitudId) => {
-    if (mensaje.trim().length === 0) {
-        toast({
-            title: "Error",
-            description: "El mensaje no puede estar vacío.",
-            status: "error",
-            duration: 3000,
-            isClosable: true,
-            position: "top-right",
-        });
-        return;
-    }
-
-    if (!/^[a-zA-Z0-9\s.,?!]*$/.test(mensaje)) {
-        toast({
-            title: "Error",
-            description: "El mensaje no puede contener caracteres especiales.",
-            status: "error",
-            duration: 3000,
-            isClosable: true,
-            position: "top-right",
-        });
-        return;
-    }
-
-    fetch(`http://localhost:3000/solicitudes/${solicitudId}`, {
-        method: "PUT",
-        headers: {
-            "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ mensaje }),
-    })
-        .then((response) => response.json())
-        .then(() => {
+        if (mensaje.trim().length === 0) {
             toast({
-                title: "Mensaje enviado",
-                description: "El mensaje se ha enviado con éxito.",
-                status: "success",
+                title: "Error",
+                description: "El mensaje no puede estar vacío.",
+                status: "error",
                 duration: 3000,
                 isClosable: true,
                 position: "top-right",
             });
-            handleMensajeModalClose(true); // Pasar true para indicar que el mensaje se envió correctamente
-        });
-};
-
-    const aumentarRecordatorio = (solicitudId) => {
-        fetch(`http://localhost:3000/solicitudes/${solicitudId}/recordatorio`, {
+            return;
+        }
+    
+        if (!/^[a-zA-Z0-9\s.,?!]*$/.test(mensaje)) {
+            toast({
+                title: "Error",
+                description: "El mensaje no puede contener caracteres especiales.",
+                status: "error",
+                duration: 3000,
+                isClosable: true,
+                position: "top-right",
+            });
+            return;
+        }
+    
+        fetch(`http://localhost:3000/solicitudes/${solicitudId}`, {
             method: "PUT",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ mensaje }),
         })
             .then((response) => response.json())
-            .then((data) => {
-                setSolicitudes((prevSolicitudes) =>
-                    prevSolicitudes.map((solicitud) =>
-                        solicitud.id === solicitudId
-                            ? {
-                                  ...solicitud,
-                                  recordatorio: data.recordatorio,
-                              }
-                            : solicitud
-                    )
-                );
+            .then(() => {
+                toast({
+                    title: "Mensaje enviado",
+                    description: "El mensaje se ha enviado con éxito.",
+                    status: "success",
+                    duration: 3000,
+                    isClosable: true,
+                    position: "top-right",
+                });
+                handleMensajeModalClose(true);
+                handleClose(); // Cerrar el modal de detalles del evento
             });
     };
+
+const aumentarRecordatorio = (solicitudId) => {
+    fetch(`http://localhost:3000/solicitudes/${solicitudId}/recordatorio`, {
+        method: "PUT",
+    })
+        .then((response) => response.json())
+        .then((data) => {
+            setSelectedSolicitud((prevSolicitud) => ({
+                ...prevSolicitud,
+                recordatorio: data.recordatorio,
+            }));
+        });
+};
 
     const handleOpenDetalleModal = (solicitud) => {
         setSelectedSolicitud(solicitud);
@@ -352,19 +347,16 @@ export const MisSolicitudesPerfil = () => {
                                             Mensaje
                                         </Button>
                                         <Button
-                                            colorScheme="orange"
-                                            mt={3}
-                                            ml={3}
-                                            onClick={(e) => {
-                                                e.stopPropagation();
-                                                aumentarRecordatorio(
-                                                    selectedSolicitud.id
-                                                );
-                                            }}
-                                        >
-                                            Recordatorio (
-                                            {selectedSolicitud.recordatorio})
-                                        </Button>
+                                        colorScheme="orange"
+                                        mt={3}
+                                        ml={3}
+                                        onClick={(e) => {
+                                            e.stopPropagation();
+                                            aumentarRecordatorio(selectedSolicitud.id);
+                                        }}
+                                    >
+                                        Recordatorio ({selectedSolicitud.recordatorio})
+                                    </Button>
                                     </>
                                 )}
                             </Box>
@@ -389,6 +381,7 @@ export const MisSolicitudesPerfil = () => {
                         <Button
                             colorScheme="blue"
                             onClick={() => enviarMensaje(selectedSolicitud.id)}
+                            onClose={() => handleClose()}
                         >
                             Enviar
                         </Button>
