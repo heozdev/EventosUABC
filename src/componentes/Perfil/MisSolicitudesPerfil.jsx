@@ -22,25 +22,33 @@ import {
 } from "@chakra-ui/react";
 import { format } from "date-fns";
 
-export const MisSolicitudesPerfil = ({solicitud}) => {
+export const MisSolicitudesPerfil = ({ solicitud }) => {
     const [solicitudes, setSolicitudes] = useState([]);
     const [selectedSolicitud, setSelectedSolicitud] = useState(null);
     const [modalSize] = useState("5xl");
     const [mensajeModal, setMensajeModal] = useState(false);
     const [mensaje, setMensaje] = useState("");
     const toast = useToast();
+    const [usuario, setUsuario] = useState(
+        JSON.parse(localStorage.getItem("usuario"))
+    );
 
     useEffect(() => {
-        fetch("http://localhost:3000/solicitudes")
-            .then((response) => response.json())
-            .then((data) => {
-                const pendientes = data.filter(
-                    (solicitud) =>
-                        solicitud.estado === "Pendiente" ||
-                        solicitud.estado === "Rechazado"
-                );
-                setSolicitudes(pendientes);
-            });
+        if (usuario) {
+            fetch(`http://localhost:3000/usuarios/${usuario.id}/solicitudes`)
+                .then((response) => response.json())
+                .then((data) => {
+                    const pendientes = data.filter(
+                        (solicitud) =>
+                            solicitud.estado === "Pendiente" ||
+                            solicitud.estado === "Rechazado"
+                    );
+                    setSolicitudes(pendientes);
+                })
+                .catch((error) => {
+                    console.error("Error al obtener las solicitudes:", error);
+                });
+        }
     }, []);
 
     const handleOpen = (solicitud) => setSelectedSolicitud(solicitud);
@@ -73,11 +81,12 @@ export const MisSolicitudesPerfil = ({solicitud}) => {
             });
             return;
         }
-    
+
         if (!/^[a-zA-Z0-9\s.,?!]*$/.test(mensaje)) {
             toast({
                 title: "Error",
-                description: "El mensaje no puede contener caracteres especiales.",
+                description:
+                    "El mensaje no puede contener caracteres especiales.",
                 status: "error",
                 duration: 3000,
                 isClosable: true,
@@ -85,7 +94,7 @@ export const MisSolicitudesPerfil = ({solicitud}) => {
             });
             return;
         }
-    
+
         fetch(`http://localhost:3000/solicitudes/${solicitudId}`, {
             method: "PUT",
             headers: {
@@ -108,18 +117,18 @@ export const MisSolicitudesPerfil = ({solicitud}) => {
             });
     };
 
-const aumentarRecordatorio = (solicitudId) => {
-    fetch(`http://localhost:3000/solicitudes/${solicitudId}/recordatorio`, {
-        method: "PUT",
-    })
-        .then((response) => response.json())
-        .then((data) => {
-            setSelectedSolicitud((prevSolicitud) => ({
-                ...prevSolicitud,
-                recordatorio: data.recordatorio,
-            }));
-        });
-};
+    const aumentarRecordatorio = (solicitudId) => {
+        fetch(`http://localhost:3000/solicitudes/${solicitudId}/recordatorio`, {
+            method: "PUT",
+        })
+            .then((response) => response.json())
+            .then((data) => {
+                setSelectedSolicitud((prevSolicitud) => ({
+                    ...prevSolicitud,
+                    recordatorio: data.recordatorio,
+                }));
+            });
+    };
 
     const handleOpenDetalleModal = (solicitud) => {
         setSelectedSolicitud(solicitud);
@@ -246,7 +255,7 @@ const aumentarRecordatorio = (solicitudId) => {
                                     </FormLabel>
                                     <FormLabel mt={3} fontSize="m">
                                         <b>Responsable: </b>
-                                        {selectedSolicitud.responsable}
+                                        {selectedSolicitud.nombreResponsable}
                                     </FormLabel>
                                     <FormLabel mt={3} fontSize="m">
                                         <b>Modalidad: </b>
@@ -274,7 +283,8 @@ const aumentarRecordatorio = (solicitudId) => {
                                         <b>Hora Fin: </b>
                                         {selectedSolicitud.horaFin}
                                     </FormLabel>
-                                    {selectedSolicitud.estado === "Rechazado" && (
+                                    {selectedSolicitud.estado ===
+                                        "Rechazado" && (
                                         <FormLabel
                                             fontSize="m"
                                             color={"red"}
@@ -347,16 +357,19 @@ const aumentarRecordatorio = (solicitudId) => {
                                             Mensaje
                                         </Button>
                                         <Button
-                                        colorScheme="orange"
-                                        mt={3}
-                                        ml={3}
-                                        onClick={(e) => {
-                                            e.stopPropagation();
-                                            aumentarRecordatorio(selectedSolicitud.id);
-                                        }}
-                                    >
-                                        Recordatorio ({selectedSolicitud.recordatorio})
-                                    </Button>
+                                            colorScheme="orange"
+                                            mt={3}
+                                            ml={3}
+                                            onClick={(e) => {
+                                                e.stopPropagation();
+                                                aumentarRecordatorio(
+                                                    selectedSolicitud.id
+                                                );
+                                            }}
+                                        >
+                                            Recordatorio (
+                                            {selectedSolicitud.recordatorio})
+                                        </Button>
                                     </>
                                 )}
                             </Box>
@@ -365,7 +378,10 @@ const aumentarRecordatorio = (solicitudId) => {
                 </Modal>
             )}
 
-            <Modal isOpen={mensajeModal} onClose={() => handleMensajeModalClose(false)}>
+            <Modal
+                isOpen={mensajeModal}
+                onClose={() => handleMensajeModalClose(false)}
+            >
                 <ModalOverlay />
                 <ModalContent>
                     <ModalHeader>Enviar mensaje</ModalHeader>

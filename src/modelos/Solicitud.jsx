@@ -186,13 +186,16 @@ export const Solicitud = ({ solicitud, setSolicitud, updateSolicitudes }) => {
                     boxShadow: "lg",
                 }}
             >
-                {solicitud.valorEnCreditos && <Text 
+                {solicitud.valorEnCreditos && (
+                    <Text
                         position="absolute"
                         right={3}
                         top={3}
                         fontWeight="bold"
-                    >8=1</Text> 
-                }
+                    >
+                        8=1
+                    </Text>
+                )}
                 <Image
                     objectFit="cover"
                     maxW={{ base: "100%", sm: "200px", md: "40%" }}
@@ -213,7 +216,7 @@ export const Solicitud = ({ solicitud, setSolicitud, updateSolicitudes }) => {
                                 {solicitud.fecha}
                             </FormLabel>
                             <FormLabel mt={2} fontSize="xl">
-                                {solicitud.responsable}
+                                {solicitud.nombreResponsable}
                             </FormLabel>
                         </FormControl>
                     </CardBody>
@@ -287,7 +290,7 @@ export const Solicitud = ({ solicitud, setSolicitud, updateSolicitudes }) => {
                                 </FormLabel>
                                 <FormLabel mt={3} fontSize="m">
                                     <b>Responsable: </b>
-                                    {solicitud.responsable}
+                                    {solicitud.nombreResponsable}
                                 </FormLabel>
                                 <FormLabel mt={3} fontSize="m">
                                     <b>Modalidad: </b>
@@ -315,11 +318,19 @@ export const Solicitud = ({ solicitud, setSolicitud, updateSolicitudes }) => {
                                 </FormLabel>
                                 {solicitud.estado === "Pendiente" && (
                                     <>
-                                        <FormLabel mt={3} fontSize="xl" color={"red"}>
+                                        <FormLabel
+                                            mt={3}
+                                            fontSize="xl"
+                                            color={"red"}
+                                        >
                                             <b>Mensaje Responsable: </b>
                                             {solicitud.mensaje}
                                         </FormLabel>
-                                        <FormLabel mt={3} fontSize="xl" color={"red"}>
+                                        <FormLabel
+                                            mt={3}
+                                            fontSize="xl"
+                                            color={"red"}
+                                        >
                                             <b>Recordatorio: </b>
                                             {solicitud.recordatorio}
                                         </FormLabel>

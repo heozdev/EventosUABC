@@ -1,17 +1,28 @@
 import { useEffect, useState } from "react";
-import { Solicitud } from "../modelos/Solicitud";
 import MostrarSolicitudes from "../componentes/Solicitud/MostrarSolicitudes";
 
 export const Solicitudes = () => {
     const [solicitudes, setSolicitudes] = useState([]); // Solicitudes sin filtrar
-    const [solicitud, setSolicitud] = useState();
+    const [usuario, setUsuario] = useState(
+        JSON.parse(localStorage.getItem("usuario"))
+    );
 
     const getSolicitudes = () => {
-        fetch("http://localhost:3000/solicitudes")
-            .then((response) => response.json())
-            .then((data) => {
-                setSolicitudes(data);
-            });
+        if (usuario) {
+            fetch(`http://localhost:3000/usuarios/${usuario.id}/solicitudes`)
+                .then((response) => response.json())
+                .then((data) => {
+                    const pendientes = data.filter(
+                        (solicitud) =>
+                            solicitud.estado === "Pendiente" ||
+                            solicitud.estado === "Rechazado"
+                    );
+                    setSolicitudes(pendientes);
+                })
+                .catch((error) => {
+                    console.error("Error al obtener las solicitudes:", error);
+                });
+        }
     };
 
     useEffect(() => {
@@ -20,7 +31,7 @@ export const Solicitudes = () => {
 
     useEffect(() => {
         getSolicitudes();
-    }, [solicitud]);
+    }, [solicitudes]);
 
     return (
         <>
