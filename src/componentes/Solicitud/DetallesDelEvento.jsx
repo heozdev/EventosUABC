@@ -15,6 +15,7 @@ import {
     Center,
     FormControl,
     FormLabel,
+    CloseButton,
 } from "@chakra-ui/react";
 import { format } from "date-fns";
 
@@ -46,8 +47,25 @@ export const DetallesDelEvento = () => {
         return <div>Cargando...</div>;
     }
 
+    function CloseButtonLink() {
+        return (
+            <a
+                href="/eventos"
+                style={{
+                    position: "absolute",
+                    top: "10px",
+                    right: "50px",
+                    textDecoration: "none",
+                }}
+            >
+                <CloseButton size="lg" />
+            </a>
+        );
+    }
+
     return (
         <Box p={8}>
+            <CloseButtonLink/>
             <Heading as="h1" size="xl" textAlign={"center"}>
                     {evento.solicitud.nombre}
                 </Heading>
