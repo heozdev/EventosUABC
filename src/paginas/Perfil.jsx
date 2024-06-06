@@ -4,11 +4,12 @@ import { AccionesPerfil } from "../componentes/Perfil/AccionesPerfil";
 import { useEffect, useState } from "react";
 
 export const Perfil = () => {
-
-    const [rol, setRol] = useState("");
+    const [usuario, setUsuario] = useState(
+        JSON.parse(localStorage.getItem("usuario"))
+    );
 
     useEffect(() => {
-        setRol(localStorage.getItem("rol"));
+        setUsuario(JSON.parse(localStorage.getItem("usuario")));
     }, []);
 
     return (
@@ -17,12 +18,15 @@ export const Perfil = () => {
                 Perfil
             </Heading>
             <Container>
-                <Grid >
+                <Grid>
                     <GridItem>
                         <InformacionPerfil />
                     </GridItem>
-                    <GridItem display={rol === "Alumno" ? "none" : "flex"}>
-                        <AccionesPerfil />
+                    <GridItem>
+                        {usuario.tipoUsuario.rol == "Profesor" ||
+                            (usuario.tipoUsuario.rol == "Encargado" && (
+                                <AccionesPerfil />
+                            ))}
                     </GridItem>
                 </Grid>
             </Container>

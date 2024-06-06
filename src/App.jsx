@@ -8,7 +8,7 @@ export const App = () => {
     const navigate = useNavigate();
 
     useEffect(() => {
-        if (!localStorage.getItem("rol")) {
+        if (!localStorage.getItem("usuario")) {
             navigate("/login");
         }
     }, []);

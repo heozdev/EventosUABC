@@ -10,11 +10,9 @@ export const Solicitudes = () => {
         fetch("http://localhost:3000/solicitudes")
             .then((response) => response.json())
             .then((data) => {
-                console.log(data);
                 setSolicitudes(data);
             });
     };
-    
 
     useEffect(() => {
         getSolicitudes();
