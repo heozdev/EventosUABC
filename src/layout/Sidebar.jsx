@@ -116,3 +116,5 @@ export const Sidebar = ({ gridArea }) => {
         </GridItem>
     );
 };
+
+
