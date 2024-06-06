@@ -17,7 +17,14 @@ export const Solicitudes = () => {
                             solicitud.estado === "Pendiente" ||
                             solicitud.estado === "Rechazado"
                     );
-                    setSolicitudes(pendientes);
+                    const pendientesOrdenadas = pendientes.sort((a, b) => {
+                        return (
+                            new Date(b.fechaCreacion) -
+                            new Date(a.fechaCreacion)
+                        );
+                    });
+
+                    setSolicitudes(pendientesOrdenadas);
                 })
                 .catch((error) => {
                     console.error("Error al obtener las solicitudes:", error);
@@ -29,9 +36,9 @@ export const Solicitudes = () => {
         getSolicitudes();
     }, []);
 
-    useEffect(() => {
-        getSolicitudes();
-    }, [solicitudes]);
+    // useEffect(() => {
+    //     getSolicitudes();
+    // }, [solicitudes]);
 
     return (
         <>
