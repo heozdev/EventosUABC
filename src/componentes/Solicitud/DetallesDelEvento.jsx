@@ -369,7 +369,7 @@ export const DetallesDelEvento = () => {
          <Modal isOpen={isOpen} onClose={() => setIsOpen(false)} size="2xl">
             <ModalOverlay />
             <ModalContent>
-                <ModalHeader>Usuarios que asistirán:</ModalHeader>
+                <ModalHeader>Usuarios que asistieron:</ModalHeader>
                     <ModalCloseButton />
                     <ModalBody>
             <Table variant="simple">
