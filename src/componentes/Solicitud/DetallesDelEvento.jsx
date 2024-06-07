@@ -33,6 +33,85 @@ export const DetallesDelEvento = () => {
     const [evento, setEvento] = useState(null);
     const toast = useToast();
     const [asistira,setAsistira] = useState(false);
+ 
+    useEffect(() => {
+        const fetchEvento = async () => {
+            try {
+                const response = await fetch(`http://localhost:3000/eventos/${id}`);
+                if (!response.ok) {
+                    throw new Error(`HTTP error! Status: ${response.status}`);
+                }
+                const data = await response.json();
+                console.log(data); // Verifica los datos recibidos en la consola
+                setEvento(data); // Actualiza el estado con los datos del evento recibido
+            } catch (error) {
+                console.error("Error al obtener los detalles del evento:", error);
+                toast({
+                    title: "Error",
+                    description: "Hubo un problema al obtener los detalles del evento.",
+                    status: "error",
+                    duration: 3000,
+                    isClosable: true,
+                    position: "top-right",
+                });
+            }
+        };
+
+        fetchEvento();
+    }, [id, toast]);
+
+
+    useEffect(() => {
+        const getAsistencia = async () => {
+            try {
+                const usuarioJSON = localStorage.getItem("usuario");
+    
+                if (!usuarioJSON) {
+                    throw new Error(
+                        "No hay datos de usuario almacenados en localStorage"
+                    );
+                }
+    
+                const usuario = JSON.parse(usuarioJSON);
+                const eventoId = evento.id;
+    
+                // Construir la URL con los parámetros de eventId y usuarioId
+                const url = `http://localhost:3000/eventos/${eventoId}/asistencia/${usuario.id}`;
+    
+                const response = await fetch(url, {
+                    method: "GET",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                });
+    
+                if (!response.ok) {
+                    throw new Error('Error al obtener la solicitud de asistencia');
+                }
+    
+                const data = await response.json();
+    
+                // Actualizar localmente setAsistira basado en la respuesta del servidor
+                setAsistira(data); // Suponiendo que data contiene true o false
+    
+                console.log("setAsistira:", setAsistira);
+    
+                // Aquí puedes hacer lo que necesites con setAsistira, como actualizar en tu interfaz
+                // Ejemplo: actualizarEstado(setAsistira);
+    
+            } catch (error) {
+                console.error("Error al obtener solicitud:", error);
+                // Manejar el error según tus necesidades
+            }
+        };
+    
+        // Llamar a getSolicitud al montar el componente
+        if (evento && evento.id) {
+            getAsistencia();
+        }
+    
+    }, []);     
+    
     const [usuariosAsistentes, setUsuariosAsistentes] = useState([]);
     const [isOpen, setIsOpen] = useState(false);
 
@@ -163,6 +242,9 @@ export const DetallesDelEvento = () => {
             });
         }
     };
+
+    // Dependencia vacía para ejecutar una sola vez al montar el componente// Dependencias para volver a ejecutar useEffect cuando id o usuario.id cambien
+    
     
       // Maneja el cambio entre botones basado en asistira
     const handleToggleAsistencia = () => {
@@ -173,6 +255,7 @@ export const DetallesDelEvento = () => {
         }
     };
 
+    
     const obtenerUsuariosAsistentes = () => {
         fetch(`http://localhost:3000/eventos/${evento.id}/usuarios`)
           .then(response => response.json())
@@ -344,7 +427,7 @@ export const DetallesDelEvento = () => {
                     onClick={handleToggleAsistencia}
                     style={{ display: asistira ? "none" : "block" }}
                 >
-                    {asistira ? "Cancelar asistencia" : "Asistiré"}
+                    Asistiré
                 </Button>
 
                 <Button
@@ -354,7 +437,7 @@ export const DetallesDelEvento = () => {
                     onClick={handleToggleAsistencia}
                     style={{ display: asistira ? "block" : "none" }}
                 >
-                   {asistira ? "Cancelar asistencia" : "Asistiré"}
+                   Cancelar asistencia
                 </Button>
                 <Button
                 colorScheme="green"
