@@ -84,7 +84,8 @@ const solicitudes = [
             },
         },
         nombre: "Platica sobre Inteligencia Artificial",
-        descripcion: "Se hablara sobre la evolución que ha tenido la IA a lo largo de los años",
+        descripcion:
+            "Se hablara sobre la evolución que ha tenido la IA a lo largo de los años",
         fecha: "2024-06-07T00:00:00Z",
         valorEnCreditos: true,
         horaInicio: "2024-06-07T15:00:00Z",
