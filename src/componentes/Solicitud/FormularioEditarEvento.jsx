@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import {
     Box,
     Heading,
@@ -33,16 +33,22 @@ import { FaCheckCircle, FaInfoCircle, FaMapMarkerAlt } from "react-icons/fa";
 
 export const FormularioEditarEvento = () => {
     const { id } = useParams();
+    const navigate = useNavigate();
     const [evento, setEvento] = useState(null);
+    const [eventoActualizado, setEventoActualizado] = useState(null);
     const toast = useToast();
     const [tabIndex, setTabIndex] = useState(0);
     const [errors, setErrors] = useState({});
+    const [usuario, setUsuario] = useState(
+        JSON.parse(localStorage.getItem("usuario"))
+    );
 
     useEffect(() => {
         fetch(`http://localhost:3000/eventos/${id}`)
             .then((response) => response.json())
             .then((data) => {
                 setEvento(data);
+                setEventoActualizado(data);
             })
             .catch((error) => {
                 console.error("Error al obtener los detalles del evento:", error);
@@ -61,7 +67,102 @@ export const FormularioEditarEvento = () => {
         return <div>Cargando...</div>;
     }
 
+    const handleInputChange = (e) => {
+        const { name, value, type, checked } = e.target;
+        const fieldValue = type === "checkbox" ? checked : value;
     
+        setEventoActualizado((prevState) => {
+            if (name.includes("ubicacion.")) {
+                const [_, subField] = name.split("ubicacion.");
+                return {
+                    ...prevState,
+                    solicitud: {
+                        ...prevState.solicitud,
+                        ubicacion: {
+                            ...prevState.solicitud.ubicacion,
+                            [subField]: fieldValue,
+                        },
+                    },
+                };
+            } else {
+                return {
+                    ...prevState,
+                    solicitud: {
+                        ...prevState.solicitud,
+                        [name]: fieldValue,
+                    },
+                };
+            }
+        });
+    };
+    
+    const actualizarEvento = () => {
+        const solicitudActualizada = eventoActualizado.solicitud;
+        const solicitudOriginal = evento.solicitud;
+    
+        const camposModificados = Object.keys(solicitudActualizada).some(
+            (key) => solicitudActualizada[key] !== solicitudOriginal[key]
+        );
+    
+        if (camposModificados) {
+            fetch(`http://localhost:3000/eventos/${id}`, {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    estado: "Pendiente",
+                    solicitud: {
+                        nombre: solicitudActualizada.nombre,
+                        descripcion: solicitudActualizada.descripcion,
+                        fecha: solicitudActualizada.fecha,
+                        valorEnCreditos: solicitudActualizada.valorEnCreditos,
+                        horaInicio: solicitudActualizada.horaInicio,
+                        horaFin: solicitudActualizada.horaFin,
+                        totalSellos: solicitudActualizada.totalSellos,
+                        modalidad: solicitudActualizada.modalidad,
+                        estado: "Pendiente",
+                        capacidad: solicitudActualizada.capacidad,
+                        ubicacion: solicitudActualizada.ubicacion,
+                    },
+                }),
+            })
+                .then((response) => response.json())
+                .then((data) => {
+                    setEvento(data);
+                    toast({
+                        title: "Evento actualizado",
+                        description: "Los datos del evento se han actualizado correctamente.",
+                        status: "success",
+                        duration: 3000,
+                        isClosable: true,
+                        position: "top-right",
+                    });
+                    navigate("/perfil");
+                })
+                .catch((error) => {
+                    console.error("Error al actualizar el evento:", error);
+                    toast({
+                        title: "Error",
+                        description: "Hubo un problema al actualizar los datos del evento.",
+                        status: "error",
+                        duration: 3000,
+                        isClosable: true,
+                        position: "top-right",
+                    });
+                });
+        } else {
+            toast({
+                title: "Sin cambios",
+                description: "No se realizaron modificaciones en los datos del evento.",
+                status: "info",
+                duration: 3000,
+                isClosable: true,
+                position: "top-right",
+            });
+            navigate("/perfil");
+        }
+    };
 
     function CloseButtonLink() {
         return (
@@ -139,12 +240,11 @@ export const FormularioEditarEvento = () => {
                                 <FormLabel>Nombre del evento</FormLabel>
                                 <Input
                                     placeholder="Evento"
-                                    value={evento.solicitud.nombre}
+                                    value={eventoActualizado.solicitud.nombre}
                                     name="nombre"
+                                    onChange={handleInputChange}
                                 />
-                                <FormErrorMessage>
-                                    {errors.nombre}
-                                </FormErrorMessage>
+                                <FormErrorMessage>{errors.nombre}</FormErrorMessage>
                             </FormControl>
                             <FormControl
                                 isRequired
@@ -154,7 +254,8 @@ export const FormularioEditarEvento = () => {
                                 <Select
                                     placeholder="Seleccionar"
                                     name="modalidad"
-                                    value={evento.solicitud.modalidad}
+                                    value={eventoActualizado.solicitud.modalidad}
+                                    isDisabled={true}
                                 >
                                     <option>Presencial</option>
                                     <option>Online</option>
@@ -163,19 +264,14 @@ export const FormularioEditarEvento = () => {
                                     {errors.modalidad}
                                 </FormErrorMessage>
                             </FormControl>
-                            <FormControl
-                                isRequired
-                                isInvalid={errors.responsable}
-                            >
+                            <FormControl>
                                 <FormLabel>Responsable</FormLabel>
                                 <Input
                                     placeholder="Responsable"
-                                    value={evento.solicitud.responsable}
+                                    value={usuario.nombres}
                                     name="responsable"
+                                    isDisabled={true}
                                 />
-                                <FormErrorMessage>
-                                    {errors.responsable}
-                                </FormErrorMessage>
                             </FormControl>
                             <FormControl>
                                 <FormLabel>Valor en créditos</FormLabel>
@@ -185,8 +281,9 @@ export const FormularioEditarEvento = () => {
                                         size="lg"
                                         colorScheme="green"
                                         borderColor="green"
-                                        isChecked={evento.solicitud.valorEnCreditos}
+                                        isChecked={eventoActualizado.solicitud.valorEnCreditos}
                                         name="valorEnCreditos"
+                                        onChange={handleInputChange}
                                     />
                                 </HStack>
                             </FormControl>
@@ -194,9 +291,10 @@ export const FormularioEditarEvento = () => {
                                 <GridItem>
                                     <FormLabel>Total de sellos</FormLabel>
                                     <NumberInput
-                                        defaultValue={evento.solicitud.totalSellos}
+                                        defaultValue={eventoActualizado.solicitud.totalSellos}
                                         min={0}
                                         max={3}
+                                        onChange={handleInputChange}
                                     >
                                         <NumberInputField
                                             name="totalSellos"
@@ -212,7 +310,8 @@ export const FormularioEditarEvento = () => {
                                 <GridItem>
                                     <FormLabel>Capacidad</FormLabel>
                                     <NumberInput
-                                        defaultValue={evento.solicitud.capacidad}
+                                        defaultValue={eventoActualizado.solicitud.capacidad}
+                                        onChange={handleInputChange}
                                     >
                                         <NumberInputField
                                             name="capacidad"
@@ -228,8 +327,9 @@ export const FormularioEditarEvento = () => {
                                 <FormLabel>Descripción</FormLabel>
                                 <Textarea
                                     placeholder="Descripción"
-                                    value={evento.solicitud.descripcion}
+                                    value={eventoActualizado.solicitud.descripcion}
                                     name="descripcion"
+                                    onChange={handleInputChange}
                                 />
                                 <FormErrorMessage>
                                     {errors.descripcion}
@@ -251,11 +351,12 @@ export const FormularioEditarEvento = () => {
                                 <FormLabel>Facultad</FormLabel>
                                 <Select
                                     isDisabled={
-                                        evento.solicitud.modalidad === "Online"
+                                        eventoActualizado.solicitud.modalidad === "Online"
                                     }
                                     placeholder="Seleccionar"
                                     name="ubicacion.facultad"
-                                    value={evento.solicitud.ubicacion.facultad}
+                                    value={eventoActualizado.solicitud.ubicacion.facultad}
+                                    onChange={handleInputChange}
                                 >
                                     <option>Ingeniería</option>
                                     <option>Arquitectura y Diseño</option>
@@ -271,11 +372,12 @@ export const FormularioEditarEvento = () => {
                                 <FormLabel>Estado</FormLabel>
                                 <Select
                                     isDisabled={
-                                        evento.solicitud.modalidad === "Online"
+                                        eventoActualizado.solicitud.modalidad === "Online"
                                     }
                                     placeholder="Seleccionar"
                                     name="ubicacion.estado"
-                                    value={evento.solicitud.ubicacion.estado}
+                                    value={eventoActualizado.solicitud.ubicacion.estado}
+                                    onChange={handleInputChange}
                                 >
                                     <option>Baja California</option>
                                     <option>Fuera de Baja California</option>
@@ -288,11 +390,12 @@ export const FormularioEditarEvento = () => {
                                 <FormLabel>Campus</FormLabel>
                                 <Select
                                     isDisabled={
-                                        evento.solicitud.modalidad === "Online"
+                                        eventoActualizado.solicitud.modalidad === "Online"
                                     }
                                     placeholder="Seleccionar"
                                     name="ubicacion.campus"
-                                    value={evento.solicitud.ubicacion.campus}
+                                    value={eventoActualizado.solicitud.ubicacion.campus}
+                                    onChange={handleInputChange}
                                 >
                                     <option>Mexicali</option>
                                     <option>Ciencias Administrativas</option>
@@ -306,11 +409,12 @@ export const FormularioEditarEvento = () => {
                                 <FormLabel>Ciudad</FormLabel>
                                 <Select
                                     isDisabled={
-                                        evento.solicitud.modalidad === "Online"
+                                        eventoActualizado.solicitud.modalidad === "Online"
                                     }
                                     placeholder="Seleccionar"
                                     name="ubicacion.ciudad"
-                                    value={evento.solicitud.ubicacion.ciudad}
+                                    value={eventoActualizado.solicitud.ubicacion.ciudad}
+                                    onChange={handleInputChange}
                                 >
                                     <option>Mexicali</option>
                                     <option>Tecate</option>
@@ -329,11 +433,12 @@ export const FormularioEditarEvento = () => {
                                 <FormLabel>Dirección</FormLabel>
                                 <Input
                                     isDisabled={
-                                        evento.solicitud.modalidad === "Online"
+                                        eventoActualizado.solicitud.modalidad === "Online"
                                     }
                                     placeholder="Dirección"
-                                    value={evento.solicitud.ubicacion.direccion}
+                                    value={eventoActualizado.solicitud.ubicacion.direccion}
                                     name="ubicacion.direccion"
+                                    onChange={handleInputChange}
                                 />
                                 <FormErrorMessage>
                                     {errors.direccion}
@@ -341,18 +446,19 @@ export const FormularioEditarEvento = () => {
                             </FormControl>
                             <FormControl isRequired isInvalid={errors.aula}>
                                 <FormLabel>
-                                    {evento.solicitud.modalidad === "Online"
+                                    {eventoActualizado.solicitud.modalidad === "Online"
                                         ? "Link de la reunion"
                                         : "Aula"}
                                 </FormLabel>
                                 <Input
                                     placeholder={
-                                        evento.solicitud.modalidad === "Online"
+                                        eventoActualizado.solicitud.modalidad === "Online"
                                             ? "Link de la reunion"
                                             : "Aula"
                                     }
-                                    value={evento.solicitud.ubicacion.aula}
+                                    value={eventoActualizado.solicitud.ubicacion.aula}
                                     name="ubicacion.aula"
+                                    onChange={handleInputChange}
                                 />
                                 <FormErrorMessage>
                                     {errors.aula}
@@ -371,8 +477,9 @@ export const FormularioEditarEvento = () => {
                                 <FormLabel>Fecha</FormLabel>
                                 <Input
                                     type="date"
-                                    value={evento.solicitud.fecha}
+                                    value={eventoActualizado.solicitud.fecha}
                                     name="fecha"
+                                    onChange={handleInputChange}
                                 />
                                 <FormErrorMessage>
                                     {errors.fecha}
@@ -388,7 +495,8 @@ export const FormularioEditarEvento = () => {
                                     type="time"
                                     format={"HH:mm"}
                                     name="horaInicio"
-                                    value={evento.solicitud.horaInicio}
+                                    value={eventoActualizado.solicitud.horaInicio}
+                                    onChange={handleInputChange}
                                 />
                                 <FormErrorMessage>
                                     {errors.horaInicio}
@@ -400,7 +508,8 @@ export const FormularioEditarEvento = () => {
                                     type="time"
                                     format={"HH:mm"}
                                     name="horaFin"
-                                    value={evento.solicitud.horaFin}
+                                    value={eventoActualizado.solicitud.horaFin}
+                                    onChange={handleInputChange}
                                 />
                                 <FormErrorMessage>
                                     {errors.horaFin}
@@ -423,77 +532,77 @@ export const FormularioEditarEvento = () => {
                             <FormControl>
                                 <FormLabel mt={3} fontSize="m">
                                     <b>Nombre del Evento</b>
-                                    <br /> {evento.solicitud.nombre}
+                                    <br /> {eventoActualizado.solicitud.nombre}
                                 </FormLabel>
                                 <FormLabel mt={3} fontSize="m">
                                     <b>Responsable</b>
-                                    <br /> {evento.solicitud.responsable}
+                                    <br /> {usuario.nombres}
                                 </FormLabel>
                                 <FormLabel mt={3} fontSize="m">
                                     <b>Modalidad</b>
-                                    <br /> {evento.solicitud.modalidad}
+                                    <br /> {eventoActualizado.solicitud.modalidad}
                                 </FormLabel>
                                 <FormLabel mt={3} fontSize="m">
                                     <b>Capacidad</b>
-                                    <br /> {evento.solicitud.capacidad}
+                                    <br /> {eventoActualizado.solicitud.capacidad}
                                 </FormLabel>
                                 <FormLabel mt={3} fontSize="m">
                                     <b>Valor en Créditos</b>
-                                    <br /> {evento.solicitud.valorEnCreditos ? "Sí" : "No"}
+                                    <br /> {eventoActualizado.solicitud.valorEnCreditos ? "Sí" : "No"}
                                 </FormLabel>
                                 <FormLabel mt={3} fontSize="m">
                                     <b>Total de Sellos</b>
-                                    <br /> {evento.solicitud.totalSellos}
+                                    <br /> {eventoActualizado.solicitud.totalSellos}
                                 </FormLabel>
                                 <FormLabel mt={3} fontSize="m">
                                     <b>Hora Inicio</b>
-                                    <br /> {evento.solicitud.horaInicio}
+                                    <br /> {eventoActualizado.solicitud.horaInicio}
                                 </FormLabel>
                                 <FormLabel mt={3} fontSize="m">
                                     <b>Hora Fin</b>
-                                    <br /> {evento.solicitud.horaFin}
+                                    <br /> {eventoActualizado.solicitud.horaFin}
                                 </FormLabel>
                                 <FormLabel mt={3} fontSize="m">
                                     <b>Estado del Evento</b>
-                                    <br /> {evento.solicitud.estado}
+                                    <br /> {eventoActualizado.solicitud.estado}
                                 </FormLabel>
                             </FormControl>
                             <FormControl>
                                 <FormLabel mt={3} fontSize="m">
                                     <b>Descripción</b>
-                                    <br /> {evento.solicitud.descripcion}
+                                    <br /> {eventoActualizado.solicitud.descripcion}
                                 </FormLabel>
                                 <FormLabel mt={3} fontSize="m">
                                     <b>Facultad</b>
-                                    <br /> {evento.solicitud.ubicacion.facultad}
+                                    <br /> {eventoActualizado.solicitud.ubicacion.facultad}
                                 </FormLabel>
                                 <FormLabel mt={3} fontSize="m">
                                     <b>Estado</b>
-                                    <br /> {evento.solicitud.ubicacion.estado}
+                                    <br /> {eventoActualizado.solicitud.ubicacion.estado}
                                 </FormLabel>
                                 <FormLabel mt={3} fontSize="m">
                                     <b>Campus</b>
-                                    <br /> {evento.solicitud.ubicacion.campus}
+                                    <br /> {eventoActualizado.solicitud.ubicacion.campus}
                                 </FormLabel>
                                 <FormLabel mt={3} fontSize="m">
                                     <b>Ciudad</b>
-                                    <br /> {evento.solicitud.ubicacion.ciudad}
+                                    <br /> {eventoActualizado.solicitud.ubicacion.ciudad}
                                 </FormLabel>
                                 <FormLabel mt={3} fontSize="m">
                                     <b>Dirección</b>
-                                    <br /> {evento.solicitud.ubicacion.direccion}
+                                    <br /> {eventoActualizado.solicitud.ubicacion.direccion}
                                 </FormLabel>
                                 <FormLabel mt={3} fontSize="m">
                                     <b>
-                                        {evento.solicitud.modalidad === "Online"
+                                        {eventoActualizado.solicitud.modalidad === "Online"
                                             ? "Link de la reunion"
                                             : "Aula"}
                                     </b>
-                                    <br /> {evento.solicitud.ubicacion.aula}
+                                    <br /> {eventoActualizado.solicitud.ubicacion.aula}
                                 </FormLabel>
                                 <FormLabel mt={3} fontSize="m">
                                     <b>Fecha</b>
-                                    <br /> {evento.solicitud.fecha}
+                                    <br /> {eventoActualizado.solicitud.fecha}
                                 </FormLabel>
                             </FormControl>
                         </div>
@@ -502,6 +611,7 @@ export const FormularioEditarEvento = () => {
                             bgColor="#00723F"
                             color="white"
                             mt={5}
+                            onClick={actualizarEvento}
                         >
                             Enviar petición
                         </Button>

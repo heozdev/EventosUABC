@@ -24,6 +24,7 @@ function MostrarSolicitudes({ solicitudes, setSolicitudes, getSolicitudes }) {
         onClose: onCloseModalSearch,
     } = useDisclosure();
 
+
     const ultimasolicitud = pagina * solicitudesP;
     const primerasolicitud = ultimasolicitud - solicitudesP;
     const currentSolicitudes = solicitudes.slice(
@@ -73,6 +74,7 @@ function MostrarSolicitudes({ solicitudes, setSolicitudes, getSolicitudes }) {
                     isOpenModalFilter={isOpenModalFilter}
                     onCloseModalFilter={onCloseModalFilter}
                     solicitudes={solicitudes}
+                    setSolicitudes={setSolicitudes}
                 />
                 <FiltroBarraBusqueda
                     isOpenModalSearch={isOpenModalSearch}
@@ -91,11 +93,7 @@ function MostrarSolicitudes({ solicitudes, setSolicitudes, getSolicitudes }) {
                 }}
             >
                 {currentSolicitudes.map((solicitud, index) => (
-                    <Solicitud
-                        key={index}
-                        solicitud={solicitud}
-                        updateSolicitudes={getSolicitudes}
-                    />
+                    <Solicitud key={index} solicitud={solicitud} />
                 ))}
             </div>
 

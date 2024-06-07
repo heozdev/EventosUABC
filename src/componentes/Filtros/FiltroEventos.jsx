@@ -156,20 +156,6 @@ function FiltroEventos({ isOpenModalFilter, onCloseModalFilter, solicitudes, set
                 onChange={handleChangeFiltro}
               />
             </FormControl>
-            <FormControl>
-              <FormLabel>Categoría</FormLabel>
-              <Select
-                placeholder="Categoría"
-                name="categoria"
-                value={filtro.categoria}
-                onChange={handleChangeFiltro}
-              >
-                <option value="">Seleccione una categoría</option>
-                <option value="general">General</option>
-                <option value="conferencia">Conferencia</option>
-                <option value="investigacion">Investigación</option>
-              </Select>
-            </FormControl>
           </ModalBody>
           <ModalFooter>
             <Button colorScheme="green" mr={3} onClick={handleFilter}>

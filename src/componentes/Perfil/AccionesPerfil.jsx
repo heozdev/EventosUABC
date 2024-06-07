@@ -29,11 +29,10 @@ export const AccionesPerfil = () => {
                 <Tabs mt={10} position="relative" variant="unstyled">
                     <TabList justifyContent="center">
                         {usuario.tipoUsuario.rol != "Alumno" && (
-                            <>
-                                <Tab>Mis solicitudes</Tab>
-                                <Tab>Mis eventos</Tab>
-                                <Tab>Agregar solicitud</Tab>
-                            </>
+                            <Tab>Mis solicitudes</Tab>
+                        )}
+                        {usuario.tipoUsuario.rol != "Alumno" && (
+                            <Tab>Mis eventos</Tab>
                         )}
 
                         <Tab>Eventos asistidos</Tab>
@@ -46,17 +45,14 @@ export const AccionesPerfil = () => {
                     />
                     <TabPanels>
                         {usuario.tipoUsuario.rol != "Alumno" && (
-                            <>
-                                <TabPanel>
-                                    <MisSolicitudesPerfil />
-                                </TabPanel>
-                                <TabPanel>
-                                    <MisEventosPerfil />
-                                </TabPanel>
-                                <TabPanel>
-                                    <AgregarSolicitud />
-                                </TabPanel>
-                            </>
+                            <TabPanel>
+                                <MisSolicitudesPerfil />
+                            </TabPanel>
+                        )}
+                        {usuario.tipoUsuario.rol != "Alumno" && (
+                            <TabPanel>
+                                <MisEventosPerfil />
+                            </TabPanel>
                         )}
 
                         <TabPanel>
