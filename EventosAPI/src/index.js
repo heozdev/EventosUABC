@@ -530,12 +530,12 @@ app.delete("/asistencias", async (req, res) => {
         res.json({ message: "Asistencia eliminada correctamente" });
     } catch (error) {
         console.error("Error en el servidor al cancelar la asistencia:", error);
-        res.status(500).json({ error: "Error al cancelar la asistencia", details: error.message });
+        res.status(500).json({
+            error: "Error al cancelar la asistencia",
+            details: error.message,
+        });
     }
 });
-
-
-
 
 app.get("/usuarios/:usuarioId/eventos-asistidos", async (req, res) => {
     const { usuarioId } = req.params;
