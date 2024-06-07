@@ -1,24 +1,27 @@
-import {
-    Button,Center
-} from "@chakra-ui/react";
-import { Link } from "react-router-dom";
+import { Button, Center } from "@chakra-ui/react";
+import { Link, useNavigate } from "react-router-dom";
 
-export const AgregarSolicitud = () =>  {
-    return(
-        <Center mt={10} width="100%">
-            <Link to={"/perfil/crear-solicitud"}>
-                <Button 
-                    bgColor="#00723F" 
-                    color="white"
-                    transition="transform 0.3s"
-                    _hover={{
-                        transform: "scale(1.02)",
-                        boxShadow: "lg",
-                    }}
-                >
-                    Crear solicitud
-                </Button>
-            </Link>
-        </Center>
+export const AgregarSolicitud = () => {
+    const navigate = useNavigate();
+
+    const handleCrearSolicitud = () => {
+        navigate("/perfil/crear-solicitud");
+    };
+
+    return (
+        <Button
+            mt={"15px"}
+            w={"100%"}
+            bgColor="#00723F"
+            color="white"
+            transition="transform 0.3s"
+            _hover={{
+                transform: "scale(1.02)",
+                boxShadow: "lg",
+            }}
+            onClick={handleCrearSolicitud}
+        >
+            Crear solicitud
+        </Button>
     );
 };
