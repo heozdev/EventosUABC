@@ -23,6 +23,7 @@ import { EventosAsistidos } from "./EventosAsistidos";
 import { BsQrCode } from "react-icons/bs";
 import { useEffect, useState } from "react";
 import QRCode from "qrcode.react"; // Corregido aquí
+import { CarnetAlumno } from "./CarnetAlumno";
 
 export const AccionesPerfil = () => {
     const { isOpen, onOpen, onClose } = useDisclosure();
@@ -37,9 +38,9 @@ export const AccionesPerfil = () => {
     const generateUniqueQRCode = () => {
         if (!usuario || !usuario.id) {
             // Manejar el caso en que el usuario o la ID del usuario no estén disponibles
-            return "http://localhost:3000/perfil";
+            return "https://alumnos.uabc.mx/web/alumnos/bienvenido";
         }
-        return `http://localhost:3000/eventos/${usuario.id}`;
+        return `https://alumnos.uabc.mx/web/alumnos/bienvenido`;
     };
     
 
@@ -54,8 +55,10 @@ export const AccionesPerfil = () => {
                         {usuario.tipoUsuario.rol !== "Alumno" && (
                             <Tab>Mis eventos</Tab>
                         )}
-
                         <Tab>Eventos asistidos</Tab>
+                        {usuario.tipoUsuario.rol === "Alumno" && (
+                            <Tab>Mis Carnets</Tab>
+                        )}
                     </TabList>
                     <TabIndicator
                         mt="-1.5px"
@@ -74,10 +77,14 @@ export const AccionesPerfil = () => {
                                 <MisEventosPerfil />
                             </TabPanel>
                         )}
-
                         <TabPanel>
                             <EventosAsistidos />
                         </TabPanel>
+                        {usuario.tipoUsuario.rol === "Alumno" && (
+                            <TabPanel>
+                                <CarnetAlumno />
+                            </TabPanel>
+                        )}
                     </TabPanels>
                 </Tabs>
             </Box>
