@@ -267,7 +267,21 @@ app.put("/eventos/:id", async (req, res) => {
             data: {
                 estado,
                 solicitud: {
-                    update: solicitud,
+                    update: {
+                        nombre: solicitud.nombre,
+                        descripcion: solicitud.descripcion,
+                        fecha: solicitud.fecha,
+                        valorEnCreditos: solicitud.valorEnCreditos,
+                        horaInicio: solicitud.horaInicio,
+                        horaFin: solicitud.horaFin,
+                        totalSellos: solicitud.totalSellos,
+                        modalidad: solicitud.modalidad,
+                        estado: solicitud.estado,
+                        capacidad: solicitud.capacidad,
+                        ubicacion: {
+                            update: solicitud.ubicacion,
+                        },
+                    },
                 },
             },
             include: {

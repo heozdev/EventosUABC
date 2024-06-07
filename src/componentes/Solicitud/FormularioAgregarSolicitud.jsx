@@ -628,7 +628,7 @@ export const FormularioAgregarSolicitud = () => {
                                 </FormLabel>
                                 <FormLabel mt={3} fontSize="m">
                                     <b>Responsable</b>
-                                    <br /> {inputValues.responsable}
+                                    <br /> {inputValues.nombreResponsable}
                                 </FormLabel>
                                 <FormLabel mt={3} fontSize="m">
                                     <b>Modalidad</b>
