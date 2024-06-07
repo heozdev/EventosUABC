@@ -573,7 +573,7 @@ app.get("/eventos/:eventoId/usuarios", async (req, res) => {
     try {
         const usuarios = await prisma.usuario.findMany({
             where: {
-                asistencias: {
+                asistencia: {
                     some: {
                         eventoId: parseInt(eventoId),
                     },

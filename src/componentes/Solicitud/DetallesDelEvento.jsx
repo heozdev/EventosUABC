@@ -13,6 +13,19 @@ import {
     FormControl,
     FormLabel,
     CloseButton,
+    Modal,
+    ModalOverlay,
+    ModalContent,
+    ModalHeader,
+    ModalFooter,
+    ModalBody,
+    ModalCloseButton,
+    Table,
+    Thead,
+    Tbody,
+    Tr,
+    Th,
+    Td,
 } from "@chakra-ui/react";
 
 export const DetallesDelEvento = () => {
@@ -20,8 +33,9 @@ export const DetallesDelEvento = () => {
     const [evento, setEvento] = useState(null);
     const toast = useToast();
     const [asistira,setAsistira] = useState(false);
+    const [usuariosAsistentes, setUsuariosAsistentes] = useState([]);
+    const [isOpen, setIsOpen] = useState(false);
 
-    
 
     const handleRegistroEvento = () => {
         try {
@@ -158,6 +172,27 @@ export const DetallesDelEvento = () => {
             handleRegistroEvento();
         }
     };
+
+    const obtenerUsuariosAsistentes = () => {
+        fetch(`http://localhost:3000/eventos/${evento.id}/usuarios`)
+          .then(response => response.json())
+          .then(data => {
+            setUsuariosAsistentes(data);
+            setIsOpen(true); // Abrir el modal
+          })
+          .catch(error => {
+            console.error("Error al obtener los usuarios asistentes:", error);
+            toast({
+              title: "Error",
+              description: "No se pudieron obtener los usuarios que asistirán al evento.",
+              status: "error",
+              duration: 3000,
+              isClosable: true,
+              position: "top-right"
+            });
+          });
+      };
+    
 
     useEffect(() => {
         
@@ -321,6 +356,50 @@ export const DetallesDelEvento = () => {
                 >
                    {asistira ? "Cancelar asistencia" : "Asistiré"}
                 </Button>
+                <Button
+                colorScheme="green"
+                size="lg"
+                mt={10}
+                ml={4}
+                onClick={obtenerUsuariosAsistentes}
+                >
+                Ver asistentes
+                </Button>
+            {/* Modal para mostrar usuarios asistentes */}
+         <Modal isOpen={isOpen} onClose={() => setIsOpen(false)} size="2xl">
+            <ModalOverlay />
+            <ModalContent>
+                <ModalHeader>Usuarios que asistieron:</ModalHeader>
+                    <ModalCloseButton />
+                    <ModalBody>
+            <Table variant="simple">
+              <Thead>
+                <Tr>
+                  <Th>Matrícula</Th>
+                  <Th>Nombre</Th>
+                  <Th>Apellidos</Th>
+                  <Th>Carrera</Th>
+                </Tr>
+              </Thead>
+              <Tbody>
+                {usuariosAsistentes.map(usuario => (
+                  <Tr key={usuario.id}>
+                    <Td>{usuario.matricula}</Td>
+                    <Td>{usuario.nombres}</Td>
+                    <Td>{usuario.apellidos}</Td>
+                    <Td>{usuario.carrera}</Td>
+                  </Tr>
+                ))}
+              </Tbody>
+            </Table>
+          </ModalBody>
+          <ModalFooter>
+            <Button colorScheme="green" onClick={() => setIsOpen(false)}>
+              Cerrar
+            </Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
             </Center>
         </Box>
     );
