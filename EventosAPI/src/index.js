@@ -259,28 +259,50 @@ app.get("/usuarios/:id/eventos", async (req, res) => {
 
 app.put("/eventos/:id", async (req, res) => {
     const { id } = req.params;
-    const { estado, solicitud } = req.body;
+    const {
+        ubicacionId,
+        responsableId,
+        nombreResponsable,
+        nombre,
+        descripcion,
+        fecha,
+        valorEnCreditos,
+        horaInicio,
+        horaFin,
+        totalSellos,
+        modalidad,
+        estado,
+        capacidad,
+        fechaCreacion,
+        notas,
+        mensaje,
+        recordatorio,
+        ubicacion,
+    } = req.body;
 
     try {
         const eventoActualizado = await prisma.evento.update({
             where: { id: Number(id) },
             data: {
-                estado,
                 solicitud: {
                     update: {
-                        nombre: solicitud.nombre,
-                        descripcion: solicitud.descripcion,
-                        fecha: solicitud.fecha,
-                        valorEnCreditos: solicitud.valorEnCreditos,
-                        horaInicio: solicitud.horaInicio,
-                        horaFin: solicitud.horaFin,
-                        totalSellos: solicitud.totalSellos,
-                        modalidad: solicitud.modalidad,
-                        estado: solicitud.estado,
-                        capacidad: solicitud.capacidad,
-                        ubicacion: {
-                            update: solicitud.ubicacion,
-                        },
+                        ubicacionId,
+                        responsableId,
+                        nombreResponsable,
+                        nombre,
+                        descripcion,
+                        fecha,
+                        valorEnCreditos,
+                        horaInicio,
+                        horaFin,
+                        totalSellos,
+                        modalidad,
+                        estado,
+                        capacidad,
+                        fechaCreacion,
+                        notas,
+                        mensaje,
+                        recordatorio,
                     },
                 },
             },

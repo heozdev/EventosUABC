@@ -6,14 +6,13 @@ export const EventosAsistidos = () => {
         JSON.parse(localStorage.getItem("usuario"))
     );
 
-    const [eventosAsistidos, seteventosAsistidos] = useState([]);
+    const [eventosAsistidos, setEventosAsistidos] = useState([]);
 
     useEffect(() => {
         fetch(`http://localhost:3000/usuarios/${usuario.id}/eventos-asistidos`)
             .then((response) => response.json())
             .then((data) => {
-                console.log("Eventos asistidos", data);
-                seteventosAsistidos(data);
+                setEventosAsistidos(data);
             })
             .catch((error) => {
                 console.error(
