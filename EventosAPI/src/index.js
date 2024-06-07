@@ -559,6 +559,65 @@ app.delete("/asistencias", async (req, res) => {
     }
 });
 
+app.get("/eventos/:eventoId", async (req, res) => {
+    const { eventoId } = req.params;
+
+    try {
+        const evento = await prisma.evento.findUnique({
+            where: { id: parseInt(eventoId) },
+        });
+
+        if (!evento) {
+            return res.status(404).json({ error: "Evento no encontrado" });
+        }
+
+        res.json(evento);
+    } catch (error) {
+        console.error("Error al obtener el evento:", error);
+        res.status(500).json({ error: "Error al obtener el evento" });
+    }
+});
+
+app.get("/asistencias", async (req, res) => {
+    const { usuarioId, eventoId } = req.query;
+
+    try {
+        const asistencia = await prisma.asistencia.findFirst({
+            where: {
+                usuarioId: parseInt(usuarioId),
+                eventoId: parseInt(eventoId),
+            },
+        });
+
+        res.json({ exists: !!asistencia }); // Devuelve true si existe asistencia, false si no existe
+    } catch (error) {
+        console.error("Error al obtener asistencias:", error);
+        res.status(500).json({ error: "Error al obtener asistencias" });
+    }
+});
+
+app.get("/eventos/:eventId/asistencia/:usuarioId", async (req,res) => {
+    const {eventoId, usuarioId} = req.params
+
+    const evento = await prisma.evento.findUnique({
+        where:{
+            id: parseInt(eventoId)
+        },
+        include:{
+            asistencias:{
+                where:{
+                    usuarioId: parseInt(usuarioId)
+                }
+            }
+        }
+    });
+    if (evento && evento.asistencias.length > 0) {
+        res.json(true);
+    } else {
+        res.json(false);
+    }
+});
+
 app.get("/usuarios/:usuarioId/eventos-asistidos", async (req, res) => {
     const { usuarioId } = req.params;
 
@@ -611,3 +670,4 @@ app.get("/eventos/:eventoId/usuarios", async (req, res) => {
         });
     }
 });
+
