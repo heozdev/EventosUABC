@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useParams } from "react-router-dom";
 import {
     Box,
@@ -27,12 +27,17 @@ import {
     Th,
     Td,
 } from "@chakra-ui/react";
+import ReactToPrint from 'react-to-print';
+import { FaPrint } from "react-icons/fa";
+
 
 export const DetallesDelEvento = () => {
     const { id } = useParams();
     const [evento, setEvento] = useState(null);
     const toast = useToast();
     const [asistira,setAsistira] = useState(false);
+    const componentRef = useRef();
+
  
     useEffect(() => {
         const fetchEvento = async () => {
@@ -255,7 +260,6 @@ export const DetallesDelEvento = () => {
         }
     };
 
-    
     const obtenerUsuariosAsistentes = () => {
         fetch(`http://localhost:3000/eventos/${evento.id}/usuarios`)
           .then(response => response.json())
@@ -322,6 +326,19 @@ export const DetallesDelEvento = () => {
             </a>
         );
     }
+
+    const pageStyle = `
+        @page {
+            size: auto;
+            margin: 20mm;
+        }
+        @media print {
+            body {
+                -webkit-print-color-adjust: exact;
+                font-family: Arial, sans-serif;
+            }
+        }
+    `;
 
     return (
         <Box p={8}>
@@ -451,11 +468,11 @@ export const DetallesDelEvento = () => {
             {/* Modal para mostrar usuarios asistentes */}
          <Modal isOpen={isOpen} onClose={() => setIsOpen(false)} size="2xl">
             <ModalOverlay />
-            <ModalContent>
-                <ModalHeader>Usuarios que asistieron:</ModalHeader>
+            <ModalContent ref={componentRef}>
+                <ModalHeader >Usuarios que asistieron a: {evento && evento.solicitud.nombre}</ModalHeader>
                     <ModalCloseButton />
                     <ModalBody>
-            <Table variant="simple">
+            <Table variant="simple" >
               <Thead>
                 <Tr>
                   <Th>Matrícula</Th>
@@ -476,7 +493,14 @@ export const DetallesDelEvento = () => {
               </Tbody>
             </Table>
           </ModalBody>
-          <ModalFooter>
+          <ModalFooter display= "flex"justifyContent= "space-between">
+          <ReactToPrint
+                trigger={() => (
+                <FaPrint size={30} cursor="pointer" style={{ marginLeft: "20px" }}/>
+                )}
+                content={() => componentRef.current}
+                pageStyle={pageStyle}
+            />
             <Button colorScheme="green" onClick={() => setIsOpen(false)}>
               Cerrar
             </Button>
