@@ -7,7 +7,7 @@ export const InformacionPerfil = () => {
     );
 
     return (
-        <Box mt={10} bg={"#F5F5F5"} p={10}>
+        <Box mt={10} bg={"#F5F5F5"} p={10} borderRadius={15}>
             <Grid gridTemplateColumns="20% 1fr" gap={10}>
                 <GridItem>
                     <Image
