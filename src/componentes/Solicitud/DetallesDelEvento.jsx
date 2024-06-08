@@ -469,7 +469,11 @@ export const DetallesDelEvento = () => {
          <Modal isOpen={isOpen} onClose={() => setIsOpen(false)} size="2xl">
             <ModalOverlay />
             <ModalContent ref={componentRef}>
-                <ModalHeader >Usuarios que asistieron a: {evento && evento.solicitud.nombre}</ModalHeader>
+                <ModalHeader >
+                    <div>Usuarios que asistieron a: {evento.solicitud.nombre}</div>
+                    <div>Responsable: {evento.solicitud.nombreResponsable}</div>
+                    <div>Fecha: {evento.solicitud.fecha}</div>
+                </ModalHeader>
                     <ModalCloseButton />
                     <ModalBody>
             <Table variant="simple" >
