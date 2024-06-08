@@ -41,6 +41,10 @@ export const DetallesDelEvento = () => {
         JSON.parse(localStorage.getItem("usuario"))
     );
 
+    const [selectUsuarios, setSelectUsuarios] = useState({}); // Estado para mantener el seguimiento de usuarios seleccionados
+    const [InvitarModalAbrir, setInvitarModalAbrir] = useState(false); // Estado para el modal de invitar grupos
+    const [usuarios, setUsuarios] = useState([]);
+
     const fetchEvento = async () => {
         try {
             const response = await fetch(`http://localhost:3000/eventos/${id}`);
@@ -294,6 +298,58 @@ export const DetallesDelEvento = () => {
             });
     }, []);
 
+    const obtenerUsuarios = async () => {
+        try {
+            const response = await fetch('http://localhost:3000/usuarios');
+            if (!response.ok) {
+                throw new Error('Error al obtener los usuarios');
+            }
+            const data = await response.json();
+            setUsuarios(data);
+            // Inicializar el estado de selección para los usuarios
+            const seleccionInicial = data.reduce((acc, user) => {
+                acc[user.id] = false; // Suponiendo que 'id' es único para cada usuario
+                return acc;
+            }, {});
+            setSelectUsuarios(seleccionInicial);
+        } catch (error) {
+            console.error('Error al obtener los usuarios:', error);
+            toast({
+                title: "Error",
+                description: "No se pudieron obtener los usuarios.",
+                status: "error",
+                duration: 3000,
+                isClosable: true,
+                position: "top-right"
+            });
+        }
+    };
+
+    const cambioSeleccion = (userId) => {
+        setSelectUsuarios(prevState => ({
+            ...prevState,
+            [userId]: !prevState[userId]
+        }));
+    };
+
+    const seleccionarTodos = (event) => {
+        const { checked } = event.target;
+        const nuevaSeleccion = {};
+        usuarios.forEach(user => {
+            nuevaSeleccion[user.id] = checked;
+        });
+        setSelectUsuarios(nuevaSeleccion);
+    };
+
+
+
+    // Función para abrir el modal y obtener usuarios
+    const AbrirModalInvitar = () => {
+        obtenerUsuarios();
+        setInvitarModalAbrir(true);
+    };
+
+
     if (!evento) {
         return <div>Cargando...</div>;
     }
@@ -447,6 +503,16 @@ export const DetallesDelEvento = () => {
                 )}
 
                 <Button
+                colorScheme="green"
+                size="lg"
+                mt={10}
+                ml={4}
+                onClick={AbrirModalInvitar}
+                >
+                Invitar Grupos
+                </Button>
+
+                <Button
                     colorScheme="green"
                     size="lg"
                     mt={10}
@@ -523,6 +589,59 @@ export const DetallesDelEvento = () => {
                         </ModalFooter>
                     </ModalContent>
                 </Modal>
+
+                {/* Modal para "Invitar Grupos" */}
+       <Modal isOpen={InvitarModalAbrir} onClose={() => setInvitarModalAbrir(false)} size="4xl">
+                <ModalOverlay />
+                <ModalContent>
+                    <ModalHeader>Invitar Grupos</ModalHeader>
+                    <ModalCloseButton />
+                    <ModalBody>
+                        <Table variant="simple">
+                            <Thead>
+                                <Tr>
+                                    <Th>
+                                        <Text>Seleccionar todos</Text>
+                                        <input
+                                            type="checkbox"
+                                            onChange={seleccionarTodos}
+                                            checked={usuarios.every(user => selectUsuarios[user.id])}
+                                        />
+                                    </Th>
+                                    <Th>Matrícula</Th>
+                                    <Th>Nombre</Th>
+                                    <Th>Apellidos</Th>
+                                    <Th>Carrera</Th>
+                                    <Th>Correo</Th>
+                                </Tr>
+                            </Thead>
+                            <Tbody>
+                                {usuarios.map(usuario => (
+                                    <Tr key={usuario.id}>
+                                        <Td>
+                                            <input
+                                                type="checkbox"
+                                                checked={selectUsuarios[usuario.id]}
+                                                onChange={() => cambioSeleccion(usuario.id)}
+                                            />
+                                        </Td>
+                                        <Td>{usuario.matricula}</Td>
+                                        <Td>{usuario.nombres}</Td>
+                                        <Td>{usuario.apellidos}</Td>
+                                        <Td>{usuario.carrera}</Td>
+                                        <Td>{usuario.correo}</Td>
+                                    </Tr>
+                                ))}
+                            </Tbody>
+                        </Table>
+                    </ModalBody>
+                    <ModalFooter>
+                        <Button colorScheme="green" ml={4} mt={10}> Invitar </Button>
+                        <Button colorScheme="green" ml={4} mt={10} onClick={() => setInvitarModalAbrir(false)}>Cerrar</Button>
+                    </ModalFooter>
+                </ModalContent>
+            </Modal>
+
             </Center>
         </Box>
     );
