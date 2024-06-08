@@ -514,17 +514,19 @@ export const DetallesDelEvento = () => {
                             display="flex"
                             justifyContent="space-between"
                         >
-                            <ReactToPrint
-                                trigger={() => (
-                                    <FaPrint
-                                        size={30}
-                                        cursor="pointer"
-                                        style={{ marginLeft: "20px" }}
-                                    />
-                                )}
-                                content={() => componentRef.current}
-                                pageStyle={pageStyle}
-                            />
+                            {usuario.tipoUsuario.rol !== "Alumno" && (
+                                <ReactToPrint
+                                    trigger={() => (
+                                        <FaPrint
+                                            size={30}
+                                            cursor="pointer"
+                                            style={{ marginLeft: "20px" }}
+                                        />
+                                    )}
+                                    content={() => componentRef.current}
+                                    pageStyle={pageStyle}
+                                />
+                            )}
                             <Button
                                 colorScheme="green"
                                 onClick={() => setIsOpen(false)}
