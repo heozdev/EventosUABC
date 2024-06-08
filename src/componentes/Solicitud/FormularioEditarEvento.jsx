@@ -292,14 +292,17 @@ export const FormularioEditarEvento = () => {
                                 <GridItem>
                                     <FormLabel>Total de sellos</FormLabel>
                                     <NumberInput
+                                        value={evento.totalSellos}
                                         min={0}
                                         max={3}
-                                        defaultValue={evento.totalSellos}
+                                        onChange={(value) =>
+                                            setEvento((prevState) => ({
+                                                ...prevState,
+                                                totalSellos: parseInt(value),
+                                            }))
+                                        }
                                     >
-                                        <NumberInputField
-                                            name="totalSellos"
-                                            onChange={handleInputChange}
-                                        />
+                                        <NumberInputField name="totalSellos" />
                                         <NumberInputStepper>
                                             <NumberIncrementStepper />
                                             <NumberDecrementStepper />

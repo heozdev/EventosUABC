@@ -383,14 +383,17 @@ export const FormularioAgregarSolicitud = () => {
                                 <GridItem>
                                     <FormLabel>Total de sellos</FormLabel>
                                     <NumberInput
-                                        defaultValue={inputValues.totalSellos}
+                                        value={inputValues.totalSellos}
                                         min={0}
                                         max={3}
+                                        onChange={(value) =>
+                                            setInputValues((prevState) => ({
+                                                ...prevState,
+                                                totalSellos: parseInt(value),
+                                            }))
+                                        }
                                     >
-                                        <NumberInputField
-                                            name="totalSellos"
-                                            onChange={handleInputsChange}
-                                        />
+                                        <NumberInputField name="totalSellos" />
                                         <NumberInputStepper>
                                             <NumberIncrementStepper />
                                             <NumberDecrementStepper />

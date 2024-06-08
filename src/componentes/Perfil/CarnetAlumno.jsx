@@ -64,14 +64,14 @@ export const CarnetAlumno = () => {
                                     ))}
                                 </SimpleGrid>
                                 <Center>
-                                    <ReactToPrint
-                                        trigger={() => (
-                                            <Box as="button" display="flex" alignItems="center" mr={5} mt={4}>
-                                                <FaPrint fontSize={"25px"}/>
-                                            </Box>
-                                        )}
-                                        content={() => carnetRefs.current[index]}
-                                    />
+                                <ReactToPrint
+                                    trigger={() => (
+                                        <Box as="button" display="flex" alignItems="center" mr={5} mt={4}>
+                                            <FaPrint fontSize={"25px"}/>
+                                        </Box>
+                                    )}
+                                    content={() => carnetRefs.current[index].firstChild}
+                                />
                                     <Checkbox mt="4">UN CRÉDITO</Checkbox>
                                 </Center>
                             </VStack>

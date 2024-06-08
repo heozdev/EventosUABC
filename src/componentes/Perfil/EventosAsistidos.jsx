@@ -116,7 +116,9 @@ export const EventosAsistidos = () => {
                                 {usuario.nombres} {usuario.apellidos} asistió al
                                 evento {eventoActual.solicitud.nombre} el día{" "}
                                 {eventoActual.solicitud.fecha} a las{" "}
-                                {eventoActual.solicitud.horaInicio}
+                                {eventoActual.solicitud.horaInicio} con el valor 
+                                en créditos de {eventoActual.solicitud.totalSellos}
+                                {" "}sellos
                             </Text>
                         </ModalBody>
                         <ModalFooter>
