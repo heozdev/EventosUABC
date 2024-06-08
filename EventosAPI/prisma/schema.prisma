@@ -19,12 +19,20 @@ model TipoDeUsuario {
   rol String
 }
 
+model TipoDeNotificacion {
+  id Int @id @default(autoincrement())
+  tipoDeNotificacion String
+  notificacion Notificacion[]
+}
+
 model Notificacion {
   id Int @id @default(autoincrement())
+  tipoDeNotificacionId Int 
   usuarioId Int
   mensaje String
   leida Boolean
 
+  tipoDeNotificacion TipoDeNotificacion @relation(fields: [tipoDeNotificacionId], references: [id])
   usuario Usuario @relation(fields: [usuarioId], references: [id])
 }
 

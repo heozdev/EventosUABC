@@ -447,30 +447,38 @@ app.get("/usuarios/:id/solicitudes", async (req, res) => {
 });
 
 // Crear una nueva notificación
-app.post("/notificaciones", (req, res) => {
-    const { usuarioId, mensaje, leida } = req.body;
+// Crear una nueva notificación
+app.post("/notificaciones", async (req, res) => {
+    const { tipoDeNotificacionId, usuarioId, mensaje, leida } = req.body;
+    console.log(req.body);
 
-    prisma.notificacion
-        .create({
+    try {
+        const nuevaNotificacion = await prisma.notificacion.create({
             data: {
-                usuarioId,
+                tipoDeNotificacion: { connect: { id: tipoDeNotificacionId } },
+                usuario: { connect: { id: usuarioId } },
                 mensaje,
                 leida,
             },
-        })
-        .then((nuevaNotificacion) => {
-            res.status(201).json(nuevaNotificacion);
-        })
-        .catch((error) => {
-            console.error("Error al crear la notificación: ", error);
-            res.status(500).json({ error: "Error al crear la notificación" });
+            include: {
+                tipoDeNotificacion: true,
+            },
         });
+        res.status(201).json(nuevaNotificacion);
+    } catch (error) {
+        console.error("Error al crear la notificación: ", error);
+        res.status(500).json({ error: "Error al crear la notificación" });
+    }
 });
 
 // Obtener todas las notificaciones
 app.get("/notificaciones", async (req, res) => {
     try {
-        const notificaciones = await prisma.notificacion.findMany();
+        const notificaciones = await prisma.notificacion.findMany({
+            include: {
+                tipoDeNotificacion: true,
+            },
+        });
         res.json(notificaciones);
     } catch (error) {
         console.error("Error al obtener las notificaciones: ", error);
@@ -487,7 +495,11 @@ app.get("/usuarios/:usuarioId/notificaciones", async (req, res) => {
             where: {
                 usuarioId: parseInt(usuarioId),
             },
+            include: {
+                tipoDeNotificacion: true,
+            },
         });
+
         res.json(notificaciones);
     } catch (error) {
         console.error("Error al obtener las notificaciones: ", error);

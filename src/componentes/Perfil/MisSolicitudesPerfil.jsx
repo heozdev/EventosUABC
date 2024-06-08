@@ -96,26 +96,26 @@ export const MisSolicitudesPerfil = ({ solicitud }) => {
             return;
         }
 
-        fetch(`http://localhost:3000/solicitudes/${solicitudId}`, {
-            method: "PUT",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify({ mensaje }),
-        })
-            .then((response) => response.json())
-            .then(() => {
-                toast({
-                    title: "Mensaje enviado",
-                    description: "El mensaje se ha enviado con éxito.",
-                    status: "success",
-                    duration: 3000,
-                    isClosable: true,
-                    position: "top-right",
-                });
-                handleMensajeModalClose(true);
-                handleClose(); // Cerrar el modal de detalles del evento
-            });
+        // fetch(`http://localhost:3000/solicitudes/${solicitudId}`, {
+        //     method: "PUT",
+        //     headers: {
+        //         "Content-Type": "application/json",
+        //     },
+        //     body: JSON.stringify({ mensaje }),
+        // })
+        //     .then((response) => response.json())
+        //     .then(() => {
+        //         toast({
+        //             title: "Mensaje enviado",
+        //             description: "El mensaje se ha enviado con éxito.",
+        //             status: "success",
+        //             duration: 3000,
+        //             isClosable: true,
+        //             position: "top-right",
+        //         });
+        //         handleMensajeModalClose(true);
+        //         handleClose(); // Cerrar el modal de detalles del evento
+        //     });
     };
 
     const aumentarRecordatorio = (solicitudId) => {

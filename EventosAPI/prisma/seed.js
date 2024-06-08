@@ -14,6 +14,14 @@ const roles = [
     },
 ];
 
+const tiposDeNotificacion = [
+    { tipoDeNotificacion: "Registrarse a un evento" },
+    { tipoDeNotificacion: "Cancelar un evento" },
+    { tipoDeNotificacion: "Invitacion a un evento" },
+    { tipoDeNotificacion: "Cancelar tu asistencia a un evento" },
+    { tipoDeNotificacion: "Modificacion de un evento" },
+];
+
 const usuarios = [
     {
         correo: "hosuna2900@gmail.com",
@@ -129,7 +137,7 @@ async function main() {
         const rol = await prisma.tipoDeUsuario.create({
             data: r,
         });
-        console.log(`Se creo rol con el id: ${rol.IdTipoUsuario}`);
+        console.log(`Se creó rol con el id: ${rol.IdTipoUsuario}`);
     }
 
     for (const u of usuarios) {
@@ -173,7 +181,7 @@ async function main() {
                         responsable: { connect: { id: responsable.id } },
                     },
                 });
-                console.log(`Se creo solicitud con el id: ${solicitud.id}`);
+                console.log(`Se creó solicitud con el id: ${solicitud.id}`);
             } else {
                 console.log(
                     `Responsable con correo ${s.responsable} no encontrado.`
@@ -184,15 +192,30 @@ async function main() {
         }
     }
 
+    for (const tipo of tiposDeNotificacion) {
+        try {
+            const notificacion = await prisma.tipoDeNotificacion.create({
+                data: tipo,
+            });
+            console.log(
+                `Se creó tipo de notificación con el id: ${notificacion.id}`
+            );
+        } catch (e) {
+            console.error(`Error al crear tipo de notificación:`, e);
+        }
+    }
+
     console.log(`Seeding finished.`);
 
     const getSolicitudes = await prisma.solicitud.findMany();
     const getRoles = await prisma.tipoDeUsuario.findMany();
     const getUsuarios = await prisma.usuario.findMany();
+    const getTiposDeNotificacion = await prisma.tipoDeNotificacion.findMany();
 
     console.log(getSolicitudes);
     console.log(getRoles);
     console.log(getUsuarios);
+    console.log(getTiposDeNotificacion);
 }
 
 main()

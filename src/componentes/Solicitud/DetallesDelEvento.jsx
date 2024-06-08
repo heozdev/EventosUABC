@@ -68,43 +68,6 @@ export const DetallesDelEvento = () => {
     }, [id, toast]);
 
     useEffect(() => {
-        // const getAsistencia = async () => {
-        //     try {
-        //         const eventoId = evento.id;
-
-        //         // Construir la URL con los parámetros de eventId y usuarioId
-        //         const url = `http://localhost:3000/eventos/${eventoId}/asistencia/${usuario.id}`;
-
-        //         const response = await fetch(url, {
-        //             method: "GET",
-        //             headers: {
-        //                 "Content-Type": "application/json",
-        //             },
-        //         });
-
-        //         if (!response.ok) {
-        //             throw new Error(
-        //                 "Error al obtener la solicitud de asistencia"
-        //             );
-        //         }
-
-        //         const data = await response.json();
-
-        //         // Actualizar localmente setAsistira basado en la respuesta del servidor
-        //         setAsistira(data); // Suponiendo que data contiene true o false
-
-        //         // Aquí puedes hacer lo que necesites con setAsistira, como actualizar en tu interfaz
-        //         // Ejemplo: actualizarEstado(setAsistira);
-        //     } catch (error) {
-        //         console.error("Error al obtener solicitud:", error);
-        //         // Manejar el error según tus necesidades
-        //     }
-        // };
-
-        // // Llamar a getSolicitud al montar el componente
-        // if (evento && evento.id) {
-        //     getAsistencia();
-        // }
         fetchEvento();
 
         fetch(`http://localhost:3000/usuarios/${usuario.id}/eventos-asistidos`)
@@ -158,6 +121,30 @@ export const DetallesDelEvento = () => {
                         isClosable: true,
                         position: "top-right",
                     });
+
+                    fetch("http://localhost:3000/notificaciones", {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                        },
+                        body: JSON.stringify({
+                            usuarioId: usuario.id,
+                            tipoDeNotificacionId: 1,
+                            mensaje: `Usted a sido registrado exitosamente al evento: ${evento.solicitud.nombre}, le pedimos estar al tanto de las fechas y comunicados del evento`,
+                            leida: false,
+                        }),
+                    })
+                        .then((resp) => resp.json())
+                        .then((data) => {
+                            console.log("notificacion", data);
+                        })
+                        .catch((error) => {
+                            console.error(
+                                "Error al crear la notificación: ",
+                                error
+                            );
+                        });
+
                     setRegistrado(true);
                 })
                 .catch((error) => {
@@ -377,7 +364,7 @@ export const DetallesDelEvento = () => {
                     <FormControl>
                         <FormLabel mt={3} fontSize="m">
                             <b>Responsable: </b>
-                            {evento.solicitud.responsable}
+                            {evento.solicitud.nombreResponsable}
                         </FormLabel>
                         <FormLabel mt={3} fontSize="m">
                             <b>Modalidad: </b>
