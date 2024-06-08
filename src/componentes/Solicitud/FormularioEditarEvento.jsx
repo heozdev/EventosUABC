@@ -46,7 +46,6 @@ export const FormularioEditarEvento = () => {
         fetch(`http://localhost:3000/eventos/${id}`)
             .then((response) => response.json())
             .then((data) => {
-                console.log(data.solicitud);
                 setEvento(data.solicitud);
             })
             .catch((error) => {
@@ -69,53 +68,37 @@ export const FormularioEditarEvento = () => {
     if (!evento) {
         return <div>Cargando...</div>;
     }
+    
+    // Asignar un valor predeterminado a evento.capacidad si es undefined o null
+    if (evento.capacidad === undefined || evento.capacidad === null) {
+        evento.capacidad = 0;
+    }
 
     const handleInputChange = (e) => {
-        if (e.target.value === "-") {
-            e.preventDefault();
-        }
-
+        const { name, value, checked, type } = e.target;
         setEvento((prevState) => {
-            if (e.target.name.includes(".")) {
-                const [padre, hijo] = e.target.name.split(".");
-                return {
-                    ...prevState,
-                    [padre]: {
-                        ...prevState[padre],
-                        [hijo]: e.target.value,
-                    },
-                };
-            } else if (e.target.name === "valorEnCreditos") {
-                return {
-                    ...prevState,
-                    ["valorEnCreditos"]: e.target.checked,
-                };
-            } else if (
-                e.target.name == "capacidad" ||
-                e.target.name == "totalSellos"
-            ) {
-                return {
-                    ...prevState,
-                    [e.target.name]: parseInt(e.target.value),
+            const updatedState = { ...prevState };
+    
+            if (name.includes(".")) {
+                const [parent, child] = name.split(".");
+                updatedState[parent] = {
+                    ...updatedState[parent],
+                    [child]: type === "checkbox" ? checked : value,
                 };
             } else {
-                return {
-                    ...prevState,
-                    [e.target.name]: e.target.value,
-                };
+                updatedState[name] = type === "checkbox" ? checked : value;
             }
+    
+            // Si se actualizó un campo de ubicación, aseguramos que el objeto ubicacion exista
+            if (name.includes("ubicacion")) {
+                updatedState.ubicacion = updatedState.ubicacion || {};
+            }
+    
+            return updatedState;
         });
     };
 
     const actualizarEvento = () => {
-        // const solicitudOriginal = evento.solicitud;
-
-        // const camposModificados = Object.keys(solicitudActualizada).some(
-        //     (key) => solicitudActualizada[key] !== solicitudOriginal[key]
-        // );
-
-        console.log("Evento actualizado", evento);
-
         fetch(`http://localhost:3000/eventos/${id}`, {
             method: "PUT",
             headers: {
@@ -125,7 +108,6 @@ export const FormularioEditarEvento = () => {
         })
             .then((response) => response.json())
             .then((data) => {
-                console.log("Evento actualizado resp", data);
                 setEvento(data);
                 toast({
                     title: "Evento actualizado",
@@ -150,17 +132,6 @@ export const FormularioEditarEvento = () => {
                     position: "top-right",
                 });
             });
-
-        // toast({
-        //     title: "Sin cambios",
-        //     description:
-        //         "No se realizaron modificaciones en los datos del evento.",
-        //     status: "info",
-        //     duration: 3000,
-        //     isClosable: true,
-        //     position: "top-right",
-        // });
-        // navigate("/perfil");
     };
 
     function CloseButtonLink() {
@@ -285,6 +256,7 @@ export const FormularioEditarEvento = () => {
                                         isChecked={evento.valorEnCreditos}
                                         name="valorEnCreditos"
                                         onChange={handleInputChange}
+                                        isDisabled={true}
                                     />
                                 </HStack>
                             </FormControl>
@@ -301,6 +273,7 @@ export const FormularioEditarEvento = () => {
                                                 totalSellos: parseInt(value),
                                             }))
                                         }
+                                        isDisabled={true}
                                     >
                                         <NumberInputField name="totalSellos" />
                                         <NumberInputStepper>
@@ -314,8 +287,14 @@ export const FormularioEditarEvento = () => {
                                 <GridItem>
                                     <FormLabel>Capacidad</FormLabel>
                                     <NumberInput
-                                        defaultValue={evento.capacidad}
-                                        onChange={handleInputChange}
+                                        defaultValue={isNaN(evento.capacidad) ? 0 : evento.capacidad}
+                                        onChange={(valueString) => {
+                                            const value = parseInt(valueString);
+                                            setEvento((prevState) => ({
+                                                ...prevState,
+                                                capacidad: value,
+                                            }));
+                                        }}
                                     >
                                         <NumberInputField name="capacidad" />
                                     </NumberInput>
