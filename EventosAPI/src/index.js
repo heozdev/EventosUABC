@@ -596,20 +596,20 @@ app.get("/asistencias", async (req, res) => {
     }
 });
 
-app.get("/eventos/:eventId/asistencia/:usuarioId", async (req,res) => {
-    const {eventoId, usuarioId} = req.params
+app.get("/eventos/:eventId/asistencia/:usuarioId", async (req, res) => {
+    const { eventoId, usuarioId } = req.params;
 
     const evento = await prisma.evento.findUnique({
-        where:{
-            id: parseInt(eventoId)
+        where: {
+            id: parseInt(eventoId),
         },
-        include:{
-            asistencias:{
-                where:{
-                    usuarioId: parseInt(usuarioId)
-                }
-            }
-        }
+        include: {
+            asistencias: {
+                where: {
+                    usuarioId: parseInt(usuarioId),
+                },
+            },
+        },
     });
     if (evento && evento.asistencias.length > 0) {
         res.json(true);
@@ -670,4 +670,3 @@ app.get("/eventos/:eventoId/usuarios", async (req, res) => {
         });
     }
 });
-
