@@ -282,12 +282,23 @@ app.put("/eventos/:id", async (req, res) => {
     } = req.body;
 
     try {
+        const ubicacionActualizada = await prisma.ubicacion.update({
+            where: { id: Number(ubicacionId) },
+            data: {
+                facultad: ubicacion.facultad,
+                estado: ubicacion.estado,
+                campus: ubicacion.ciudad,
+                ciudad: ubicacion.ciudad,
+                direccion: ubicacion.direccion,
+                aula: ubicacion.aula,
+            },
+        });
+
         const eventoActualizado = await prisma.evento.update({
             where: { id: Number(id) },
             data: {
                 solicitud: {
                     update: {
-                        ubicacionId,
                         responsableId,
                         nombreResponsable,
                         nombre,
@@ -612,6 +623,7 @@ app.get("/eventos/:eventId/asistencia/:usuarioId", async (req, res) => {
             },
         },
     });
+
     if (evento && evento.asistencia.length > 0) {
         res.json(true);
     } else {

@@ -140,7 +140,6 @@ export const MisEventosPerfil = ({ evento }) => {
     };
 
     const handleCloseEditarFormulario = () => {
-        setSelectedSolicitud(null);
         setShowEditarFormulario(false);
     };
 
