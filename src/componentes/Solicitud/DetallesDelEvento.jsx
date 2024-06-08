@@ -300,9 +300,9 @@ export const DetallesDelEvento = () => {
 
     const obtenerUsuarios = async () => {
         try {
-            const response = await fetch('http://localhost:3000/usuarios');
+            const response = await fetch("http://localhost:3000/usuarios");
             if (!response.ok) {
-                throw new Error('Error al obtener los usuarios');
+                throw new Error("Error al obtener los usuarios");
             }
             const data = await response.json();
             setUsuarios(data);
@@ -311,44 +311,42 @@ export const DetallesDelEvento = () => {
                 acc[user.id] = false; // Suponiendo que 'id' es único para cada usuario
                 return acc;
             }, {});
+
             setSelectUsuarios(seleccionInicial);
         } catch (error) {
-            console.error('Error al obtener los usuarios:', error);
+            console.error("Error al obtener los usuarios:", error);
             toast({
                 title: "Error",
                 description: "No se pudieron obtener los usuarios.",
                 status: "error",
                 duration: 3000,
                 isClosable: true,
-                position: "top-right"
+                position: "top-right",
             });
         }
     };
 
     const cambioSeleccion = (userId) => {
-        setSelectUsuarios(prevState => ({
+        setSelectUsuarios((prevState) => ({
             ...prevState,
-            [userId]: !prevState[userId]
+            [userId]: !prevState[userId],
         }));
     };
 
     const seleccionarTodos = (event) => {
         const { checked } = event.target;
         const nuevaSeleccion = {};
-        usuarios.forEach(user => {
+        usuarios.forEach((user) => {
             nuevaSeleccion[user.id] = checked;
         });
         setSelectUsuarios(nuevaSeleccion);
     };
-
-
 
     // Función para abrir el modal y obtener usuarios
     const AbrirModalInvitar = () => {
         obtenerUsuarios();
         setInvitarModalAbrir(true);
     };
-
 
     if (!evento) {
         return <div>Cargando...</div>;
@@ -369,6 +367,27 @@ export const DetallesDelEvento = () => {
             </a>
         );
     }
+
+    const invitarUsuarios = () => {
+        for (const key in selectUsuarios) {
+            if (selectUsuarios[key]) {
+                fetch(`http://localhost:3000/notificaciones`, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({
+                        tipoDeNotificacionId: 3,
+                        usuarioId: key,
+                        mensaje: `El ${usuario.tipoUsuario.rol}: ${usuario.nombres} te ha invidado a asistir al evento: ${evento.solicitud.nombre}`,
+                        leida: false,
+                    }),
+                })
+                    .then((resp) => resp.json())
+                    .then((data) => console.log(data));
+            }
+        }
+    };
 
     const pageStyle = `
         @page {
@@ -502,15 +521,29 @@ export const DetallesDelEvento = () => {
                     </Button>
                 )}
 
-                <Button
-                colorScheme="green"
-                size="lg"
-                mt={10}
-                ml={4}
-                onClick={AbrirModalInvitar}
-                >
-                Invitar Grupos
-                </Button>
+                {usuario.tipoUsuario.rol == "Profesor" && (
+                    <Button
+                        colorScheme="green"
+                        size="lg"
+                        mt={10}
+                        ml={4}
+                        onClick={AbrirModalInvitar}
+                    >
+                        Invitar Grupos
+                    </Button>
+                )}
+
+                {usuario.tipoUsuario.rol == "Encargado" && (
+                    <Button
+                        colorScheme="green"
+                        size="lg"
+                        mt={10}
+                        ml={4}
+                        onClick={AbrirModalInvitar}
+                    >
+                        Invitar Grupos
+                    </Button>
+                )}
 
                 <Button
                     colorScheme="green"
@@ -591,57 +624,86 @@ export const DetallesDelEvento = () => {
                 </Modal>
 
                 {/* Modal para "Invitar Grupos" */}
-       <Modal isOpen={InvitarModalAbrir} onClose={() => setInvitarModalAbrir(false)} size="4xl">
-                <ModalOverlay />
-                <ModalContent>
-                    <ModalHeader>Invitar Grupos</ModalHeader>
-                    <ModalCloseButton />
-                    <ModalBody>
-                        <Table variant="simple">
-                            <Thead>
-                                <Tr>
-                                    <Th>
-                                        <Text>Seleccionar todos</Text>
-                                        <input
-                                            type="checkbox"
-                                            onChange={seleccionarTodos}
-                                            checked={usuarios.every(user => selectUsuarios[user.id])}
-                                        />
-                                    </Th>
-                                    <Th>Matrícula</Th>
-                                    <Th>Nombre</Th>
-                                    <Th>Apellidos</Th>
-                                    <Th>Carrera</Th>
-                                    <Th>Correo</Th>
-                                </Tr>
-                            </Thead>
-                            <Tbody>
-                                {usuarios.map(usuario => (
-                                    <Tr key={usuario.id}>
-                                        <Td>
+                <Modal
+                    isOpen={InvitarModalAbrir}
+                    onClose={() => setInvitarModalAbrir(false)}
+                    size="4xl"
+                >
+                    <ModalOverlay />
+                    <ModalContent>
+                        <ModalHeader>Invitar Grupos</ModalHeader>
+                        <ModalCloseButton />
+                        <ModalBody>
+                            <Table variant="simple">
+                                <Thead>
+                                    <Tr>
+                                        <Th>
+                                            <Text>Seleccionar todos</Text>
                                             <input
                                                 type="checkbox"
-                                                checked={selectUsuarios[usuario.id]}
-                                                onChange={() => cambioSeleccion(usuario.id)}
+                                                onChange={seleccionarTodos}
+                                                checked={usuarios.every(
+                                                    (user) =>
+                                                        selectUsuarios[user.id]
+                                                )}
                                             />
-                                        </Td>
-                                        <Td>{usuario.matricula}</Td>
-                                        <Td>{usuario.nombres}</Td>
-                                        <Td>{usuario.apellidos}</Td>
-                                        <Td>{usuario.carrera}</Td>
-                                        <Td>{usuario.correo}</Td>
+                                        </Th>
+                                        <Th>Matrícula</Th>
+                                        <Th>Nombre</Th>
+                                        <Th>Apellidos</Th>
+                                        <Th>Carrera</Th>
+                                        <Th>Correo</Th>
                                     </Tr>
-                                ))}
-                            </Tbody>
-                        </Table>
-                    </ModalBody>
-                    <ModalFooter>
-                        <Button colorScheme="green" ml={4} mt={10}> Invitar </Button>
-                        <Button colorScheme="green" ml={4} mt={10} onClick={() => setInvitarModalAbrir(false)}>Cerrar</Button>
-                    </ModalFooter>
-                </ModalContent>
-            </Modal>
-
+                                </Thead>
+                                <Tbody>
+                                    {usuarios.map((usuario) => (
+                                        <Tr key={usuario.id}>
+                                            <Td>
+                                                <input
+                                                    type="checkbox"
+                                                    checked={
+                                                        selectUsuarios[
+                                                            usuario.id
+                                                        ]
+                                                    }
+                                                    onChange={() =>
+                                                        cambioSeleccion(
+                                                            usuario.id
+                                                        )
+                                                    }
+                                                />
+                                            </Td>
+                                            <Td>{usuario.matricula}</Td>
+                                            <Td>{usuario.nombres}</Td>
+                                            <Td>{usuario.apellidos}</Td>
+                                            <Td>{usuario.carrera}</Td>
+                                            <Td>{usuario.correo}</Td>
+                                        </Tr>
+                                    ))}
+                                </Tbody>
+                            </Table>
+                        </ModalBody>
+                        <ModalFooter>
+                            <Button
+                                onClick={invitarUsuarios}
+                                colorScheme="green"
+                                ml={4}
+                                mt={10}
+                            >
+                                {" "}
+                                Invitar{" "}
+                            </Button>
+                            <Button
+                                colorScheme="green"
+                                ml={4}
+                                mt={10}
+                                onClick={() => setInvitarModalAbrir(false)}
+                            >
+                                Cerrar
+                            </Button>
+                        </ModalFooter>
+                    </ModalContent>
+                </Modal>
             </Center>
         </Box>
     );

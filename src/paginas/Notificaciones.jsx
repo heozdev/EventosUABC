@@ -39,7 +39,7 @@ export const Notificaciones = () => {
             </Heading>
             {notificaciones.length > 0 ? (
                 <Grid
-                    h="calc(100% - 80px)"
+                    h="calc(100% - 200px)"
                     mt={4}
                     templateColumns="repeat(2, 1fr)"
                     gap={4}

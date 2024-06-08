@@ -455,8 +455,10 @@ app.post("/notificaciones", async (req, res) => {
     try {
         const nuevaNotificacion = await prisma.notificacion.create({
             data: {
-                tipoDeNotificacion: { connect: { id: tipoDeNotificacionId } },
-                usuario: { connect: { id: usuarioId } },
+                tipoDeNotificacion: {
+                    connect: { id: Number(tipoDeNotificacionId) },
+                },
+                usuario: { connect: { id: Number(usuarioId) } },
                 mensaje,
                 leida,
             },
