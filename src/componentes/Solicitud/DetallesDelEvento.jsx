@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useParams } from "react-router-dom";
 import {
     Box,
@@ -27,114 +27,119 @@ import {
     Th,
     Td,
 } from "@chakra-ui/react";
+import ReactToPrint from "react-to-print";
+import { FaPrint } from "react-icons/fa";
 
 export const DetallesDelEvento = () => {
     const { id } = useParams();
-    const [evento, setEvento] = useState(null);
+    const [evento, setEvento] = useState();
     const toast = useToast();
-    const [asistira,setAsistira] = useState(false);
- 
-    useEffect(() => {
-        const fetchEvento = async () => {
-            try {
-                const response = await fetch(`http://localhost:3000/eventos/${id}`);
-                if (!response.ok) {
-                    throw new Error(`HTTP error! Status: ${response.status}`);
-                }
-                const data = await response.json();
-                console.log(data); // Verifica los datos recibidos en la consola
-                setEvento(data); // Actualiza el estado con los datos del evento recibido
-            } catch (error) {
-                console.error("Error al obtener los detalles del evento:", error);
-                toast({
-                    title: "Error",
-                    description: "Hubo un problema al obtener los detalles del evento.",
-                    status: "error",
-                    duration: 3000,
-                    isClosable: true,
-                    position: "top-right",
-                });
-            }
-        };
+    const [registrado, setRegistrado] = useState(false);
+    const [asistira, setAsistira] = useState(false);
+    const componentRef = useRef();
+    const [usuario, setUsuario] = useState(
+        JSON.parse(localStorage.getItem("usuario"))
+    );
 
+    const fetchEvento = async () => {
+        try {
+            const response = await fetch(`http://localhost:3000/eventos/${id}`);
+            if (!response.ok) {
+                throw new Error(`HTTP error! Status: ${response.status}`);
+            }
+            const data = await response.json();
+            setEvento(data); // Actualiza el estado con los datos del evento recibido
+        } catch (error) {
+            console.error("Error al obtener los detalles del evento:", error);
+            toast({
+                title: "Error",
+                description:
+                    "Hubo un problema al obtener los detalles del evento.",
+                status: "error",
+                duration: 3000,
+                isClosable: true,
+                position: "top-right",
+            });
+        }
+    };
+
+    useEffect(() => {
         fetchEvento();
     }, [id, toast]);
 
-
     useEffect(() => {
-        const getAsistencia = async () => {
-            try {
-                const usuarioJSON = localStorage.getItem("usuario");
-    
-                if (!usuarioJSON) {
-                    throw new Error(
-                        "No hay datos de usuario almacenados en localStorage"
-                    );
+        // const getAsistencia = async () => {
+        //     try {
+        //         const eventoId = evento.id;
+
+        //         // Construir la URL con los parámetros de eventId y usuarioId
+        //         const url = `http://localhost:3000/eventos/${eventoId}/asistencia/${usuario.id}`;
+
+        //         const response = await fetch(url, {
+        //             method: "GET",
+        //             headers: {
+        //                 "Content-Type": "application/json",
+        //             },
+        //         });
+
+        //         if (!response.ok) {
+        //             throw new Error(
+        //                 "Error al obtener la solicitud de asistencia"
+        //             );
+        //         }
+
+        //         const data = await response.json();
+
+        //         // Actualizar localmente setAsistira basado en la respuesta del servidor
+        //         setAsistira(data); // Suponiendo que data contiene true o false
+
+        //         // Aquí puedes hacer lo que necesites con setAsistira, como actualizar en tu interfaz
+        //         // Ejemplo: actualizarEstado(setAsistira);
+        //     } catch (error) {
+        //         console.error("Error al obtener solicitud:", error);
+        //         // Manejar el error según tus necesidades
+        //     }
+        // };
+
+        // // Llamar a getSolicitud al montar el componente
+        // if (evento && evento.id) {
+        //     getAsistencia();
+        // }
+        fetchEvento();
+
+        fetch(`http://localhost:3000/usuarios/${usuario.id}/eventos-asistidos`)
+            .then((response) => response.json())
+            .then((data) => {
+                console.log("data", data);
+                const existeEvento = data.find((e) => e.id == id);
+
+                if (existeEvento) {
+                    setRegistrado(true);
+                } else {
+                    setRegistrado(false);
                 }
-    
-                const usuario = JSON.parse(usuarioJSON);
-                const eventoId = evento.id;
-    
-                // Construir la URL con los parámetros de eventId y usuarioId
-                const url = `http://localhost:3000/eventos/${eventoId}/asistencia/${usuario.id}`;
-    
-                const response = await fetch(url, {
-                    method: "GET",
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                });
-    
-                if (!response.ok) {
-                    throw new Error('Error al obtener la solicitud de asistencia');
-                }
-    
-                const data = await response.json();
-    
-                // Actualizar localmente setAsistira basado en la respuesta del servidor
-                setAsistira(data); // Suponiendo que data contiene true o false
-    
-                console.log("setAsistira:", setAsistira);
-    
-                // Aquí puedes hacer lo que necesites con setAsistira, como actualizar en tu interfaz
-                // Ejemplo: actualizarEstado(setAsistira);
-    
-            } catch (error) {
-                console.error("Error al obtener solicitud:", error);
-                // Manejar el error según tus necesidades
-            }
-        };
-    
-        // Llamar a getSolicitud al montar el componente
-        if (evento && evento.id) {
-            getAsistencia();
-        }
-    
-    }, []);     
-    
+            })
+            .catch((error) => {
+                console.error(
+                    "Error al obtener los eventos del usuario:",
+                    error
+                );
+            });
+
+        console.log(registrado);
+    }, []);
+
     const [usuariosAsistentes, setUsuariosAsistentes] = useState([]);
     const [isOpen, setIsOpen] = useState(false);
 
-
     const handleRegistroEvento = () => {
         try {
-            const usuarioJSON = localStorage.getItem("usuario");
-
-            if (!usuarioJSON) {
-                throw new Error(
-                    "No hay datos de usuario almacenados en localStorage"
-                );
-            }
-            const usuario = JSON.parse(usuarioJSON);
-
             const eventoId = evento.id;
 
             const data = {
                 usuarioId: usuario.id,
                 eventoId: eventoId,
             };
-
-            console.log(JSON.stringify(data));
 
             fetch(`http://localhost:3000/asistencias`, {
                 method: "POST",
@@ -145,26 +150,26 @@ export const DetallesDelEvento = () => {
             })
                 .then((response) => response.json())
                 .then((responseData) => {
-                    console.log(responseData);
                     toast({
-                        title:"Registro exitoso",
-                        description:"Se ha registrado correctamente al evento",
-                        status:"success",
-                        duration:3000,
-                        isClosable:true,
-                        position:"top-right"
+                        title: "Registro exitoso",
+                        description: "Se ha registrado correctamente al evento",
+                        status: "success",
+                        duration: 3000,
+                        isClosable: true,
+                        position: "top-right",
                     });
-                    setAsistira(true);
+                    setRegistrado(true);
                 })
                 .catch((error) => {
                     console.error("Error al registrar la asistencia:", error);
                     toast({
                         title: "Error",
-                        description: "Hubo un error al registrar tu asistencia.",
+                        description:
+                            "Hubo un error al registrar tu asistencia.",
                         status: "error",
                         duration: 5000,
                         isClosable: true,
-                        position:"top-right"
+                        position: "top-right",
                     });
                 });
         } catch (error) {
@@ -175,7 +180,7 @@ export const DetallesDelEvento = () => {
                 status: "error",
                 duration: 5000,
                 isClosable: true,
-                position:"top-right"
+                position: "top-right",
             });
         }
     };
@@ -183,14 +188,14 @@ export const DetallesDelEvento = () => {
     const handleCancelarAsistencia = () => {
         try {
             const usuarioJSON = localStorage.getItem("usuario");
-    
+
             if (!usuarioJSON) {
                 throw new Error(
                     "No hay datos de usuario almacenados en localStorage"
                 );
             }
             const usuario = JSON.parse(usuarioJSON);
-    
+
             fetch("http://localhost:3000/asistencias", {
                 method: "DELETE",
                 headers: {
@@ -198,26 +203,27 @@ export const DetallesDelEvento = () => {
                 },
                 body: JSON.stringify({
                     usuarioId: usuario.id,
-                    eventoId: evento.id
+                    eventoId: evento.id,
                 }),
             })
                 .then((response) => {
                     if (!response.ok) {
-                        throw new Error(`HTTP error! Status: ${response.status}`);
+                        throw new Error(
+                            `HTTP error! Status: ${response.status}`
+                        );
                     }
                     return response.json();
                 })
                 .then((responseData) => {
-                    console.log(responseData);
                     toast({
                         title: "Cancelación exitosa",
                         description: "Se ha cancelado tu asistencia al evento.",
                         status: "success",
                         duration: 3000,
                         isClosable: true,
-                        position: "top-right"
+                        position: "top-right",
                     });
-                    setAsistira(false); 
+                    setRegistrado(false);
                 })
                 .catch((error) => {
                     console.error("Error al cancelar la asistencia:", error);
@@ -227,7 +233,7 @@ export const DetallesDelEvento = () => {
                         status: "error",
                         duration: 3000,
                         isClosable: true,
-                        position: "top-right"
+                        position: "top-right",
                     });
                 });
         } catch (error) {
@@ -238,51 +244,50 @@ export const DetallesDelEvento = () => {
                 status: "error",
                 duration: 3000,
                 isClosable: true,
-                position: "top-right"
+                position: "top-right",
             });
         }
     };
 
     // Dependencia vacía para ejecutar una sola vez al montar el componente// Dependencias para volver a ejecutar useEffect cuando id o usuario.id cambien
-    
-    
-      // Maneja el cambio entre botones basado en asistira
+
+    // Maneja el cambio entre botones basado en asistira
     const handleToggleAsistencia = () => {
-        if (asistira) {
+        if (registrado) {
             handleCancelarAsistencia();
         } else {
             handleRegistroEvento();
         }
     };
 
-    
     const obtenerUsuariosAsistentes = () => {
         fetch(`http://localhost:3000/eventos/${evento.id}/usuarios`)
-          .then(response => response.json())
-          .then(data => {
-            setUsuariosAsistentes(data);
-            setIsOpen(true); // Abrir el modal
-          })
-          .catch(error => {
-            console.error("Error al obtener los usuarios asistentes:", error);
-            toast({
-              title: "Error",
-              description: "No se pudieron obtener los usuarios que asistirán al evento.",
-              status: "error",
-              duration: 3000,
-              isClosable: true,
-              position: "top-right"
+            .then((response) => response.json())
+            .then((data) => {
+                setUsuariosAsistentes(data);
+                setIsOpen(true); // Abrir el modal
+            })
+            .catch((error) => {
+                console.error(
+                    "Error al obtener los usuarios asistentes:",
+                    error
+                );
+                toast({
+                    title: "Error",
+                    description:
+                        "No se pudieron obtener los usuarios que asistirán al evento.",
+                    status: "error",
+                    duration: 3000,
+                    isClosable: true,
+                    position: "top-right",
+                });
             });
-          });
-      };
-    
+    };
 
     useEffect(() => {
-        
         fetch(`http://localhost:3000/eventos/${id}`)
             .then((response) => response.json())
             .then((data) => {
-                console.log(data);
                 setEvento(data);
             })
             .catch((error) => {
@@ -301,7 +306,6 @@ export const DetallesDelEvento = () => {
                 });
             });
     }, []);
-
 
     if (!evento) {
         return <div>Cargando...</div>;
@@ -322,6 +326,19 @@ export const DetallesDelEvento = () => {
             </a>
         );
     }
+
+    const pageStyle = `
+        @page {
+            size: auto;
+            margin: 20mm;
+        }
+        @media print {
+            body {
+                -webkit-print-color-adjust: exact;
+                font-family: Arial, sans-serif;
+            }
+        }
+    `;
 
     return (
         <Box p={8}>
@@ -420,69 +437,103 @@ export const DetallesDelEvento = () => {
                 </Grid>
             </Center>
             <Center>
+                {registrado ? (
+                    <Button
+                        colorScheme="red"
+                        size="lg"
+                        mt={10}
+                        onClick={handleToggleAsistencia}
+                        style={{ display: "block" }}
+                    >
+                        Cancelar asistencia
+                    </Button>
+                ) : (
+                    <Button
+                        colorScheme="green"
+                        size="lg"
+                        mt={10}
+                        onClick={handleToggleAsistencia}
+                        style={{ display: "block" }}
+                    >
+                        Asistiré
+                    </Button>
+                )}
+
                 <Button
                     colorScheme="green"
                     size="lg"
                     mt={10}
-                    onClick={handleToggleAsistencia}
-                    style={{ display: asistira ? "none" : "block" }}
+                    ml={4}
+                    onClick={obtenerUsuariosAsistentes}
                 >
-                    Asistiré
+                    Ver asistentes
                 </Button>
-
-                <Button
-                    colorScheme="red"
-                    size="lg"
-                    mt={10}
-                    onClick={handleToggleAsistencia}
-                    style={{ display: asistira ? "block" : "none" }}
+                {/* Modal para mostrar usuarios asistentes */}
+                <Modal
+                    isOpen={isOpen}
+                    onClose={() => setIsOpen(false)}
+                    size="2xl"
                 >
-                   Cancelar asistencia
-                </Button>
-                <Button
-                colorScheme="green"
-                size="lg"
-                mt={10}
-                ml={4}
-                onClick={obtenerUsuariosAsistentes}
-                >
-                Ver asistentes
-                </Button>
-            {/* Modal para mostrar usuarios asistentes */}
-         <Modal isOpen={isOpen} onClose={() => setIsOpen(false)} size="2xl">
-            <ModalOverlay />
-            <ModalContent>
-                <ModalHeader>Usuarios que asistieron:</ModalHeader>
-                    <ModalCloseButton />
-                    <ModalBody>
-            <Table variant="simple">
-              <Thead>
-                <Tr>
-                  <Th>Matrícula</Th>
-                  <Th>Nombre</Th>
-                  <Th>Apellidos</Th>
-                  <Th>Carrera</Th>
-                </Tr>
-              </Thead>
-              <Tbody>
-                {usuariosAsistentes.map(usuario => (
-                  <Tr key={usuario.id}>
-                    <Td>{usuario.matricula}</Td>
-                    <Td>{usuario.nombres}</Td>
-                    <Td>{usuario.apellidos}</Td>
-                    <Td>{usuario.carrera}</Td>
-                  </Tr>
-                ))}
-              </Tbody>
-            </Table>
-          </ModalBody>
-          <ModalFooter>
-            <Button colorScheme="green" onClick={() => setIsOpen(false)}>
-              Cerrar
-            </Button>
-          </ModalFooter>
-        </ModalContent>
-      </Modal>
+                    <ModalOverlay />
+                    <ModalContent ref={componentRef}>
+                        <ModalHeader>
+                            <div>
+                                Usuarios que asistieron a:{" "}
+                                {evento.solicitud.nombre}
+                            </div>
+                            <div>
+                                Responsable:{" "}
+                                {evento.solicitud.nombreResponsable}
+                            </div>
+                            <div>Fecha: {evento.solicitud.fecha}</div>
+                        </ModalHeader>
+                        <ModalCloseButton />
+                        <ModalBody>
+                            <Table variant="simple">
+                                <Thead>
+                                    <Tr>
+                                        <Th>Matrícula</Th>
+                                        <Th>Nombre</Th>
+                                        <Th>Apellidos</Th>
+                                        <Th>Carrera</Th>
+                                    </Tr>
+                                </Thead>
+                                <Tbody>
+                                    {usuariosAsistentes.map((usuario) => (
+                                        <Tr key={usuario.id}>
+                                            <Td>{usuario.matricula}</Td>
+                                            <Td>{usuario.nombres}</Td>
+                                            <Td>{usuario.apellidos}</Td>
+                                            <Td>{usuario.carrera}</Td>
+                                        </Tr>
+                                    ))}
+                                </Tbody>
+                            </Table>
+                        </ModalBody>
+                        <ModalFooter
+                            display="flex"
+                            justifyContent="space-between"
+                        >
+                            <ReactToPrint
+                                trigger={() => (
+                                    <FaPrint
+                                        size={30}
+                                        cursor="pointer"
+                                        style={{ marginLeft: "20px" }}
+                                    />
+                                )}
+                                content={() => componentRef.current}
+                                pageStyle={pageStyle}
+                            />
+                            <Button
+                                colorScheme="green"
+                                onClick={() => setIsOpen(false)}
+                            >
+                                Cerrar
+                            </Button>
+                        </ModalFooter>
+                    </ModalContent>
+                </Modal>
             </Center>
         </Box>
     );

@@ -1,5 +1,6 @@
 const express = require("express");
 const cors = require("cors");
+const PDFDocument = require("pdfkit");
 const { PrismaClient, Prisma } = require("@prisma/client");
 
 const prisma = new PrismaClient();
@@ -604,14 +605,14 @@ app.get("/eventos/:eventId/asistencia/:usuarioId", async (req, res) => {
             id: parseInt(eventoId),
         },
         include: {
-            asistencias: {
+            asistencia: {
                 where: {
                     usuarioId: parseInt(usuarioId),
                 },
             },
         },
     });
-    if (evento && evento.asistencias.length > 0) {
+    if (evento && evento.asistencia.length > 0) {
         res.json(true);
     } else {
         res.json(false);
@@ -668,5 +669,56 @@ app.get("/eventos/:eventoId/usuarios", async (req, res) => {
         res.status(500).json({
             error: "Error al obtener los usuarios del evento",
         });
+    }
+});
+
+// Endpoint para generar y descargar el PDF
+app.get("/usuarios/:id/eventos-asistidos/pdf", async (req, res) => {
+    const { id } = req.params;
+
+    try {
+        const eventos = await prisma.evento.findMany({
+            where: {
+                asistencia: {
+                    some: {
+                        usuarioId: parseInt(id),
+                    },
+                },
+            },
+            include: {
+                solicitud: true,
+            },
+        });
+
+        // Crear el documento PDF
+        const doc = new PDFDocument();
+
+        // Configurar la respuesta HTTP para la descarga del PDF
+        res.setHeader(
+            "Content-Disposition",
+            "attachment; filename=eventos-asistidos.pdf"
+        );
+        res.setHeader("Content-Type", "application/pdf");
+
+        // Crear el contenido del PDF
+        doc.fontSize(16).text("Eventos Asistidos", { align: "center" });
+        doc.moveDown();
+
+        eventos.forEach((evento) => {
+            doc.fontSize(14).text(`Evento: ${evento.solicitud.nombre}`);
+            doc.fontSize(12).text(`Fecha: ${evento.solicitud.fecha}`);
+            doc.fontSize(12).text(
+                `Hora de Inicio: ${evento.solicitud.horaInicio}`
+            );
+            doc.fontSize(12).text(`Hora de Fin: ${evento.solicitud.horaFin}`);
+            doc.moveDown();
+        });
+
+        // Finalizar y enviar el PDF
+        doc.pipe(res);
+        doc.end();
+    } catch (error) {
+        console.error("Error al generar el PDF:", error);
+        res.status(500).json({ error: "Error al generar el PDF" });
     }
 });
