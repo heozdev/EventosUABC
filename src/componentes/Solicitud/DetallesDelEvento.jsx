@@ -521,8 +521,8 @@ export const DetallesDelEvento = () => {
                     </Button>
                 )}
 
-                {usuario.tipoUsuario.rol == "Profesor" && (
-                    <Button
+                {usuario.tipoUsuario.rol === "Profesor" && (
+                    <Button 
                         colorScheme="green"
                         size="lg"
                         mt={10}
@@ -532,19 +532,8 @@ export const DetallesDelEvento = () => {
                         Invitar Grupos
                     </Button>
                 )}
-
-                {usuario.tipoUsuario.rol == "Encargado" && (
-                    <Button
-                        colorScheme="green"
-                        size="lg"
-                        mt={10}
-                        ml={4}
-                        onClick={AbrirModalInvitar}
-                    >
-                        Invitar Grupos
-                    </Button>
-                )}
-
+                
+                {usuario.tipoUsuario.rol !== "Alumno" && (
                 <Button
                     colorScheme="green"
                     size="lg"
@@ -554,6 +543,7 @@ export const DetallesDelEvento = () => {
                 >
                     Ver asistentes
                 </Button>
+                )}
                 {/* Modal para mostrar usuarios asistentes */}
                 <Modal
                     isOpen={isOpen}
