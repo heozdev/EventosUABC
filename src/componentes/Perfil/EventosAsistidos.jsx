@@ -129,12 +129,14 @@ export const EventosAsistidos = () => {
                             >
                                 Cerrar
                             </Button>
+                            {usuario.tipoUsuario.rol === "Alumno" && (
                             <Button
                                 colorScheme="green"
                                 onClick={handleDownloadPDF}
                             >
                                 Obtener carta de evidencia
                             </Button>
+                            )}
                         </ModalFooter>
                     </ModalContent>
                 </Modal>
