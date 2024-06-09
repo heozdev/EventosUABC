@@ -130,12 +130,6 @@ export const FormularioAgregarSolicitud = () => {
 
         if (!inputValues.ubicacionData.aula.trim()) {
             newErrors.aula = "El nombre del evento es obligatorio";
-        } else if (
-            !/^[a-zA-Z0-9\sáéíóúÁÉÍÓÚñÑüÜ]*$/.test(
-                inputValues.ubicacionData.aula
-            )
-        ) {
-            newErrors.aula = "El aula no puede contener caracteres especiales";
         }
 
         if (!inputValues.horaInicio.trim()) {
