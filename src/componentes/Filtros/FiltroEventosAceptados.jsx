@@ -1,24 +1,22 @@
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Modal,
   ModalOverlay,
   ModalContent,
   ModalHeader,
-  ModalFooter,
-  ModalBody,
   ModalCloseButton,
-  Button,
-  FormLabel,
+  ModalBody,
+  ModalFooter,
   FormControl,
+  FormLabel,
   Select,
   Checkbox,
-  Input,
   HStack,
-} from '@chakra-ui/react';
+  Input,
+  Button
+} from "@chakra-ui/react";
 
-
-
-function FiltroEventos({ isOpenModalFilter, onCloseModalFilter, solicitudes, setSolicitudes }) {
+function FiltroEventosAceptados({ isOpenModalFilter, onCloseModalFilter, eventos, setEventos }) {
   const [filtro, setFiltro] = useState({
     ciudad: "",
     facultad: "",
@@ -27,24 +25,24 @@ function FiltroEventos({ isOpenModalFilter, onCloseModalFilter, solicitudes, set
     categoria: "",
   });
 
-  const [solicitudesFiltradas, setSolicitudesFiltradas] = useState([]);
-  const [solicitudesOriginales, setSolicitudesOriginales] = useState([]);
+  const [eventosFiltrados, setEventosFiltrados] = useState([]);
+  const [eventosOriginales, setEventosOriginales] = useState([]);
 
   useEffect(() => {
-    fetch("http://localhost:3000/solicitudes")
+    fetch("http://localhost:3000/eventos")
       .then(response => response.json())
       .then(data => {
-        setSolicitudesOriginales(data);
-        setSolicitudesFiltradas(data); // Inicialmente, mostramos todas las solicitudes
+        setEventosOriginales(data);
+        setEventosFiltrados(data); // Inicialmente, mostramos todos los eventos
       })
       .catch(error => {
-        console.error('Error al obtener datos:', error);
+        console.error('Error al obtener datos de eventos:', error);
       });
   }, []);
 
   useEffect(() => {
-    setSolicitudesFiltradas(filtrarSolicitudes());
-  }, [filtro, solicitudesOriginales]);
+    setEventosFiltrados(filtrarEventos());
+  }, [filtro, eventosOriginales]);
 
   const CambiarFiltro = (event) => {
     const { name, value, type, checked } = event.target;
@@ -52,23 +50,21 @@ function FiltroEventos({ isOpenModalFilter, onCloseModalFilter, solicitudes, set
     setFiltro({ ...filtro, [name]: newValue });
   };
 
-  const filtrarSolicitudes = () => {
-    return solicitudesOriginales.filter((evento) => {
+  const filtrarEventos = () => {
+    return eventosOriginales.filter((evento) => {
       return (
-        (filtro.ciudad === "" ||
-          (evento.ubicacion.ciudad && evento.ubicacion.ciudad.toLowerCase().includes(filtro.ciudad.toLowerCase()))) &&
-        (filtro.facultad === "" ||
-          (evento.ubicacion.facultad && evento.ubicacion.facultad.toLowerCase().includes(filtro.facultad.toLowerCase()))) &&
-        (!filtro.valorEnCreditos || evento.valorEnCreditos === filtro.valorEnCreditos) &&
-        (filtro.fecha === "" || evento.fecha === filtro.fecha) &&
-        (filtro.categoria === "" || (evento.categoria && evento.categoria.toLowerCase().includes(filtro.categoria.toLowerCase())))
+        (filtro.ciudad === "" || (evento.solicitud.ubicacion.ciudad && evento.solicitud.ubicacion.ciudad.toLowerCase().includes(filtro.ciudad.toLowerCase()))) &&
+        (filtro.facultad === "" || (evento.solicitud.ubicacion.facultad && evento.solicitud.ubicacion.facultad.toLowerCase().includes(filtro.facultad.toLowerCase()))) &&
+        (!filtro.valorEnCreditos || evento.solicitud.valorEnCreditos === filtro.valorEnCreditos) &&
+        (filtro.fecha === "" || evento.solicitud.fecha === filtro.fecha) &&
+        (filtro.categoria === "" || (evento.solicitud.categoria && evento.solicitud.categoria.toLowerCase().includes(filtro.categoria.toLowerCase())))
       );
     });
   };
 
   const Filtro = () => {
     onCloseModalFilter();
-    setSolicitudes(filtrarSolicitudes());
+    setEventos(filtrarEventos());
   };
 
   const opcionesCiudad = ["Mexicali", "Tijuana", "Ensenada", "Tecate"];
@@ -78,7 +74,7 @@ function FiltroEventos({ isOpenModalFilter, onCloseModalFilter, solicitudes, set
       <Modal isOpen={isOpenModalFilter} onClose={onCloseModalFilter}>
         <ModalOverlay />
         <ModalContent>
-          <ModalHeader>Filtros</ModalHeader>
+          <ModalHeader>Filtros de Eventos</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
             <FormControl>
@@ -142,4 +138,4 @@ function FiltroEventos({ isOpenModalFilter, onCloseModalFilter, solicitudes, set
   );
 }
 
-export default FiltroEventos;
+export default FiltroEventosAceptados;

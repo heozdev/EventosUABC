@@ -118,7 +118,7 @@ export const AccionesPerfil = () => {
                                 </Center>
                             </ModalBody>
                             <ModalFooter>
-                                <Button colorScheme="blue" mr={3} onClick={onClose}>
+                                <Button colorScheme="green" mr={3} onClick={onClose}>
                                     Cerrar
                                 </Button>
                             </ModalFooter>

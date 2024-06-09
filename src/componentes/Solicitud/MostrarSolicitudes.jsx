@@ -6,13 +6,11 @@ import { AddIcon } from "@chakra-ui/icons";
 import { BiSolidFilterAlt } from "react-icons/bi";
 import FiltroEventos from "../Filtros/FiltroEventos";
 import FiltroBarraBusqueda from "../Filtros/FiltroBarraBusqueda";
-import { FormularioAgregarSolicitud } from "./FormularioAgregarSolicitud";
 import { Solicitud } from "../../modelos/Solicitud";
 
 function MostrarSolicitudes({ solicitudes, setSolicitudes, getSolicitudes }) {
     const [pagina, setPagina] = useState(1);
     const [solicitudesP] = useState(6);
-    const [mostrarFormulario, setMostrarFormulario] = useState(false);
     const {
         isOpen: isOpenModalFilter,
         onOpen: onOpenModalFilter,
@@ -34,9 +32,6 @@ function MostrarSolicitudes({ solicitudes, setSolicitudes, getSolicitudes }) {
 
     const paginate = (pag) => setPagina(pag);
 
-    const AgregarSolicitud = () => {
-        setMostrarFormulario(!mostrarFormulario);
-    };
 
     return (
         <center>
@@ -44,15 +39,6 @@ function MostrarSolicitudes({ solicitudes, setSolicitudes, getSolicitudes }) {
                 Solicitudes
             </Heading>
             <Flex justifyContent="center" alignItems="center" mt={10} ml={600}>
-            <Button
-            color="#004928"
-            colorScheme="white"
-            leftIcon={<AddIcon />}
-            onClick={AgregarSolicitud}
-            >
-            {mostrarFormulario ? "Cerrar Formulario" : "Agregar Solicitud"}
-            </Button>
-            {mostrarFormulario && <FormularioAgregarSolicitud />}
                 <BiSolidFilterAlt
                     style={{
                         color: "#004928",

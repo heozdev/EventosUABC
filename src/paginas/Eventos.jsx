@@ -2,12 +2,14 @@ import { useState, useEffect } from "react";
 import { Heading, Center } from "@chakra-ui/react";
 import { Evento } from "../modelos/Evento";
 import FiltroBarraBusquedaEventos from "../componentes/Filtros/FiltroBarraBusquedaEventos";
+import FiltroEventosAceptados from "../componentes/Filtros/FiltroEventosAceptados";
 import { useDisclosure } from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@chakra-ui/react";
 import { SearchIcon } from "@chakra-ui/icons";
 import { Flex } from "@chakra-ui/react";
 import { Box } from "@chakra-ui/react";
+import { BiSolidFilterAlt } from "react-icons/bi";
 
 export const Eventos = () => {
     const [eventos, setEventos] = useState([]);
@@ -15,6 +17,11 @@ export const Eventos = () => {
         isOpen: isOpenModalSearch,
         onOpen: onOpenModalSearch,
         onClose: onCloseModalSearch,
+    } = useDisclosure();
+    const {
+        isOpen: isOpenModalFilter,
+        onOpen: onOpenModalFilter,
+        onClose: onCloseModalFilter,
     } = useDisclosure();
 
     const getEventos = () => {
@@ -24,19 +31,13 @@ export const Eventos = () => {
                 "Content-Type": "application/json",
             },
         })
-            .then((response) => response.json())
-            .then((data) => {
-                setEventos(data);
-            })
-            .catch((error) => {
-                console.error("Error recuperando los eventos:", error);
-            });
-    };
-
-    const handleDeleteEvento = (id) => {
-        setEventos((prevEventos) =>
-            prevEventos.filter((evento) => evento.id !== id)
-        );
+        .then((response) => response.json())
+        .then((data) => {
+            setEventos(data);
+        })
+        .catch((error) => {
+            console.error("Error recuperando los eventos:", error);
+        });
     };
 
     useEffect(() => {
@@ -50,14 +51,22 @@ export const Eventos = () => {
                     Eventos
                 </Heading>
             </Center>
-            <Flex justifyContent="center" alignItems="center" mt={10} ml={600}>
+            <Flex justifyContent="center" alignItems="center" mt={10}>
                 <SearchIcon
                     onClick={onOpenModalSearch}
                     style={{
                         color: "#004928",
                         fontSize: "45px",
                         cursor: "pointer",
-                        marginRight: "20px", // Ajusta el margen derecho si es necesario
+                        marginRight: "20px",
+                    }}
+                />
+                <BiSolidFilterAlt
+                    onClick={onOpenModalFilter}
+                    style={{
+                        color: "#004928",
+                        fontSize: "45px",
+                        cursor: "pointer",
                     }}
                 />
                 <FiltroBarraBusquedaEventos
@@ -67,8 +76,16 @@ export const Eventos = () => {
                     setEventos={setEventos}
                 />
             </Flex>
+            <FiltroEventosAceptados
+                isOpenModalFilter={isOpenModalFilter}
+                onCloseModalFilter={onCloseModalFilter}
+                eventos={eventos}
+                setEventos={setEventos}
+            />
             {eventos.map((evento) => (
-                <Evento key={evento.id} evento={evento} />
+                <Box key={evento.id}>
+                    <Evento evento={evento} />
+                </Box>
             ))}
         </>
     );

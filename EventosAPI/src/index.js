@@ -217,18 +217,23 @@ app.post("/evento", async (req, res) => {
 });
 
 app.get("/eventos", async (req, res) => {
-    const eventos = await prisma.evento.findMany({
+    try {
+      const eventos = await prisma.evento.findMany({
         include: {
-            solicitud: {
-                include: {
-                    ubicacion: true,
-                },
-            },
-        },
-    });
-
-    res.json(eventos);
-});
+          solicitud: {
+            include: {
+              ubicacion: true
+            }
+          }
+        }
+      });
+      res.json(eventos);
+    } catch (error) {
+      console.error("Error al obtener eventos:", error);
+      res.status(500).json({ error: "Error al obtener eventos" });
+    }
+  });
+  
 
 app.get("/usuarios/:id/eventos", async (req, res) => {
     const { id } = req.params;

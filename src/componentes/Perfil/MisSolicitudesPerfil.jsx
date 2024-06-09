@@ -404,7 +404,7 @@ export const MisSolicitudesPerfil = ({ solicitud }) => {
                                         "Pendiente" && (
                                         <>
                                             <Button
-                                                colorScheme="blue"
+                                                colorScheme="green"
                                                 mt={3}
                                                 onClick={(e) => {
                                                     e.stopPropagation();
