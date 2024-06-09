@@ -96,26 +96,61 @@ export const MisSolicitudesPerfil = ({ solicitud }) => {
             return;
         }
 
-        // fetch(`http://localhost:3000/solicitudes/${solicitudId}`, {
-        //     method: "PUT",
-        //     headers: {
-        //         "Content-Type": "application/json",
-        //     },
-        //     body: JSON.stringify({ mensaje }),
-        // })
-        //     .then((response) => response.json())
-        //     .then(() => {
-        //         toast({
-        //             title: "Mensaje enviado",
-        //             description: "El mensaje se ha enviado con éxito.",
-        //             status: "success",
-        //             duration: 3000,
-        //             isClosable: true,
-        //             position: "top-right",
-        //         });
-        //         handleMensajeModalClose(true);
-        //         handleClose(); // Cerrar el modal de detalles del evento
-        //     });
+        // Obtener todos los usuarios con el rol "Encargado"
+        fetch("http://localhost:3000/usuarios/encargados")
+            .then((response) => {
+                if (!response.ok) {
+                    throw new Error("Error al obtener los encargados");
+                }
+                return response.json();
+            })
+            .then((encargados) => {
+                // Crear una notificación para cada encargado
+                const promesas = encargados.map((encargado) => {
+                    const notificacion = {
+                        usuarioId: encargado.id,
+                        tipoDeNotificacionId: 7,
+                        mensaje: `El Responsable: ${usuario.nombres} tiene el siguiente mensaje para usted: ${mensaje}`,
+                        leida: false,
+                    };
+
+                    return fetch("http://localhost:3000/notificaciones", {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                        },
+                        body: JSON.stringify(notificacion),
+                    }).then((response) => {
+                        if (!response.ok) {
+                            throw new Error("Error al crear la notificación");
+                        }
+                    });
+                });
+
+                return Promise.all(promesas);
+            })
+            .then(() => {
+                toast({
+                    title: "Mensaje enviado con éxito",
+                    status: "success",
+                    position: "top",
+                    duration: 2000,
+                    isClosable: true,
+                });
+            })
+            .catch((error) => {
+                toast({
+                    title: "Error",
+                    description: error.message,
+                    status: "error",
+                    position: "top",
+                    duration: 2000,
+                    isClosable: true,
+                });
+            });
+
+        handleMensajeModalClose(true);
+        handleClose(); // Cerrar el modal de detalles del evento
     };
 
     const aumentarRecordatorio = (solicitudId) => {

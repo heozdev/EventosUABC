@@ -94,6 +94,7 @@ export const MisEventosPerfil = ({ evento }) => {
                 const promesas = encargados.map((encargado) => {
                     const notificacion = {
                         usuarioId: encargado.id,
+                        tipoDeNotificacionId: 5,
                         mensaje: `Un evento ha sido cancelado: ${textArea}`,
                         leida: false,
                     };

@@ -22,7 +22,7 @@ export const Notificaciones = () => {
                 }
             )
                 .then((response) => response.json())
-                .then((data) => setNotificaciones(data))
+                .then((data) => setNotificaciones(data.reverse()))
                 .catch((error) =>
                     console.error(
                         "Error al obtener las notificaciones: ",

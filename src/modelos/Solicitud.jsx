@@ -26,6 +26,9 @@ export const Solicitud = ({ solicitud, setSolicitud, updateSolicitudes }) => {
     const [isOpen, setIsOpen] = useState(false);
     const [value, setValue] = useState("");
     const [showConfirmModal, setShowConfirmModal] = useState(false);
+    const [usuario, setUsuario] = useState(
+        JSON.parse(localStorage.getItem("usuario"))
+    );
     const toast = useToast();
 
     const crearEvento = (solicitudId) => {
@@ -55,6 +58,20 @@ export const Solicitud = ({ solicitud, setSolicitud, updateSolicitudes }) => {
             .then((data) => {
                 if (data) {
                     crearEvento(solicitud.id);
+                    fetch(`http://localhost:3000/notificaciones`, {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                        },
+                        body: JSON.stringify({
+                            tipoDeNotificacionId: 8,
+                            usuarioId: solicitud.responsableId,
+                            mensaje: `Su solicitud para la creacion del evento: ${solicitud.nombre} ha sido aceptada con exito por el Encargado ${usuario.nombres}.`,
+                            leida: false,
+                        }),
+                    })
+                        .then((resp) => resp.json())
+                        .then((data) => console.log(data));
                     toast({
                         title: "Solicitud aceptada",
                         description: "La solicitud fue aceptada correctamente.",
