@@ -113,14 +113,14 @@ export const DetallesDelEvento = () => {
         }
         try {
             const eventoId = evento.id;
-    
+
             // Verificar si la capacidad del evento está llena
             if (usuariosAsistentes.length >= evento.solicitud.capacidad) {
                 // Mostrar alerta de capacidad llena
                 const confirmacion = window.confirm(
                     "La capacidad del evento está llena. ¿Desea inscribirse en la lista de espera?"
                 );
-    
+
                 if (confirmacion) {
                     // Agregar usuario a la lista de espera
                     fetch(`http://localhost:3000/lista-espera`, {
@@ -169,7 +169,7 @@ export const DetallesDelEvento = () => {
                     usuarioId: usuario.id,
                     eventoId: eventoId,
                 };
-    
+
                 fetch(`http://localhost:3000/asistencias`, {
                     method: "POST",
                     headers: {
@@ -181,13 +181,14 @@ export const DetallesDelEvento = () => {
                     .then(() => {
                         toast({
                             title: "Registro exitoso",
-                            description: "Se ha registrado correctamente al evento",
+                            description:
+                                "Se ha registrado correctamente al evento",
                             status: "success",
                             duration: 3000,
                             isClosable: true,
                             position: "top-right",
                         });
-    
+
                         fetch("http://localhost:3000/notificaciones", {
                             method: "POST",
                             headers: {
@@ -210,11 +211,14 @@ export const DetallesDelEvento = () => {
                                     error
                                 );
                             });
-    
+
                         setRegistrado(true);
                     })
                     .catch((error) => {
-                        console.error("Error al registrar la asistencia:", error);
+                        console.error(
+                            "Error al registrar la asistencia:",
+                            error
+                        );
                         toast({
                             title: "Error",
                             description:
@@ -242,14 +246,14 @@ export const DetallesDelEvento = () => {
     const handleCancelarAsistencia = () => {
         try {
             const usuarioJSON = localStorage.getItem("usuario");
-    
+
             if (!usuarioJSON) {
                 throw new Error(
                     "No hay datos de usuario almacenados en localStorage"
                 );
             }
             const usuario = JSON.parse(usuarioJSON);
-    
+
             fetch("http://localhost:3000/asistencias", {
                 method: "DELETE",
                 headers: {
@@ -262,7 +266,9 @@ export const DetallesDelEvento = () => {
             })
                 .then((response) => {
                     if (!response.ok) {
-                        throw new Error(`HTTP error! Status: ${response.status}`);
+                        throw new Error(
+                            `HTTP error! Status: ${response.status}`
+                        );
                     }
                     return response.json();
                 })
@@ -276,7 +282,7 @@ export const DetallesDelEvento = () => {
                         position: "top-right",
                     });
                     setRegistrado(false);
-    
+
                     // Verificar si hay usuarios en la lista de espera
                     fetch(
                         `http://localhost:3000/lista-espera/${evento.id}?_sort=fechaRegistro&_order=asc&_limit=1`
@@ -285,7 +291,7 @@ export const DetallesDelEvento = () => {
                         .then((usuariosEnEspera) => {
                             if (usuariosEnEspera.length > 0) {
                                 const usuarioEnEspera = usuariosEnEspera[0];
-    
+
                                 // Registrar automáticamente al usuario en espera
                                 fetch(`http://localhost:3000/asistencias`, {
                                     method: "POST",
@@ -355,7 +361,8 @@ export const DetallesDelEvento = () => {
             .then(() => {
                 toast({
                     title: "Cancelación exitosa",
-                    description: "Se ha cancelado tu asistencia de la lista de espera.",
+                    description:
+                        "Se ha cancelado tu asistencia de la lista de espera.",
                     status: "success",
                     duration: 3000,
                     isClosable: true,
@@ -364,10 +371,14 @@ export const DetallesDelEvento = () => {
                 setEnListaDeEspera(false);
             })
             .catch((error) => {
-                console.error("Error al cancelar la asistencia de la lista de espera:", error);
+                console.error(
+                    "Error al cancelar la asistencia de la lista de espera:",
+                    error
+                );
                 toast({
                     title: "Error",
-                    description: "Hubo un error al cancelar tu asistencia de la lista de espera.",
+                    description:
+                        "Hubo un error al cancelar tu asistencia de la lista de espera.",
                     status: "error",
                     duration: 3000,
                     isClosable: true,
@@ -394,7 +405,7 @@ export const DetallesDelEvento = () => {
             .then((response) => response.json())
             .then((data) => {
                 setUsuariosAsistentes(data);
-    
+
                 // Obtener cantidad de usuarios en la lista de espera
                 fetch(`http://localhost:3000/lista-espera/${evento.id}/count`)
                     .then((response) => response.json())
@@ -404,7 +415,10 @@ export const DetallesDelEvento = () => {
                     });
             })
             .catch((error) => {
-                console.error("Error al obtener los usuarios asistentes:", error);
+                console.error(
+                    "Error al obtener los usuarios asistentes:",
+                    error
+                );
                 toast({
                     title: "Error",
                     description:
@@ -641,37 +655,37 @@ export const DetallesDelEvento = () => {
                 </Grid>
             </Center>
             <Center>
-            {registrado ? (
-                <Button
-                    colorScheme="red"
-                    size="lg"
-                    mt={10}
-                    onClick={handleToggleAsistencia}
-                    style={{ display: "block" }}
-                >
-                    Cancelar asistencia
-                </Button>
-            ) : enListaDeEspera ? (
-                <Button
-                    colorScheme="yellow"
-                    size="lg"
-                    mt={10}
-                    onClick={handleToggleAsistencia}
-                    style={{ display: "block" }}
-                >
-                    Cancelar lista de espera
-                </Button>
-            ) : (
-                <Button
-                    colorScheme="green"
-                    size="lg"
-                    mt={10}
-                    onClick={handleToggleAsistencia}
-                    style={{ display: "block" }}
-                >
-                    Asistiré
-                </Button>
-            )}
+                {registrado ? (
+                    <Button
+                        colorScheme="red"
+                        size="lg"
+                        mt={10}
+                        onClick={handleToggleAsistencia}
+                        style={{ display: "block" }}
+                    >
+                        Cancelar asistencia
+                    </Button>
+                ) : enListaDeEspera ? (
+                    <Button
+                        colorScheme="yellow"
+                        size="lg"
+                        mt={10}
+                        onClick={handleToggleAsistencia}
+                        style={{ display: "block" }}
+                    >
+                        Cancelar lista de espera
+                    </Button>
+                ) : (
+                    <Button
+                        colorScheme="green"
+                        size="lg"
+                        mt={10}
+                        onClick={handleToggleAsistencia}
+                        style={{ display: "block" }}
+                    >
+                        Asistiré
+                    </Button>
+                )}
 
                 {usuario.tipoUsuario.rol != "Alumno" && (
                     <Button
@@ -703,12 +717,20 @@ export const DetallesDelEvento = () => {
                     size="2xl"
                 >
                     <ModalOverlay />
-                        <ModalContent ref={componentRef}>
+                    <ModalContent ref={componentRef}>
                         <ModalHeader>
-                            <div>Usuarios que asistieron a: {evento.solicitud.nombre}</div>
-                            <div>Responsable: {evento.solicitud.nombreResponsable}</div>
+                            <div>
+                                Usuarios que asistieron a:{" "}
+                                {evento.solicitud.nombre}
+                            </div>
+                            <div>
+                                Responsable:{" "}
+                                {evento.solicitud.nombreResponsable}
+                            </div>
                             <div>Fecha: {evento.solicitud.fecha}</div>
-                            <div>Cantidad en lista de espera: {cantidadEnEspera}</div>
+                            <div>
+                                Cantidad en lista de espera: {cantidadEnEspera}
+                            </div>
                         </ModalHeader>
                         <ModalCloseButton />
                         <ModalBody>
