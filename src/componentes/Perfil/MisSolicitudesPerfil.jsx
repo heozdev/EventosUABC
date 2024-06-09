@@ -478,7 +478,7 @@ export const MisSolicitudesPerfil = ({ solicitud }) => {
                         </ModalBody>
                         <ModalFooter>
                             <Button
-                                colorScheme="blue"
+                                colorScheme="green"
                                 onClick={() =>
                                     enviarMensaje(selectedSolicitud.id)
                                 }

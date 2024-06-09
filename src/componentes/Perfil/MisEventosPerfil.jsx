@@ -38,7 +38,16 @@ export const MisEventosPerfil = ({ evento }) => {
     const navigate = useNavigate(); // Hook de navegación
     const [usuario, setUsuario] = useState(
         JSON.parse(localStorage.getItem("usuario"))
+<<<<<<< HEAD
     ); // Usuario actual obtenido del almacenamiento local
+=======
+    );
+    const [eventoSeleccionadoId, setEventoSeleccionadoId] = useState(null);
+    const [alumno, setAlumno] = useState({
+        nombre: "",
+        matricula: "",
+    });
+>>>>>>> bf441a589c07cd73c965835f95908f2cc529b96a
 
     // Función para manejar el clic en una tarjeta de evento y redirigir al usuario a la página de edición
     const handleCardClick = (eventoId) => {
@@ -71,7 +80,19 @@ export const MisEventosPerfil = ({ evento }) => {
         }
     }, []);
 
+<<<<<<< HEAD
     // Función para manejar la solicitud de cancelación de un evento
+=======
+    const handleAlumnoInputs = (e) => {
+        setAlumno((prevState) => {
+            return {
+                ...prevState,
+                [e.target.name]: e.target.value,
+            };
+        });
+    };
+
+>>>>>>> bf441a589c07cd73c965835f95908f2cc529b96a
     const handleCancelarEvento = () => {
         if (!textArea.trim().length) {
             // Si no se ha ingresado una nota, mostrar un mensaje de error
@@ -145,8 +166,117 @@ export const MisEventosPerfil = ({ evento }) => {
                 });
             });
 
+<<<<<<< HEAD
         setTextArea(""); // Limpiar el contenido del campo de texto
         handleClose(); // Cerrar el modal
+=======
+        setTextArea("");
+        handleClose();
+    };
+
+    const cancelarEventoEncargado = () => {
+        fetch(`http://localhost:3000/cancelar-evento/${selectedEvento.id}`, {
+            method: "DELETE",
+            headers: {
+                "Content-Type": "application/json",
+            },
+        })
+            .then((resp) => {})
+            .then((data) => {
+                setEventos((prevEventos) =>
+                    prevEventos.filter(
+                        (evento) => evento.id !== selectedEvento.id
+                    )
+                );
+            });
+
+        setSelectedEvento(null);
+    };
+
+    const handleCloseEditarFormulario = () => {
+        setShowEditarFormulario(false);
+    };
+
+    const handleOpen = (evento) => setSelectedEvento(evento);
+    const handleClose = () => setSelectedEvento(null);
+
+    const handleOpenRegistroModal = (evento) => {
+        setEventoSeleccionadoId(evento.id);
+        setIsRegistroModalOpen(true);
+    };
+    const handleCloseRegistroModal = () => setIsRegistroModalOpen(false);
+
+    const handleRegistroAlumno = () => {
+        //validar formulario vacio
+        if (!alumno.matricula.trim().length || !alumno.nombre.trim().length) {
+            toast({
+                title: "Por favor, no deje ningun campo vacio.",
+                status: "error",
+                position: "top",
+                duration: 2000,
+                isClosable: true,
+            });
+
+            return;
+        }
+
+        fetch(`http://localhost:3000/asistencias/registrar-alumno`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                matricula: alumno.matricula,
+                eventoId: eventoSeleccionadoId,
+            }),
+        })
+            .then((resp) => {
+                console.log(resp);
+
+                if (resp.status == 404) {
+                    throw new Error(
+                        "Error en la solicitud de asistencia: " +
+                            "Usuario no encontrado"
+                    );
+                }
+
+                if (resp.status == 500) {
+                    throw new Error(
+                        "Error en la solicitud de asistencia: " +
+                            "Este usuario ya ha sido registrado a este evento"
+                    );
+                }
+                return resp.json();
+            })
+            .then(() => {
+                // Si la solicitud fue exitosa, manejar los datos recibidos
+                toast({
+                    title: "Alumno registrado correctamente.",
+                    status: "success",
+                    position: "top",
+                    duration: 2000,
+                    isClosable: true,
+                });
+            })
+            .catch((error) => {
+                // Si hay un error en la solicitud, manejar el error y mostrarlo al usuario
+                toast({
+                    title: "Error",
+                    description: error.message,
+                    status: "error",
+                    position: "top",
+                    duration: 2000,
+                    isClosable: true,
+                });
+            });
+
+        setAlumno({
+            alumno: "",
+            matricula: "",
+        });
+
+        handleCloseRegistroModal();
+>>>>>>> bf441a589c07cd73c965835f95908f2cc529b96a
     };
 
     return (
@@ -235,7 +365,7 @@ export const MisEventosPerfil = ({ evento }) => {
                             alignItems="center"
                             borderRadius={10}
                             cursor="pointer"
-                            onClick={handleOpenRegistroModal}
+                            onClick={() => handleOpenRegistroModal(evento)}
                             transition="transform 0.3s"
                             _hover={{
                                 transform: "scale(1.02)",
@@ -376,7 +506,11 @@ export const MisEventosPerfil = ({ evento }) => {
                             </Button>
                             <Button
                                 colorScheme="red"
-                                onClick={onOpenNotasCancelacion}
+                                onClick={
+                                    usuario.tipoUsuario.rol == "Encargado"
+                                        ? cancelarEventoEncargado
+                                        : onOpenNotasCancelacion
+                                }
                             >
                                 Solicitar cancelacion
                             </Button>
@@ -433,11 +567,21 @@ export const MisEventosPerfil = ({ evento }) => {
                     <ModalBody>
                         <FormControl>
                             <FormLabel>Nombre del Alumno</FormLabel>
-                            <Input placeholder="Ingrese el nombre del alumno" />
+                            <Input
+                                value={alumno.nombre}
+                                name="nombre"
+                                onChange={handleAlumnoInputs}
+                                placeholder="Ingrese el nombre del alumno"
+                            />
                         </FormControl>
                         <FormControl mt={4}>
                             <FormLabel>Matrícula</FormLabel>
-                            <Input placeholder="Ingrese la matrícula del alumno" />
+                            <Input
+                                onChange={handleAlumnoInputs}
+                                value={alumno.matricula}
+                                name="matricula"
+                                placeholder="Ingrese la matrícula del alumno"
+                            />
                         </FormControl>
                     </ModalBody>
                     <ModalFooter>

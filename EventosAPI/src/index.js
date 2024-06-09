@@ -218,22 +218,21 @@ app.post("/evento", async (req, res) => {
 
 app.get("/eventos", async (req, res) => {
     try {
-      const eventos = await prisma.evento.findMany({
-        include: {
-          solicitud: {
+        const eventos = await prisma.evento.findMany({
             include: {
-              ubicacion: true
-            }
-          }
-        }
-      });
-      res.json(eventos);
+                solicitud: {
+                    include: {
+                        ubicacion: true,
+                    },
+                },
+            },
+        });
+        res.json(eventos);
     } catch (error) {
-      console.error("Error al obtener eventos:", error);
-      res.status(500).json({ error: "Error al obtener eventos" });
+        console.error("Error al obtener eventos:", error);
+        res.status(500).json({ error: "Error al obtener eventos" });
     }
-  });
-  
+});
 
 app.get("/usuarios/:id/eventos", async (req, res) => {
     const { id } = req.params;
@@ -346,6 +345,37 @@ app.delete("/eventos/:id", async (req, res) => {
             where: { id: Number(id) },
         });
         res.json({ message: "Evento eliminado", evento });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: "Error al eliminar el evento" });
+    }
+});
+
+app.delete("/cancelar-evento/:id", async (req, res) => {
+    const { id } = req.params;
+    try {
+        // Busca todas las entradas en la tabla Asistencia relacionadas con el evento
+        const asistenciasRelacionadas = await prisma.asistencia.findMany({
+            where: {
+                eventoId: Number(id), // Asegúrate de que id sea un número
+            },
+        });
+
+        // Elimina todas las entradas relacionadas en la tabla Asistencia
+        await prisma.asistencia.deleteMany({
+            where: {
+                eventoId: Number(id), // Asegúrate de que id sea un número
+            },
+        });
+
+        // Una vez eliminadas las entradas relacionadas, procede a eliminar el evento
+        await prisma.evento.delete({
+            where: {
+                id: Number(id), // Asegúrate de que id sea un número
+            },
+        });
+
+        res.status(204).send(); // Envía una respuesta exitosa sin contenido
     } catch (error) {
         console.error(error);
         res.status(500).json({ error: "Error al eliminar el evento" });
@@ -567,6 +597,32 @@ app.post("/asistencias", async (req, res) => {
     }
 });
 
+app.post("/asistencias/registrar-alumno", async (req, res) => {
+    const { matricula, eventoId } = req.body;
+    console.log(matricula);
+    try {
+        const usuario = await prisma.usuario.findUnique({
+            where: { matricula: Number(matricula) },
+        });
+
+        if (!usuario) {
+            return res.status(404).json({ error: "Usuario no encontrado" });
+        }
+
+        const asistencia = await prisma.asistencia.create({
+            data: {
+                usuario: { connect: { id: Number(usuario.id) } },
+                evento: { connect: { id: Number(eventoId) } },
+            },
+        });
+
+        res.json(asistencia);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: "Error al registrar la asistencia" });
+    }
+});
+
 app.delete("/asistencias", async (req, res) => {
     const { usuarioId, eventoId } = req.body;
 
@@ -751,5 +807,83 @@ app.get("/usuarios/:id/eventos-asistidos/pdf", async (req, res) => {
     } catch (error) {
         console.error("Error al generar el PDF:", error);
         res.status(500).json({ error: "Error al generar el PDF" });
+    }
+});
+
+// Crear una nueva entrada en la lista de espera
+app.post("/lista-espera", async (req, res) => {
+    const { eventoId, usuarioId, fechaRegistro } = req.body;
+
+    try {
+        const nuevaEntrada = await prisma.listaEspera.create({
+            data: {
+                eventoId,
+                usuarioId,
+                fechaRegistro,
+            },
+        });
+
+        res.json(nuevaEntrada);
+    } catch (error) {
+        console.error("Error al crear la entrada en la lista de espera:", error);
+        res.status(500).json({ error: "Error al crear la entrada en la lista de espera" });
+    }
+});
+
+// Obtener la cantidad de usuarios en la lista de espera para un evento
+app.get("/lista-espera/:eventoId/count", async (req, res) => {
+    const { eventoId } = req.params;
+
+    try {
+        const cantidadEnEspera = await prisma.listaEspera.count({
+            where: {
+                eventoId: parseInt(eventoId),
+            },
+        });
+
+        res.json(cantidadEnEspera);
+    } catch (error) {
+        console.error("Error al obtener la cantidad de usuarios en espera:", error);
+        res.status(500).json({ error: "Error al obtener la cantidad de usuarios en espera" });
+    }
+});
+
+// Obtener los usuarios en la lista de espera para un evento, ordenados por fecha de registro
+app.get("/lista-espera/:eventoId", async (req, res) => {
+    const { eventoId } = req.params;
+
+    try {
+        const usuariosEnEspera = await prisma.listaEspera.findMany({
+            where: {
+                eventoId: parseInt(eventoId),
+            },
+            orderBy: {
+                fechaRegistro: "asc",
+            },
+        });
+
+        res.json(usuariosEnEspera);
+    } catch (error) {
+        console.error("Error al obtener los usuarios en espera:", error);
+        res.status(500).json({ error: "Error al obtener los usuarios en espera" });
+    }
+});
+
+// Eliminar un usuario de la lista de espera
+app.delete("/lista-espera", async (req, res) => {
+    const { usuarioId, eventoId } = req.body;
+
+    try {
+        const usuarioEliminado = await prisma.listaEspera.deleteMany({
+            where: {
+                usuarioId: parseInt(usuarioId),
+                eventoId: parseInt(eventoId),
+            },
+        });
+
+        res.json(usuarioEliminado);
+    } catch (error) {
+        console.error("Error al eliminar el usuario de la lista de espera:", error);
+        res.status(500).json({ error: "Error al eliminar el usuario de la lista de espera" });
     }
 });
