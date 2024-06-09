@@ -24,21 +24,36 @@ import { format } from "date-fns";
 import { AgregarSolicitud } from "./AgregarSolicitud";
 
 export const MisSolicitudesPerfil = ({ solicitud }) => {
+    // Estado para almacenar las solicitudes
     const [solicitudes, setSolicitudes] = useState([]);
+
+    // Estado para la solicitud seleccionada
     const [selectedSolicitud, setSelectedSolicitud] = useState(null);
+
+    // Estado para el tamaño del modal
     const [modalSize] = useState("5xl");
+
+    // Estado para controlar la visibilidad del mensaje modal
     const [mensajeModal, setMensajeModal] = useState(false);
+
+    // Estado para almacenar el mensaje del modal
     const [mensaje, setMensaje] = useState("");
+
+    // Estado para mostrar notificaciones
     const toast = useToast();
+    
+    // Estado para almacenar la información del usuario
     const [usuario, setUsuario] = useState(
         JSON.parse(localStorage.getItem("usuario"))
     );
 
+    // useEffect para cargar las solicitudes del usuario al montar el componente
     useEffect(() => {
         if (usuario) {
             fetch(`http://localhost:3000/usuarios/${usuario.id}/solicitudes`)
                 .then((response) => response.json())
                 .then((data) => {
+                    // Filtrar las solicitudes pendientes o rechazadas
                     const pendientes = data.filter(
                         (solicitud) =>
                             solicitud.estado === "Pendiente" ||
@@ -52,9 +67,11 @@ export const MisSolicitudesPerfil = ({ solicitud }) => {
         }
     }, []);
 
+    // Funciones para manejar la apertura y cierre del modal de detalles de solicitud
     const handleOpen = (solicitud) => setSelectedSolicitud(solicitud);
     const handleClose = () => setSelectedSolicitud(null);
 
+    // Funciones para manejar la apertura y cierre del modal de mensaje
     const handleMensajeModalOpen = (solicitud) => {
         setSelectedSolicitud(solicitud);
         setMensajeModal(true);
@@ -68,9 +85,12 @@ export const MisSolicitudesPerfil = ({ solicitud }) => {
         }
     };
 
+    // Función para manejar cambios en el textarea del mensaje
     const handleMensajeChange = (e) => setMensaje(e.target.value);
 
+    // Función para enviar un mensaje
     const enviarMensaje = (solicitudId) => {
+        // Validar que el mensaje no esté vacío y no contenga caracteres especiales
         if (mensaje.trim().length === 0) {
             toast({
                 title: "Error",
@@ -86,8 +106,7 @@ export const MisSolicitudesPerfil = ({ solicitud }) => {
         if (!/^[a-zA-Z0-9\s.,?!]*$/.test(mensaje)) {
             toast({
                 title: "Error",
-                description:
-                    "El mensaje no puede contener caracteres especiales.",
+                description: "El mensaje no puede contener caracteres especiales.",
                 status: "error",
                 duration: 3000,
                 isClosable: true,
@@ -130,6 +149,7 @@ export const MisSolicitudesPerfil = ({ solicitud }) => {
                 return Promise.all(promesas);
             })
             .then(() => {
+                // Mostrar toast de éxito
                 toast({
                     title: "Mensaje enviado con éxito",
                     status: "success",
@@ -139,6 +159,7 @@ export const MisSolicitudesPerfil = ({ solicitud }) => {
                 });
             })
             .catch((error) => {
+                // Mostrar toast de error
                 toast({
                     title: "Error",
                     description: error.message,
@@ -153,6 +174,7 @@ export const MisSolicitudesPerfil = ({ solicitud }) => {
         handleClose(); // Cerrar el modal de detalles del evento
     };
 
+    // Función para aumentar el recordatorio de una solicitud
     const aumentarRecordatorio = (solicitudId) => {
         fetch(`http://localhost:3000/solicitudes/${solicitudId}/recordatorio`, {
             method: "PUT",
@@ -166,6 +188,7 @@ export const MisSolicitudesPerfil = ({ solicitud }) => {
             });
     };
 
+    // Función para manejar la apertura del modal de detalles de solicitud
     const handleOpenDetalleModal = (solicitud) => {
         setSelectedSolicitud(solicitud);
         setMensajeModal(false);

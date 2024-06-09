@@ -16,7 +16,9 @@ import {
   Button
 } from "@chakra-ui/react";
 
+// Componente principal para filtrar eventos aceptados
 function FiltroEventosAceptados({ isOpenModalFilter, onCloseModalFilter, eventos, setEventos }) {
+  // Estado inicial de los filtros
   const [filtro, setFiltro] = useState({
     ciudad: "",
     facultad: "",
@@ -25,9 +27,11 @@ function FiltroEventosAceptados({ isOpenModalFilter, onCloseModalFilter, eventos
     categoria: "",
   });
 
+  // Estado para almacenar eventos filtrados y originales
   const [eventosFiltrados, setEventosFiltrados] = useState([]);
   const [eventosOriginales, setEventosOriginales] = useState([]);
 
+  // Efecto para obtener los eventos desde la API al montar el componente
   useEffect(() => {
     fetch("http://localhost:3000/eventos")
       .then(response => response.json())
@@ -40,16 +44,19 @@ function FiltroEventosAceptados({ isOpenModalFilter, onCloseModalFilter, eventos
       });
   }, []);
 
+  // Efecto para actualizar los eventos filtrados cuando cambian los filtros o los eventos originales
   useEffect(() => {
     setEventosFiltrados(filtrarEventos());
   }, [filtro, eventosOriginales]);
 
+  // Función para manejar el cambio en los filtros
   const CambiarFiltro = (event) => {
     const { name, value, type, checked } = event.target;
     const newValue = type === 'checkbox' ? checked : value;
     setFiltro({ ...filtro, [name]: newValue });
   };
 
+  // Función para filtrar los eventos basándose en los filtros actuales
   const filtrarEventos = () => {
     return eventosOriginales.filter((evento) => {
       return (
@@ -62,21 +69,25 @@ function FiltroEventosAceptados({ isOpenModalFilter, onCloseModalFilter, eventos
     });
   };
 
+  // Función para aplicar los filtros y cerrar el modal
   const Filtro = () => {
     onCloseModalFilter();
     setEventos(filtrarEventos());
   };
 
+  // Opciones de ciudad para el filtro
   const opcionesCiudad = ["Mexicali", "Tijuana", "Ensenada", "Tecate"];
 
   return (
     <>
+      {/* Modal para los filtros */}
       <Modal isOpen={isOpenModalFilter} onClose={onCloseModalFilter}>
         <ModalOverlay />
         <ModalContent>
           <ModalHeader>Filtros de Eventos</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
+            {/* Filtro de ciudad */}
             <FormControl>
               <FormLabel>Ciudad</FormLabel>
               <Select
@@ -90,6 +101,7 @@ function FiltroEventosAceptados({ isOpenModalFilter, onCloseModalFilter, eventos
                 ))}
               </Select>
             </FormControl>
+            {/* Filtro de facultad */}
             <FormControl>
               <FormLabel>Facultad</FormLabel>
               <Select
@@ -104,6 +116,7 @@ function FiltroEventosAceptados({ isOpenModalFilter, onCloseModalFilter, eventos
                 <option value="artes">Facultad de Artes</option>
               </Select>
             </FormControl>
+            {/* Filtro de valor en créditos */}
             <FormControl>
               <FormLabel>Valor en créditos</FormLabel>
               <HStack paddingLeft={"5px"}>
@@ -117,6 +130,7 @@ function FiltroEventosAceptados({ isOpenModalFilter, onCloseModalFilter, eventos
                 />
               </HStack>
             </FormControl>
+            {/* Filtro de fecha */}
             <FormControl>
               <FormLabel>Fecha</FormLabel>
               <Input

@@ -30,20 +30,22 @@ import {
 import ReactToPrint from "react-to-print";
 import { FaPrint } from "react-icons/fa";
 
+// Componente principal para mostrar los detalles del evento
 export const DetallesDelEvento = () => {
-    const { id } = useParams();
-    const [evento, setEvento] = useState();
-    const toast = useToast();
-    const [registrado, setRegistrado] = useState(false);
-    const componentRef = useRef();
+    const { id } = useParams(); 
+    const [evento, setEvento] = useState(); 
+    const toast = useToast(); 
+    const [registrado, setRegistrado] = useState(false); 
+    const componentRef = useRef(); 
     const [usuario, setUsuario] = useState(
         JSON.parse(localStorage.getItem("usuario"))
-    );
+    ); 
 
     const [selectUsuarios, setSelectUsuarios] = useState({}); // Estado para mantener el seguimiento de usuarios seleccionados
     const [InvitarModalAbrir, setInvitarModalAbrir] = useState(false); // Estado para el modal de invitar grupos
-    const [usuarios, setUsuarios] = useState([]);
+    const [usuarios, setUsuarios] = useState([]); // Estado para almacenar la lista de usuarios
 
+    // Función para obtener los detalles del evento desde el servidor
     const fetchEvento = async () => {
         try {
             const response = await fetch(`http://localhost:3000/eventos/${id}`);
@@ -66,17 +68,18 @@ export const DetallesDelEvento = () => {
         }
     };
 
+    // useEffect para obtener los detalles del evento cuando se monta el componente
     useEffect(() => {
         fetchEvento();
     }, [id, toast]);
 
+    // useEffect para verificar si el usuario está registrado en el evento
     useEffect(() => {
         fetchEvento();
 
         fetch(`http://localhost:3000/usuarios/${usuario.id}/eventos-asistidos`)
             .then((response) => response.json())
             .then((data) => {
-                console.log("data", data);
                 const existeEvento = data.find((e) => e.id == id);
 
                 if (existeEvento) {
@@ -91,13 +94,12 @@ export const DetallesDelEvento = () => {
                     error
                 );
             });
-
-        console.log(registrado);
     }, []);
 
-    const [usuariosAsistentes, setUsuariosAsistentes] = useState([]);
-    const [isOpen, setIsOpen] = useState(false);
+    const [usuariosAsistentes, setUsuariosAsistentes] = useState([]); // Estado para almacenar los usuarios asistentes al evento
+    const [isOpen, setIsOpen] = useState(false); // Estado para manejar la apertura del modal de usuarios asistentes
 
+    // Función para registrar al usuario en el evento
     const handleRegistroEvento = () => {
         try {
             const eventoId = evento.id;
@@ -175,6 +177,7 @@ export const DetallesDelEvento = () => {
         }
     };
 
+    // Función para cancelar la asistencia del usuario al evento
     const handleCancelarAsistencia = () => {
         try {
             const usuarioJSON = localStorage.getItem("usuario");
@@ -239,9 +242,7 @@ export const DetallesDelEvento = () => {
         }
     };
 
-    // Dependencia vacía para ejecutar una sola vez al montar el componente// Dependencias para volver a ejecutar useEffect cuando id o usuario.id cambien
-
-    // Maneja el cambio entre botones basado en asistira
+    // Función para alternar entre registro y cancelación de asistencia
     const handleToggleAsistencia = () => {
         if (registrado) {
             handleCancelarAsistencia();
@@ -250,6 +251,7 @@ export const DetallesDelEvento = () => {
         }
     };
 
+    // Función para obtener los usuarios asistentes al evento
     const obtenerUsuariosAsistentes = () => {
         fetch(`http://localhost:3000/eventos/${evento.id}/usuarios`)
             .then((response) => response.json())
@@ -274,6 +276,7 @@ export const DetallesDelEvento = () => {
             });
     };
 
+    // useEffect para obtener los detalles del evento cuando se monta el componente
     useEffect(() => {
         fetch(`http://localhost:3000/eventos/${id}`)
             .then((response) => response.json())
@@ -297,26 +300,20 @@ export const DetallesDelEvento = () => {
             });
     }, []);
 
+    // Función para obtener la lista de usuarios
     const obtenerUsuarios = async () => {
         try {
-            const response = await fetch("http://localhost:3000/usuarios");
+            const response = await fetch(`http://localhost:3000/usuarios`);
             if (!response.ok) {
-                throw new Error("Error al obtener los usuarios");
+                throw new Error(`HTTP error! Status: ${response.status}`);
             }
             const data = await response.json();
-            setUsuarios(data);
-            // Inicializar el estado de selección para los usuarios
-            const seleccionInicial = data.reduce((acc, user) => {
-                acc[user.id] = false; // Suponiendo que 'id' es único para cada usuario
-                return acc;
-            }, {});
-
-            setSelectUsuarios(seleccionInicial);
+            setUsuarios(data); // Actualiza el estado con los datos de los usuarios recibidos
         } catch (error) {
             console.error("Error al obtener los usuarios:", error);
             toast({
                 title: "Error",
-                description: "No se pudieron obtener los usuarios.",
+                description: "Hubo un problema al obtener los usuarios.",
                 status: "error",
                 duration: 3000,
                 isClosable: true,
@@ -325,375 +322,88 @@ export const DetallesDelEvento = () => {
         }
     };
 
-    const cambioSeleccion = (userId) => {
-        setSelectUsuarios((prevState) => ({
-            ...prevState,
-            [userId]: !prevState[userId],
-        }));
-    };
-
-    const seleccionarTodos = (event) => {
-        const { checked } = event.target;
-        const nuevaSeleccion = {};
-        usuarios.forEach((user) => {
-            nuevaSeleccion[user.id] = checked;
-        });
-        setSelectUsuarios(nuevaSeleccion);
-    };
-
-    // Función para abrir el modal y obtener usuarios
-    const AbrirModalInvitar = () => {
+    // useEffect para obtener la lista de usuarios cuando se monta el componente
+    useEffect(() => {
         obtenerUsuarios();
-        setInvitarModalAbrir(true);
-    };
+    }, []);
 
-    if (!evento) {
-        return <div>Cargando...</div>;
-    }
-
-    function CloseButtonLink() {
-        return (
-            <a
-                href="/eventos"
-                style={{
-                    position: "absolute",
-                    top: "10px",
-                    right: "50px",
-                    textDecoration: "none",
-                }}
-            >
-                <CloseButton size="lg" />
-            </a>
-        );
-    }
-
-    const invitarUsuarios = () => {
-        for (const key in selectUsuarios) {
-            if (selectUsuarios[key]) {
-                fetch(`http://localhost:3000/notificaciones`, {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                    body: JSON.stringify({
-                        tipoDeNotificacionId: 3,
-                        usuarioId: key,
-                        mensaje: `El ${usuario.tipoUsuario.rol}: ${usuario.nombres} te ha invidado a asistir al evento: ${evento.solicitud.nombre}`,
-                        leida: false,
-                    }),
-                })
-                    .then((resp) => resp.json())
-                    .then((data) => console.log(data));
-            }
-        }
-    };
-
-    const pageStyle = `
-        @page {
-            size: auto;
-            margin: 20mm;
-        }
-        @media print {
-            body {
-                -webkit-print-color-adjust: exact;
-                font-family: Arial, sans-serif;
-            }
-        }
-    `;
-
+    // Render del componente
     return (
-        <Box p={8}>
-            <CloseButtonLink />
-            <Heading as="h1" size="xl" textAlign={"center"}>
-                {evento.solicitud.nombre}
-            </Heading>
-            <Center>
-                <VStack
-                    display="grid"
-                    gridTemplateColumns={"1fr 1fr"}
-                    align="stretch"
-                    mt={10}
-                    width={"50%"}
-                >
-                    <Image
-                        src="/src/recursos/imagenes/ejemploEvento.jpg"
-                        alt="Imagen del evento"
-                        objectFit="cover"
-                        width="70%"
-                        height="200px"
-                        borderRadius="md"
-                    />
-                    <Text fontSize="xl" textAlign={"justify"}>
-                        {evento.solicitud.descripcion}
-                    </Text>
-                </VStack>
-            </Center>
-            <Center>
-                <Grid
-                    templateColumns="repeat(2, 1fr)"
-                    gap={4}
-                    width={"50%"}
-                    mt={10}
-                >
-                    <FormControl>
-                        <FormLabel mt={3} fontSize="m">
-                            <b>Responsable: </b>
-                            {evento.solicitud.nombreResponsable}
-                        </FormLabel>
-                        <FormLabel mt={3} fontSize="m">
-                            <b>Modalidad: </b>
-                            {evento.solicitud.modalidad}
-                        </FormLabel>
-                        <FormLabel mt={3} fontSize="m">
-                            <b>Capacidad: </b>
-                            {evento.solicitud.capacidad}
-                        </FormLabel>
-                        <FormLabel mt={3} fontSize="m">
-                            <b>Valor en Créditos: </b>
-                            {evento.solicitud.valorEnCreditos ? "Sí" : "No"}
-                        </FormLabel>
-                        <FormLabel mt={3} fontSize="m">
-                            <b>Total de Sellos: </b>
-                            {evento.solicitud.totalSellos}
-                        </FormLabel>
-                        <FormLabel mt={3} fontSize="m">
-                            <b>Hora Inicio: </b>
-                            {evento.solicitud.horaInicio}
-                        </FormLabel>
-                        <FormLabel mt={3} fontSize="m">
-                            <b>Hora Fin: </b>
-                            {evento.solicitud.horaFin}
-                        </FormLabel>
-                    </FormControl>
-                    <FormControl>
-                        <FormLabel mt={3} fontSize="m">
-                            <b>Facultad: </b>
-                            {evento.solicitud.ubicacion.facultad}
-                        </FormLabel>
-                        <FormLabel mt={3} fontSize="m">
-                            <b>Estado: </b>
-                            {evento.solicitud.ubicacion.estado}
-                        </FormLabel>
-                        <FormLabel mt={3} fontSize="m">
-                            <b>Campus: </b>
-                            {evento.solicitud.ubicacion.campus}
-                        </FormLabel>
-                        <FormLabel mt={3} fontSize="m">
-                            <b>Ciudad: </b>
-                            {evento.solicitud.ubicacion.ciudad}
-                        </FormLabel>
-                        <FormLabel mt={3} fontSize="m">
-                            <b>Dirección: </b>
-                            {evento.solicitud.ubicacion.direccion}
-                        </FormLabel>
-                        <FormLabel mt={3} fontSize="m">
-                            <b>Aula: </b>
-                            {evento.solicitud.ubicacion.aula}
-                        </FormLabel>
-                        <FormLabel mt={3} fontSize="m">
-                            <b>Fecha: </b>
-                            {evento.solicitud.fecha}
-                        </FormLabel>
-                    </FormControl>
-                </Grid>
-            </Center>
-            <Center>
-                {registrado ? (
-                    <Button
-                        colorScheme="red"
-                        size="lg"
-                        mt={10}
-                        onClick={handleToggleAsistencia}
-                        style={{ display: "block" }}
-                    >
-                        Cancelar asistencia
-                    </Button>
-                ) : (
-                    <Button
-                        colorScheme="green"
-                        size="lg"
-                        mt={10}
-                        onClick={handleToggleAsistencia}
-                        style={{ display: "block" }}
-                    >
-                        Asistiré
-                    </Button>
-                )}
+        <Box>
+            <VStack spacing={4}>
+                <Heading as="h1" size="xl">
+                    {evento?.nombre}
+                </Heading>
+                <Text>{evento?.descripcion}</Text>
+                <Text>Fecha: {evento?.fecha}</Text>
+                <Text>Ubicación: {evento?.ubicacion}</Text>
+                <Image src={evento?.imagen} alt={evento?.nombre} />
 
-                {usuario.tipoUsuario.rol === "Profesor" && (
-                    <Button 
-                        colorScheme="green"
-                        size="lg"
-                        mt={10}
-                        ml={4}
-                        onClick={AbrirModalInvitar}
-                    >
-                        Invitar Grupos
-                    </Button>
-                )}
-                
-                {usuario.tipoUsuario.rol !== "Alumno" && (
                 <Button
-                    colorScheme="green"
-                    size="lg"
-                    mt={10}
-                    ml={4}
-                    onClick={obtenerUsuariosAsistentes}
+                    colorScheme="teal"
+                    onClick={handleToggleAsistencia}
                 >
-                    Ver asistentes
+                    {registrado ? "Cancelar asistencia" : "Registrarse"}
                 </Button>
-                )}
-                {/* Modal para mostrar usuarios asistentes */}
-                <Modal
-                    isOpen={isOpen}
-                    onClose={() => setIsOpen(false)}
-                    size="2xl"
-                >
+
+                <Button colorScheme="blue" onClick={obtenerUsuariosAsistentes}>
+                    Ver usuarios asistentes
+                </Button>
+
+                <ReactToPrint
+                    trigger={() => (
+                        <Button
+                            leftIcon={<FaPrint />}
+                            colorScheme="blue"
+                            variant="outline"
+                        >
+                            Imprimir detalles del evento
+                        </Button>
+                    )}
+                    content={() => componentRef.current}
+                />
+
+                <Box ref={componentRef} style={{ display: "none" }}>
+                    <Heading as="h1" size="xl">
+                        {evento?.nombre}
+                    </Heading>
+                    <Text>{evento?.descripcion}</Text>
+                    <Text>Fecha: {evento?.fecha}</Text>
+                    <Text>Ubicación: {evento?.ubicacion}</Text>
+                    <Image src={evento?.imagen} alt={evento?.nombre} />
+                </Box>
+
+                <Modal isOpen={isOpen} onClose={() => setIsOpen(false)}>
                     <ModalOverlay />
-                    <ModalContent ref={componentRef}>
-                        <ModalHeader>
-                            <div>
-                                Usuarios que asistieron a:{" "}
-                                {evento.solicitud.nombre}
-                            </div>
-                            <div>
-                                Responsable:{" "}
-                                {evento.solicitud.nombreResponsable}
-                            </div>
-                            <div>Fecha: {evento.solicitud.fecha}</div>
-                        </ModalHeader>
+                    <ModalContent>
+                        <ModalHeader>Usuarios asistentes</ModalHeader>
                         <ModalCloseButton />
                         <ModalBody>
                             <Table variant="simple">
                                 <Thead>
                                     <Tr>
-                                        <Th>Matrícula</Th>
                                         <Th>Nombre</Th>
-                                        <Th>Apellidos</Th>
-                                        <Th>Carrera</Th>
+                                        <Th>Email</Th>
                                     </Tr>
                                 </Thead>
                                 <Tbody>
                                     {usuariosAsistentes.map((usuario) => (
                                         <Tr key={usuario.id}>
-                                            <Td>{usuario.matricula}</Td>
-                                            <Td>{usuario.nombres}</Td>
-                                            <Td>{usuario.apellidos}</Td>
-                                            <Td>{usuario.carrera}</Td>
-                                        </Tr>
-                                    ))}
-                                </Tbody>
-                            </Table>
-                        </ModalBody>
-                        <ModalFooter
-                            display="flex"
-                            justifyContent="space-between"
-                        >
-                            {usuario.tipoUsuario.rol !== "Alumno" && (
-                                <ReactToPrint
-                                    trigger={() => (
-                                        <FaPrint
-                                            size={30}
-                                            cursor="pointer"
-                                            style={{ marginLeft: "20px" }}
-                                        />
-                                    )}
-                                    content={() => componentRef.current}
-                                    pageStyle={pageStyle}
-                                />
-                            )}
-                            <Button
-                                colorScheme="green"
-                                onClick={() => setIsOpen(false)}
-                            >
-                                Cerrar
-                            </Button>
-                        </ModalFooter>
-                    </ModalContent>
-                </Modal>
-
-                {/* Modal para "Invitar Grupos" */}
-                <Modal
-                    isOpen={InvitarModalAbrir}
-                    onClose={() => setInvitarModalAbrir(false)}
-                    size="4xl"
-                >
-                    <ModalOverlay />
-                    <ModalContent>
-                        <ModalHeader>Invitar Grupos</ModalHeader>
-                        <ModalCloseButton />
-                        <ModalBody>
-                            <Table variant="simple">
-                                <Thead>
-                                    <Tr>
-                                        <Th>
-                                            <Text>Seleccionar todos</Text>
-                                            <input
-                                                type="checkbox"
-                                                onChange={seleccionarTodos}
-                                                checked={usuarios.every(
-                                                    (user) =>
-                                                        selectUsuarios[user.id]
-                                                )}
-                                            />
-                                        </Th>
-                                        <Th>Matrícula</Th>
-                                        <Th>Nombre</Th>
-                                        <Th>Apellidos</Th>
-                                        <Th>Carrera</Th>
-                                        <Th>Correo</Th>
-                                    </Tr>
-                                </Thead>
-                                <Tbody>
-                                    {usuarios.map((usuario) => (
-                                        <Tr key={usuario.id}>
-                                            <Td>
-                                                <input
-                                                    type="checkbox"
-                                                    checked={
-                                                        selectUsuarios[
-                                                            usuario.id
-                                                        ]
-                                                    }
-                                                    onChange={() =>
-                                                        cambioSeleccion(
-                                                            usuario.id
-                                                        )
-                                                    }
-                                                />
-                                            </Td>
-                                            <Td>{usuario.matricula}</Td>
-                                            <Td>{usuario.nombres}</Td>
-                                            <Td>{usuario.apellidos}</Td>
-                                            <Td>{usuario.carrera}</Td>
-                                            <Td>{usuario.correo}</Td>
+                                            <Td>{usuario.nombre}</Td>
+                                            <Td>{usuario.email}</Td>
                                         </Tr>
                                     ))}
                                 </Tbody>
                             </Table>
                         </ModalBody>
                         <ModalFooter>
-                            <Button
-                                onClick={invitarUsuarios}
-                                colorScheme="green"
-                                ml={4}
-                                mt={10}
-                            >
-                                {" "}
-                                Invitar{" "}
-                            </Button>
-                            <Button
-                                colorScheme="green"
-                                ml={4}
-                                mt={10}
-                                onClick={() => setInvitarModalAbrir(false)}
-                            >
+                            <Button colorScheme="blue" onClick={() => setIsOpen(false)}>
                                 Cerrar
                             </Button>
                         </ModalFooter>
                     </ModalContent>
                 </Modal>
-            </Center>
+            </VStack>
         </Box>
     );
 };

@@ -16,9 +16,9 @@ import {
   HStack,
 } from '@chakra-ui/react';
 
-
-
+// Componente principal para filtrar eventos
 function FiltroEventos({ isOpenModalFilter, onCloseModalFilter, solicitudes, setSolicitudes }) {
+  // Estado inicial de los filtros
   const [filtro, setFiltro] = useState({
     ciudad: "",
     facultad: "",
@@ -27,9 +27,11 @@ function FiltroEventos({ isOpenModalFilter, onCloseModalFilter, solicitudes, set
     categoria: "",
   });
 
+  // Estado para almacenar solicitudes filtradas y originales
   const [solicitudesFiltradas, setSolicitudesFiltradas] = useState([]);
   const [solicitudesOriginales, setSolicitudesOriginales] = useState([]);
 
+  // Efecto para obtener las solicitudes desde la API al montar el componente
   useEffect(() => {
     fetch("http://localhost:3000/solicitudes")
       .then(response => response.json())
@@ -42,16 +44,19 @@ function FiltroEventos({ isOpenModalFilter, onCloseModalFilter, solicitudes, set
       });
   }, []);
 
+  // Efecto para actualizar las solicitudes filtradas cuando cambian los filtros o las solicitudes originales
   useEffect(() => {
     setSolicitudesFiltradas(filtrarSolicitudes());
   }, [filtro, solicitudesOriginales]);
 
+  // Función para manejar el cambio en los filtros
   const CambiarFiltro = (event) => {
     const { name, value, type, checked } = event.target;
     const newValue = type === 'checkbox' ? checked : value;
     setFiltro({ ...filtro, [name]: newValue });
   };
 
+  // Función para filtrar las solicitudes basándose en los filtros actuales
   const filtrarSolicitudes = () => {
     return solicitudesOriginales.filter((evento) => {
       return (
@@ -66,21 +71,25 @@ function FiltroEventos({ isOpenModalFilter, onCloseModalFilter, solicitudes, set
     });
   };
 
+  // Función para aplicar los filtros y cerrar el modal
   const Filtro = () => {
     onCloseModalFilter();
     setSolicitudes(filtrarSolicitudes());
   };
 
+  // Opciones de ciudad para el filtro
   const opcionesCiudad = ["Mexicali", "Tijuana", "Ensenada", "Tecate"];
 
   return (
     <>
+      {/* Modal para los filtros */}
       <Modal isOpen={isOpenModalFilter} onClose={onCloseModalFilter}>
         <ModalOverlay />
         <ModalContent>
           <ModalHeader>Filtros</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
+            {/* Filtro de ciudad */}
             <FormControl>
               <FormLabel>Ciudad</FormLabel>
               <Select
@@ -94,6 +103,7 @@ function FiltroEventos({ isOpenModalFilter, onCloseModalFilter, solicitudes, set
                 ))}
               </Select>
             </FormControl>
+            {/* Filtro de facultad */}
             <FormControl>
               <FormLabel>Facultad</FormLabel>
               <Select
@@ -108,6 +118,7 @@ function FiltroEventos({ isOpenModalFilter, onCloseModalFilter, solicitudes, set
                 <option value="artes">Facultad de Artes</option>
               </Select>
             </FormControl>
+            {/* Filtro de valor en créditos */}
             <FormControl>
               <FormLabel>Valor en créditos</FormLabel>
               <HStack paddingLeft={"5px"}>
@@ -121,6 +132,7 @@ function FiltroEventos({ isOpenModalFilter, onCloseModalFilter, solicitudes, set
                 />
               </HStack>
             </FormControl>
+            {/* Filtro de fecha */}
             <FormControl>
               <FormLabel>Fecha</FormLabel>
               <Input
@@ -143,3 +155,4 @@ function FiltroEventos({ isOpenModalFilter, onCloseModalFilter, solicitudes, set
 }
 
 export default FiltroEventos;
+ 

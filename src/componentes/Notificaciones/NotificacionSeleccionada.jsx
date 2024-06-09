@@ -3,32 +3,34 @@ import {
     Button,
     Flex,
     Heading,
-    Icon,
     Text,
     useColorModeValue,
-} from "@chakra-ui/react";
-import React from "react";
-import { FiAlertCircle } from "react-icons/fi";
-import { useNavigate } from "react-router-dom";
+} from "@chakra-ui/react"; // Importa componentes de Chakra UI para la interfaz de usuario
+import React from "react"; // Importa React
+import { FiAlertCircle } from "react-icons/fi"; // Importa un ícono específico de react-icons
+import { useNavigate } from "react-router-dom"; // Importa hook para la navegación
 
+// Componente que muestra la notificación seleccionada
 export const NotificacionSeleccionada = ({
     usuario,
     setNotificaciones,
     notificacionSeleccionada,
     setNotificacionSeleccionada,
 }) => {
+    // Hook para cambiar el color del texto dependiendo del modo de color (claro/oscuro)
     const textColor = useColorModeValue("gray.800", "white");
-    console.log(notificacionSeleccionada);
 
+    // Función para eliminar una notificación
     const eliminarNotificacion = () => {
         fetch(
             `http://localhost:3000/notificaciones/${notificacionSeleccionada.id}`,
             {
-                method: "DELETE",
+                method: "DELETE", // Método DELETE para eliminar la notificación
             }
         )
             .then((resp) => resp.json())
             .then((data) => {
+                // Actualiza el estado de las notificaciones filtrando la notificación eliminada
                 setNotificaciones((prevNotificaciones) =>
                     prevNotificaciones.filter(
                         (notificacion) =>
@@ -37,12 +39,15 @@ export const NotificacionSeleccionada = ({
                 );
             });
 
+        // Reinicia la notificación seleccionada a null
         setNotificacionSeleccionada(null);
     };
 
+    // Función para marcar una notificación como leída (vacía por ahora)
     const marcarNotificacionLeida = () => {};
 
     return (
+        // Caja principal que contiene la información de la notificación
         <Box h={"100%"} p={5} position={"relative"}>
             <Heading
                 as="h4"
@@ -54,6 +59,7 @@ export const NotificacionSeleccionada = ({
                 Información de la Notificación
             </Heading>
             <Box fontSize="lg" color={textColor}>
+                {/* Muestra el título de la notificación */}
                 <Box mt={"30px"}>
                     <Text as="span" fontWeight="bold">
                         Título:
@@ -66,6 +72,7 @@ export const NotificacionSeleccionada = ({
                     </Text>
                 </Box>
                 <br />
+                {/* Muestra la descripción de la notificación */}
                 <Box mt={"30px"}>
                     <Text as="span" fontWeight="bold">
                         Descripción:
@@ -75,6 +82,7 @@ export const NotificacionSeleccionada = ({
                     </Text>
                 </Box>
             </Box>
+            {/* Botones para marcar la notificación como leída o eliminarla */}
             <Flex
                 position={"absolute"}
                 bottom={10}
