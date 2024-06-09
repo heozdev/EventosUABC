@@ -20,6 +20,10 @@ export const Sidebar = ({ gridArea }) => {
         localStorage.setItem("usuario", JSON.stringify(null));
     };
 
+    if (!usuario) {
+        return null; 
+    }
+
     return (
         <GridItem bg="#00723F" area={gridArea}>
             <Grid
@@ -30,7 +34,7 @@ export const Sidebar = ({ gridArea }) => {
                 gridTemplateRows={"10% 1fr 20%"}
             >
                 <GridItem gridArea={"logo"}>
-                    <Image src="src\recursos\imagenes\logoUabc.png" alt="" />
+                    <Image src="src/recursos/imagenes/logoUabc.png" alt="" />
                 </GridItem>
                 <GridItem mt={"50px"} ml={"20px"} gridArea={"navCentro"}>
                     <Flex flexDirection={"column"} gap={5}>
@@ -55,7 +59,7 @@ export const Sidebar = ({ gridArea }) => {
                         </Flex>
                         <Flex
                             display={
-                                usuario.tipoUsuario.rol == "Encargado"
+                                usuario?.tipoUsuario?.rol === "Encargado"
                                     ? "flex"
                                     : "none"
                             }

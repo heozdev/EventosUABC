@@ -714,7 +714,7 @@ export const DetallesDelEvento = () => {
                 <Modal
                     isOpen={isOpen}
                     onClose={() => setIsOpen(false)}
-                    size="2xl"
+                    size="4xl"
                 >
                     <ModalOverlay />
                     <ModalContent ref={componentRef}>
@@ -741,6 +741,8 @@ export const DetallesDelEvento = () => {
                                         <Th>Nombre</Th>
                                         <Th>Apellidos</Th>
                                         <Th>Carrera</Th>
+                                        <Th>Facultad</Th>
+                                        <Th>Correo</Th>
                                     </Tr>
                                 </Thead>
                                 <Tbody>
@@ -750,6 +752,8 @@ export const DetallesDelEvento = () => {
                                             <Td>{usuario.nombres}</Td>
                                             <Td>{usuario.apellidos}</Td>
                                             <Td>{usuario.carrera}</Td>
+                                            <Td>{usuario.facultad}</Td>
+                                            <Th>{usuario.correo}</Th>
                                         </Tr>
                                     ))}
                                 </Tbody>

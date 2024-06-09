@@ -16,25 +16,31 @@ import {
     ModalBody,
     ModalCloseButton,
     useDisclosure,
-} from "@chakra-ui/react";
-import { MisEventosPerfil } from "./MisEventosPerfil";
-import { MisSolicitudesPerfil } from "./MisSolicitudesPerfil";
-import { EventosAsistidos } from "./EventosAsistidos";
-import { BsQrCode } from "react-icons/bs";
-import { useEffect, useState } from "react";
-import QRCode from "qrcode.react"; // Corregido aquí
-import { CarnetAlumno } from "./CarnetAlumno";
+} from "@chakra-ui/react"; 
+import { MisEventosPerfil } from "./MisEventosPerfil"; 
+import { MisSolicitudesPerfil } from "./MisSolicitudesPerfil"; 
+import { EventosAsistidos } from "./EventosAsistidos"; 
+import { BsQrCode } from "react-icons/bs"; 
+import { useEffect, useState } from "react"; 
+import QRCode from "qrcode.react"; 
+import { CarnetAlumno } from "./CarnetAlumno"; 
 
+// Componente principal de acciones del perfil
 export const AccionesPerfil = () => {
+    // Hooks de Chakra UI para controlar el estado del modal
     const { isOpen, onOpen, onClose } = useDisclosure();
+
+    // Estado para almacenar la información del usuario
     const [usuario, setUsuario] = useState(
         JSON.parse(localStorage.getItem("usuario"))
     );
 
+    // Hook de efecto para actualizar la información del usuario desde el localStorage
     useEffect(() => {
         setUsuario(JSON.parse(localStorage.getItem("usuario")));
     }, []);
 
+    // Función para generar un código QR único basado en la información del usuario
     const generateUniqueQRCode = () => {
         if (!usuario || !usuario.id) {
             // Manejar el caso en que el usuario o la ID del usuario no estén disponibles
@@ -42,7 +48,6 @@ export const AccionesPerfil = () => {
         }
         return `https://alumnos.uabc.mx/web/alumnos/bienvenido`;
     };
-    
 
     return (
         <Center>

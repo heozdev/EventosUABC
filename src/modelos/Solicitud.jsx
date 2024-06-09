@@ -1,5 +1,5 @@
-import { useEffect, useState } from "react";
-import { useToast } from "@chakra-ui/react";
+import { useEffect, useState } from "react"; 
+import { useToast } from "@chakra-ui/react"; 
 import {
     Badge,
     Button,
@@ -19,18 +19,20 @@ import {
     Stack,
     Text,
     Textarea,
-} from "@chakra-ui/react";
-import { format } from "date-fns";
+} from "@chakra-ui/react"; 
+import { format } from "date-fns"; 
+
 
 export const Solicitud = ({ solicitud, setSolicitud, updateSolicitudes }) => {
-    const [isOpen, setIsOpen] = useState(false);
-    const [value, setValue] = useState("");
-    const [showConfirmModal, setShowConfirmModal] = useState(false);
+    const [isOpen, setIsOpen] = useState(false); 
+    const [value, setValue] = useState(""); 
+    const [showConfirmModal, setShowConfirmModal] = useState(false); // Estado para controlar la apertura del modal de confirmación
     const [usuario, setUsuario] = useState(
         JSON.parse(localStorage.getItem("usuario"))
-    );
-    const toast = useToast();
+    ); 
+    const toast = useToast(); // Hook para mostrar notificaciones
 
+    // Función para crear un evento basado en una solicitud
     const crearEvento = (solicitudId) => {
         fetch("http://localhost:3000/evento", {
             method: "POST",
@@ -42,10 +44,11 @@ export const Solicitud = ({ solicitud, setSolicitud, updateSolicitudes }) => {
                 solicitudId,
             }),
         })
-            .then((response) => response.json())
-            .then((data) => console.log(data));
+        .then((response) => response.json())
+        .then((data) => console.log(data));
     };
 
+    // Función para aceptar una solicitud
     const aceptarSolicitud = () => {
         fetch(`http://localhost:3000/solicitudes/${solicitud.id}`, {
             method: "PUT",
@@ -54,45 +57,47 @@ export const Solicitud = ({ solicitud, setSolicitud, updateSolicitudes }) => {
             },
             body: JSON.stringify({ estado: "Aceptado" }),
         })
-            .then((response) => response.json())
-            .then((data) => {
-                if (data) {
-                    crearEvento(solicitud.id);
-                    fetch(`http://localhost:3000/notificaciones`, {
-                        method: "POST",
-                        headers: {
-                            "Content-Type": "application/json",
-                        },
-                        body: JSON.stringify({
-                            tipoDeNotificacionId: 8,
-                            usuarioId: solicitud.responsableId,
-                            mensaje: `Su solicitud para la creacion del evento: ${solicitud.nombre} ha sido aceptada con exito por el Encargado ${usuario.nombres}.`,
-                            leida: false,
-                        }),
-                    })
-                        .then((resp) => resp.json())
-                        .then((data) => console.log(data));
-                    toast({
-                        title: "Solicitud aceptada",
-                        description: "La solicitud fue aceptada correctamente.",
-                        status: "success",
-                        position: "top-right",
-                        duration: 3000,
-                        isClosable: true,
-                    });
-                }
-            });
+        .then((response) => response.json())
+        .then((data) => {
+            if (data) {
+                crearEvento(solicitud.id);
+                // Crear notificación para el responsable de la solicitud
+                fetch(`http://localhost:3000/notificaciones`, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({
+                        tipoDeNotificacionId: 8,
+                        usuarioId: solicitud.responsableId,
+                        mensaje: `Su solicitud para la creacion del evento: ${solicitud.nombre} ha sido aceptada con exito por el Encargado ${usuario.nombres}.`,
+                        leida: false,
+                    }),
+                })
+                .then((resp) => resp.json())
+                .then((data) => console.log(data));
+                // Mostrar notificación de éxito
+                toast({
+                    title: "Solicitud aceptada",
+                    description: "La solicitud fue aceptada correctamente.",
+                    status: "success",
+                    position: "top-right",
+                    duration: 3000,
+                    isClosable: true,
+                });
+            }
+        });
 
-        handleClose();
+        handleClose(); // Cierra el modal
     };
 
+    // Función para rechazar una solicitud
     const rechazarSolicitud = () => {
         if (!value.trim()) {
             // Verificar si se ha ingresado alguna nota antes de rechazar la solicitud
             toast({
                 title: "Error",
-                description:
-                    "Agrega observaciones antes de rechazar una solicitud",
+                description: "Agrega observaciones antes de rechazar una solicitud",
                 status: "error",
                 position: "top-right",
                 duration: 3000,
@@ -108,76 +113,69 @@ export const Solicitud = ({ solicitud, setSolicitud, updateSolicitudes }) => {
             },
             body: JSON.stringify({ estado: "Rechazado", notas: value }),
         })
-            .then((response) => response.json())
-            .then((data) => {
-                updateSolicitudes();
-                if (estadoEvento === "Rechazado") {
-                    // Mostrar mensaje de exito solo si se rechaza la solicitud
-                    toast({
-                        title: "Solicitud rechazada",
-                        description:
-                            "La solicitud ha sido rechazada correctamente.",
-                        status: "success",
-                        position: "top-right",
-                        duration: 3000,
-                        isClosable: true,
-                    });
-                } else {
-                    // Mostrar mensaje de exito para lo demas
-                    toast({
-                        title: "Solicitud enviada",
-                        description: "La solicitud fue aceptada correctamente.",
-                        status: "success",
-                        position: "top-right",
-                        duration: 3000,
-                        isClosable: true,
-                    });
-                }
+        .then((response) => response.json())
+        .then((data) => {
+            updateSolicitudes(); // Actualiza la lista de solicitudes
+            // Mostrar mensaje de éxito
+            toast({
+                title: "Solicitud rechazada",
+                description: "La solicitud ha sido rechazada correctamente.",
+                status: "success",
+                position: "top-right",
+                duration: 3000,
+                isClosable: true,
             });
+        });
 
-        handleClose();
+        handleClose(); // Cierra el modal
     };
 
+    // Función para eliminar una solicitud (muestra el modal de confirmación)
     const eliminarSolicitud = () => {
         setShowConfirmModal(true);
     };
 
+    // Función para confirmar la eliminación de una solicitud
     const handleConfirmEliminar = () => {
         fetch(`http://localhost:3000/solicitud/${solicitud.id}`, {
             method: "DELETE",
         })
-            .then((response) => response.json())
-            .then((data) => {
-                updateSolicitudes();
-                toast({
-                    title: "Solicitud eliminada",
-                    description:
-                        "La solicitud ha sido eliminada correctamente.",
-                    status: "success",
-                    position: "top-right",
-                    duration: 3000,
-                    isClosable: true,
-                });
+        .then((response) => response.json())
+        .then((data) => {
+            updateSolicitudes(); // Actualiza la lista de solicitudes
+            // Mostrar notificación de éxito
+            toast({
+                title: "Solicitud eliminada",
+                description: "La solicitud ha sido eliminada correctamente.",
+                status: "success",
+                position: "top-right",
+                duration: 3000,
+                isClosable: true,
             });
+        });
 
-        handleClose();
-        setShowConfirmModal(false);
+        handleClose(); // Cierra el modal
+        setShowConfirmModal(false); // Cierra el modal de confirmación
     };
 
+    // Función para cancelar la eliminación de una solicitud (cierra el modal de confirmación)
     const handleCancelEliminar = () => {
         setShowConfirmModal(false);
     };
 
+    // Funciones para abrir y cerrar el modal principal
     const handleOpen = () => setIsOpen(true);
     const handleClose = () => setIsOpen(false);
 
+    // Función para manejar el cambio de valor del textarea
     const handleInputChange = (e) => {
         const inputValue = e.target.value;
         setValue(inputValue);
     };
 
-    const [modalSize] = useState("5xl");
+    const [modalSize] = useState("5xl"); // Tamaño del modal
 
+    // Formatear la fecha de creación de la solicitud
     const fechaCreacion = solicitud.fechaCreacion;
     const fechaFormateada = format(
         new Date(fechaCreacion),
