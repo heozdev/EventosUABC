@@ -17,6 +17,7 @@ import {
 } from '@chakra-ui/react';
 
 
+
 function FiltroEventos({ isOpenModalFilter, onCloseModalFilter, solicitudes, setSolicitudes }) {
   const [filtro, setFiltro] = useState({
     ciudad: "",
@@ -26,20 +27,8 @@ function FiltroEventos({ isOpenModalFilter, onCloseModalFilter, solicitudes, set
     categoria: "",
   });
 
-  const [filteredSolicitudes, setFilteredSolicitudes] = useState([]);
-
-  useEffect(() => {
-    setFilteredSolicitudes(filterSolicitudes());
-  }, [filtro, solicitudes]);
-
-  const handleChangeFiltro = (event) => {
-    const { name, value, type, checked } = event.target;
-    const newValue = type === 'checkbox' ? checked : value;
-    setFiltro({ ...filtro, [name]: newValue });
-  };
-
-  const[solicitudesFiltradas, setSolicitudesFiltradas] = useState([])
-  const[solicitudesOriginales, setSolicitudesOriginales] = useState([])
+  const [solicitudesFiltradas, setSolicitudesFiltradas] = useState([]);
+  const [solicitudesOriginales, setSolicitudesOriginales] = useState([]);
 
   useEffect(() => {
     fetch("http://localhost:3000/solicitudes")
@@ -53,48 +42,36 @@ function FiltroEventos({ isOpenModalFilter, onCloseModalFilter, solicitudes, set
       });
   }, []);
 
+  useEffect(() => {
+    setSolicitudesFiltradas(filtrarSolicitudes());
+  }, [filtro, solicitudesOriginales]);
 
+  const CambiarFiltro = (event) => {
+    const { name, value, type, checked } = event.target;
+    const newValue = type === 'checkbox' ? checked : value;
+    setFiltro({ ...filtro, [name]: newValue });
+  };
 
-  const filterSolicitudes = () => {
-    return solicitudes.filter((evento) => {
+  const filtrarSolicitudes = () => {
+    return solicitudesOriginales.filter((evento) => {
       return (
         (filtro.ciudad === "" ||
-          (evento.ciudad && evento.ciudad.toLowerCase().includes(filtro.ciudad.toLowerCase()))) &&
+          (evento.ubicacion.ciudad && evento.ubicacion.ciudad.toLowerCase().includes(filtro.ciudad.toLowerCase()))) &&
         (filtro.facultad === "" ||
-          (evento.facultad && evento.facultad.toLowerCase().includes(filtro.facultad.toLowerCase()))) &&
-        (filtro.valorEnCreditos === false ||
-          evento.valorEnCreditos.toString() === filtro.valorEnCreditos.toString()) &&
-        (filtro.fecha === "" ||
-          evento.fecha === filtro.fecha) &&
-        (filtro.categoria === "" ||
-          (evento.categoria && evento.categoria.toLowerCase().includes(filtro.categoria.toLowerCase())))
+          (evento.ubicacion.facultad && evento.ubicacion.facultad.toLowerCase().includes(filtro.facultad.toLowerCase()))) &&
+        (!filtro.valorEnCreditos || evento.valorEnCreditos === filtro.valorEnCreditos) &&
+        (filtro.fecha === "" || evento.fecha === filtro.fecha) &&
+        (filtro.categoria === "" || (evento.categoria && evento.categoria.toLowerCase().includes(filtro.categoria.toLowerCase())))
       );
     });
   };
 
-  const handleFilter = () => {
+  const Filtro = () => {
     onCloseModalFilter();
-    setSolicitudes(filterSolicitudes());
-
-    // Filtramos las solicitudes originales con los criterios del filtro
-    const nuevasSolicitudesFiltradas = solicitudesOriginales.filter(solicitud => {
-      if (
-        (filtro.ciudad && solicitud.ciudad.toLowerCase() !== filtro.ciudad.toLowerCase()) ||
-        (filtro.facultad && solicitud.facultad !== filtro.facultad) ||
-        (filtro.valorEnCreditos && !solicitud.valorEnCreditos) ||
-        (filtro.fecha && solicitud.fecha !== filtro.fecha) ||
-        (filtro.categoria && solicitud.categoria.toLowerCase() !== filtro.categoria.toLowerCase())
-      ) {
-        return false; // No cumple con los criterios de filtro, excluimos la solicitud
-      }
-      return true; // Cumple con todos los criterios de filtro, incluimos la solicitud
-    });
-  
-    // Actualizamos el estado de solicitudesFiltradas con las nuevas solicitudes filtradas
-    setSolicitudesFiltradas(nuevasSolicitudesFiltradas);
+    setSolicitudes(filtrarSolicitudes());
   };
 
-  const opcionesCiudad = ["Mexicali", "Tijuana", "Ensenada", "Tecate" ]
+  const opcionesCiudad = ["Mexicali", "Tijuana", "Ensenada", "Tecate"];
 
   return (
     <>
@@ -110,13 +87,11 @@ function FiltroEventos({ isOpenModalFilter, onCloseModalFilter, solicitudes, set
                 placeholder="Ciudad"
                 name="ciudad"
                 value={filtro.ciudad}
-                onChange={handleChangeFiltro}
+                onChange={CambiarFiltro}
               >
-
-              {opcionesCiudad.map((tipo, index)=>(
-                <option value={tipo} key={index}>{tipo}</option>
-              ))}
-          
+                {opcionesCiudad.map((tipo, index) => (
+                  <option value={tipo} key={index}>{tipo}</option>
+                ))}
               </Select>
             </FormControl>
             <FormControl>
@@ -125,7 +100,7 @@ function FiltroEventos({ isOpenModalFilter, onCloseModalFilter, solicitudes, set
                 placeholder="Facultad"
                 name="facultad"
                 value={filtro.facultad}
-                onChange={handleChangeFiltro}
+                onChange={CambiarFiltro}
               >
                 <option value="ingenieria">Facultad de Ingeniería Mexicali</option>
                 <option value="idiomas">Facultad de Idiomas Mexicali</option>
@@ -140,10 +115,9 @@ function FiltroEventos({ isOpenModalFilter, onCloseModalFilter, solicitudes, set
                 <Checkbox
                   size="lg"
                   colorScheme="green"
-                  defaultChecked={filtro.valorEnCreditos}
-                  borderColor="green"
+                  checked={filtro.valorEnCreditos}
                   name="valorEnCreditos"
-                  onChange={handleChangeFiltro}
+                  onChange={CambiarFiltro}
                 />
               </HStack>
             </FormControl>
@@ -153,12 +127,12 @@ function FiltroEventos({ isOpenModalFilter, onCloseModalFilter, solicitudes, set
                 type="date"
                 name="fecha"
                 value={filtro.fecha}
-                onChange={handleChangeFiltro}
+                onChange={CambiarFiltro}
               />
             </FormControl>
           </ModalBody>
           <ModalFooter>
-            <Button colorScheme="green" mr={3} onClick={handleFilter}>
+            <Button colorScheme="green" mr={3} onClick={Filtro}>
               Filtrar
             </Button>
           </ModalFooter>
