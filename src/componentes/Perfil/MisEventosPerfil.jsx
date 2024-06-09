@@ -374,7 +374,7 @@ export const MisEventosPerfil = ({ evento }) => {
                         </ModalBody>
                         <ModalFooter>
                             <Button
-                                colorScheme="blue"
+                                colorScheme="green"
                                 onClick={() =>
                                     handleCardClick(selectedEvento.id)
                                 }
