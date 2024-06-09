@@ -39,7 +39,8 @@ export const DetallesDelEvento = () => {
     const [usuario, setUsuario] = useState(
         JSON.parse(localStorage.getItem("usuario"))
     );
-
+    const [cantidadEnEspera, setCantidadEnEspera] = useState(0);
+    const [enListaDeEspera, setEnListaDeEspera] = useState(false);
     const [selectUsuarios, setSelectUsuarios] = useState({}); // Estado para mantener el seguimiento de usuarios seleccionados
     const [InvitarModalAbrir, setInvitarModalAbrir] = useState(false); // Estado para el modal de invitar grupos
     const [usuarios, setUsuarios] = useState([]);
@@ -99,69 +100,132 @@ export const DetallesDelEvento = () => {
     const [isOpen, setIsOpen] = useState(false);
 
     const handleRegistroEvento = () => {
+        if (registrado || enListaDeEspera) {
+            toast({
+                title: "Ya estás registrado",
+                description: "No puedes registrarte nuevamente.",
+                status: "warning",
+                duration: 3000,
+                isClosable: true,
+                position: "top-right",
+            });
+            return;
+        }
         try {
             const eventoId = evento.id;
-
-            const data = {
-                usuarioId: usuario.id,
-                eventoId: eventoId,
-            };
-
-            fetch(`http://localhost:3000/asistencias`, {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify(data),
-            })
-                .then((response) => response.json())
-                .then(() => {
-                    toast({
-                        title: "Registro exitoso",
-                        description: "Se ha registrado correctamente al evento",
-                        status: "success",
-                        duration: 3000,
-                        isClosable: true,
-                        position: "top-right",
-                    });
-
-                    fetch("http://localhost:3000/notificaciones", {
+    
+            // Verificar si la capacidad del evento está llena
+            if (usuariosAsistentes.length >= evento.solicitud.capacidad) {
+                // Mostrar alerta de capacidad llena
+                const confirmacion = window.confirm(
+                    "La capacidad del evento está llena. ¿Desea inscribirse en la lista de espera?"
+                );
+    
+                if (confirmacion) {
+                    // Agregar usuario a la lista de espera
+                    fetch(`http://localhost:3000/lista-espera`, {
                         method: "POST",
                         headers: {
                             "Content-Type": "application/json",
                         },
                         body: JSON.stringify({
+                            eventoId: eventoId,
                             usuarioId: usuario.id,
-                            tipoDeNotificacionId: 1,
-                            mensaje: `Usted a sido registrado exitosamente al evento: ${evento.solicitud.nombre}, le pedimos estar al tanto de las fechas y comunicados del evento`,
-                            leida: false,
+                            fechaRegistro: new Date(),
                         }),
                     })
-                        .then((resp) => resp.json())
-                        .then((data) => {
-                            console.log("notificacion", data);
+                        .then((response) => response.json())
+                        .then(() => {
+                            toast({
+                                title: "Inscripción en lista de espera",
+                                description:
+                                    "Te has inscrito en la lista de espera para este evento.",
+                                status: "info",
+                                duration: 3000,
+                                isClosable: true,
+                                position: "top-right",
+                            });
+                            setEnListaDeEspera(true); // Actualiza el estado enListaDeEspera a true
                         })
                         .catch((error) => {
                             console.error(
-                                "Error al crear la notificación: ",
+                                "Error al inscribir en la lista de espera:",
                                 error
                             );
+                            toast({
+                                title: "Error",
+                                description:
+                                    "Hubo un error al inscribirte en la lista de espera.",
+                                status: "error",
+                                duration: 5000,
+                                isClosable: true,
+                                position: "top-right",
+                            });
                         });
-
-                    setRegistrado(true);
+                }
+            } else {
+                // Registrar asistencia normalmente
+                const data = {
+                    usuarioId: usuario.id,
+                    eventoId: eventoId,
+                };
+    
+                fetch(`http://localhost:3000/asistencias`, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify(data),
                 })
-                .catch((error) => {
-                    console.error("Error al registrar la asistencia:", error);
-                    toast({
-                        title: "Error",
-                        description:
-                            "Hubo un error al registrar tu asistencia.",
-                        status: "error",
-                        duration: 5000,
-                        isClosable: true,
-                        position: "top-right",
+                    .then((response) => response.json())
+                    .then(() => {
+                        toast({
+                            title: "Registro exitoso",
+                            description: "Se ha registrado correctamente al evento",
+                            status: "success",
+                            duration: 3000,
+                            isClosable: true,
+                            position: "top-right",
+                        });
+    
+                        fetch("http://localhost:3000/notificaciones", {
+                            method: "POST",
+                            headers: {
+                                "Content-Type": "application/json",
+                            },
+                            body: JSON.stringify({
+                                usuarioId: usuario.id,
+                                tipoDeNotificacionId: 1,
+                                mensaje: `Usted a sido registrado exitosamente al evento: ${evento.solicitud.nombre}, le pedimos estar al tanto de las fechas y comunicados del evento`,
+                                leida: false,
+                            }),
+                        })
+                            .then((resp) => resp.json())
+                            .then((data) => {
+                                console.log("notificacion", data);
+                            })
+                            .catch((error) => {
+                                console.error(
+                                    "Error al crear la notificación: ",
+                                    error
+                                );
+                            });
+    
+                        setRegistrado(true);
+                    })
+                    .catch((error) => {
+                        console.error("Error al registrar la asistencia:", error);
+                        toast({
+                            title: "Error",
+                            description:
+                                "Hubo un error al registrar tu asistencia.",
+                            status: "error",
+                            duration: 5000,
+                            isClosable: true,
+                            position: "top-right",
+                        });
                     });
-                });
+            }
         } catch (error) {
             console.error("Error al procesar los datos del usuario:", error);
             toast({
@@ -178,14 +242,14 @@ export const DetallesDelEvento = () => {
     const handleCancelarAsistencia = () => {
         try {
             const usuarioJSON = localStorage.getItem("usuario");
-
+    
             if (!usuarioJSON) {
                 throw new Error(
                     "No hay datos de usuario almacenados en localStorage"
                 );
             }
             const usuario = JSON.parse(usuarioJSON);
-
+    
             fetch("http://localhost:3000/asistencias", {
                 method: "DELETE",
                 headers: {
@@ -198,9 +262,7 @@ export const DetallesDelEvento = () => {
             })
                 .then((response) => {
                     if (!response.ok) {
-                        throw new Error(
-                            `HTTP error! Status: ${response.status}`
-                        );
+                        throw new Error(`HTTP error! Status: ${response.status}`);
                     }
                     return response.json();
                 })
@@ -214,6 +276,45 @@ export const DetallesDelEvento = () => {
                         position: "top-right",
                     });
                     setRegistrado(false);
+    
+                    // Verificar si hay usuarios en la lista de espera
+                    fetch(
+                        `http://localhost:3000/lista-espera/${evento.id}?_sort=fechaRegistro&_order=asc&_limit=1`
+                    )
+                        .then((response) => response.json())
+                        .then((usuariosEnEspera) => {
+                            if (usuariosEnEspera.length > 0) {
+                                const usuarioEnEspera = usuariosEnEspera[0];
+    
+                                // Registrar automáticamente al usuario en espera
+                                fetch(`http://localhost:3000/asistencias`, {
+                                    method: "POST",
+                                    headers: {
+                                        "Content-Type": "application/json",
+                                    },
+                                    body: JSON.stringify({
+                                        usuarioId: usuarioEnEspera.usuarioId,
+                                        eventoId: evento.id,
+                                    }),
+                                })
+                                    .then((response) => response.json())
+                                    .then(() => {
+                                        // Eliminar usuario de la lista de espera
+                                        fetch(
+                                            `http://localhost:3000/lista-espera/${usuarioEnEspera.id}`,
+                                            {
+                                                method: "DELETE",
+                                            }
+                                        )
+                                            .then((response) => response.json())
+                                            .then(() => {
+                                                console.log(
+                                                    "Usuario eliminado de la lista de espera"
+                                                );
+                                            });
+                                    });
+                            }
+                        });
                 })
                 .catch((error) => {
                     console.error("Error al cancelar la asistencia:", error);
@@ -239,12 +340,50 @@ export const DetallesDelEvento = () => {
         }
     };
 
+    const handleCancelarListaDeEspera = () => {
+        fetch(`http://localhost:3000/lista-espera`, {
+            method: "DELETE",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                usuarioId: usuario.id,
+                eventoId: evento.id,
+            }),
+        })
+            .then((response) => response.json())
+            .then(() => {
+                toast({
+                    title: "Cancelación exitosa",
+                    description: "Se ha cancelado tu asistencia de la lista de espera.",
+                    status: "success",
+                    duration: 3000,
+                    isClosable: true,
+                    position: "top-right",
+                });
+                setEnListaDeEspera(false);
+            })
+            .catch((error) => {
+                console.error("Error al cancelar la asistencia de la lista de espera:", error);
+                toast({
+                    title: "Error",
+                    description: "Hubo un error al cancelar tu asistencia de la lista de espera.",
+                    status: "error",
+                    duration: 3000,
+                    isClosable: true,
+                    position: "top-right",
+                });
+            });
+    };
+
     // Dependencia vacía para ejecutar una sola vez al montar el componente// Dependencias para volver a ejecutar useEffect cuando id o usuario.id cambien
 
     // Maneja el cambio entre botones basado en asistira
     const handleToggleAsistencia = () => {
         if (registrado) {
             handleCancelarAsistencia();
+        } else if (enListaDeEspera) {
+            handleCancelarListaDeEspera();
         } else {
             handleRegistroEvento();
         }
@@ -255,13 +394,17 @@ export const DetallesDelEvento = () => {
             .then((response) => response.json())
             .then((data) => {
                 setUsuariosAsistentes(data);
-                setIsOpen(true); // Abrir el modal
+    
+                // Obtener cantidad de usuarios en la lista de espera
+                fetch(`http://localhost:3000/lista-espera/${evento.id}/count`)
+                    .then((response) => response.json())
+                    .then((cantidadEnEspera) => {
+                        setCantidadEnEspera(cantidadEnEspera);
+                        setIsOpen(true); // Abrir el modal
+                    });
             })
             .catch((error) => {
-                console.error(
-                    "Error al obtener los usuarios asistentes:",
-                    error
-                );
+                console.error("Error al obtener los usuarios asistentes:", error);
                 toast({
                     title: "Error",
                     description:
@@ -498,27 +641,37 @@ export const DetallesDelEvento = () => {
                 </Grid>
             </Center>
             <Center>
-                {registrado ? (
-                    <Button
-                        colorScheme="red"
-                        size="lg"
-                        mt={10}
-                        onClick={handleToggleAsistencia}
-                        style={{ display: "block" }}
-                    >
-                        Cancelar asistencia
-                    </Button>
-                ) : (
-                    <Button
-                        colorScheme="green"
-                        size="lg"
-                        mt={10}
-                        onClick={handleToggleAsistencia}
-                        style={{ display: "block" }}
-                    >
-                        Asistiré
-                    </Button>
-                )}
+            {registrado ? (
+                <Button
+                    colorScheme="red"
+                    size="lg"
+                    mt={10}
+                    onClick={handleToggleAsistencia}
+                    style={{ display: "block" }}
+                >
+                    Cancelar asistencia
+                </Button>
+            ) : enListaDeEspera ? (
+                <Button
+                    colorScheme="yellow"
+                    size="lg"
+                    mt={10}
+                    onClick={handleToggleAsistencia}
+                    style={{ display: "block" }}
+                >
+                    Cancelar lista de espera
+                </Button>
+            ) : (
+                <Button
+                    colorScheme="green"
+                    size="lg"
+                    mt={10}
+                    onClick={handleToggleAsistencia}
+                    style={{ display: "block" }}
+                >
+                    Asistiré
+                </Button>
+            )}
 
                 {usuario.tipoUsuario.rol === "Profesor" && (
                     <Button 
@@ -550,17 +703,12 @@ export const DetallesDelEvento = () => {
                     size="2xl"
                 >
                     <ModalOverlay />
-                    <ModalContent ref={componentRef}>
+                        <ModalContent ref={componentRef}>
                         <ModalHeader>
-                            <div>
-                                Usuarios que asistieron a:{" "}
-                                {evento.solicitud.nombre}
-                            </div>
-                            <div>
-                                Responsable:{" "}
-                                {evento.solicitud.nombreResponsable}
-                            </div>
+                            <div>Usuarios que asistieron a: {evento.solicitud.nombre}</div>
+                            <div>Responsable: {evento.solicitud.nombreResponsable}</div>
                             <div>Fecha: {evento.solicitud.fecha}</div>
+                            <div>Cantidad en lista de espera: {cantidadEnEspera}</div>
                         </ModalHeader>
                         <ModalCloseButton />
                         <ModalBody>
