@@ -40,7 +40,38 @@ export const NotificacionSeleccionada = ({
         setNotificacionSeleccionada(null);
     };
 
-    const marcarNotificacionLeida = () => {};
+    const marcarNotificacionLeida = () => {
+        fetch(
+            `http://localhost:3000/notificaciones/${notificacionSeleccionada.id}`,
+            {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    leida: true,
+                }),
+            }
+        )
+            .then((resp) => resp.json())
+            .then((data) => {
+                setNotificacionSeleccionada((prevNotificacion) => ({
+                    ...prevNotificacion,
+                    leida: true,
+                }));
+
+                // Actualizar el estado de la notificación en la lista de notificaciones
+                setNotificaciones((prevNotificaciones) =>
+                    prevNotificaciones.map((notificacion) =>
+                        notificacion.id === notificacionSeleccionada.id
+                            ? { ...notificacion, leida: true }
+                            : notificacion
+                    )
+                );
+
+                console.log(data);
+            });
+    };
 
     return (
         <Box h={"100%"} p={5} position={"relative"}>
@@ -82,15 +113,18 @@ export const NotificacionSeleccionada = ({
                 justifyContent={"center"}
                 width={"100%"}
             >
-                <Button
-                    colorScheme="blue"
-                    variant={"outline"}
-                    onClick={marcarNotificacionLeida}
-                >
-                    Marcar como leida
-                </Button>
+                {!notificacionSeleccionada.leida && (
+                    <Button
+                        colorScheme="blue"
+                        variant={"outline"}
+                        onClick={marcarNotificacionLeida}
+                    >
+                        Marcar como leída
+                    </Button>
+                )}
+
                 <Button colorScheme="red" onClick={eliminarNotificacion}>
-                    Eliminar notificacion
+                    Eliminar notificación
                 </Button>
             </Flex>
         </Box>

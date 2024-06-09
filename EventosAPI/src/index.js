@@ -218,22 +218,21 @@ app.post("/evento", async (req, res) => {
 
 app.get("/eventos", async (req, res) => {
     try {
-      const eventos = await prisma.evento.findMany({
-        include: {
-          solicitud: {
+        const eventos = await prisma.evento.findMany({
             include: {
-              ubicacion: true
-            }
-          }
-        }
-      });
-      res.json(eventos);
+                solicitud: {
+                    include: {
+                        ubicacion: true,
+                    },
+                },
+            },
+        });
+        res.json(eventos);
     } catch (error) {
-      console.error("Error al obtener eventos:", error);
-      res.status(500).json({ error: "Error al obtener eventos" });
+        console.error("Error al obtener eventos:", error);
+        res.status(500).json({ error: "Error al obtener eventos" });
     }
-  });
-  
+});
 
 app.get("/usuarios/:id/eventos", async (req, res) => {
     const { id } = req.params;
@@ -557,6 +556,32 @@ app.post("/asistencias", async (req, res) => {
             data: {
                 usuario: { connect: { id: usuarioId } },
                 evento: { connect: { id: eventoId } },
+            },
+        });
+
+        res.json(asistencia);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: "Error al registrar la asistencia" });
+    }
+});
+
+app.post("/asistencias/registrar-alumno", async (req, res) => {
+    const { matricula, eventoId } = req.body;
+    console.log(matricula);
+    try {
+        const usuario = await prisma.usuario.findUnique({
+            where: { matricula: Number(matricula) },
+        });
+
+        if (!usuario) {
+            return res.status(404).json({ error: "Usuario no encontrado" });
+        }
+
+        const asistencia = await prisma.asistencia.create({
+            data: {
+                usuario: { connect: { id: Number(usuario.id) } },
+                evento: { connect: { id: Number(eventoId) } },
             },
         });
 
