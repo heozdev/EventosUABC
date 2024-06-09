@@ -50,6 +50,7 @@ model Usuario {
   notificaciones Notificacion[]
   solicitudes Solicitud[]
   asistencia Asistencia[]
+  listaEspera ListaEspera[]
 
   tipoUsuario TipoDeUsuario @relation(fields: [idTipoUsuario], references: [IdTipoUsuario])
 }
@@ -97,6 +98,7 @@ model Evento {
   
   solicitud Solicitud @relation(fields: [solicitudId],references: [id])
   asistencia Asistencia[]
+  listaEspera ListaEspera[]
 }
 
 model Asistencia {
@@ -110,5 +112,12 @@ model Asistencia {
   @@unique([usuarioId, eventoId])
 }
 
-
+model ListaEspera {
+  id              Int           @id @default(autoincrement())
+  usuario         Usuario       @relation(fields: [usuarioId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  usuarioId       Int
+  eventoId        Int
+  evento          Evento        @relation(fields: [eventoId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  fechaRegistro   DateTime      @default(now())
+}
 
