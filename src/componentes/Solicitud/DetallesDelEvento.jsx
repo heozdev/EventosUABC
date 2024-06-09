@@ -30,28 +30,21 @@ import {
 import ReactToPrint from "react-to-print";
 import { FaPrint } from "react-icons/fa";
 
-// Componente principal para mostrar los detalles del evento
 export const DetallesDelEvento = () => {
-    const { id } = useParams(); 
-    const [evento, setEvento] = useState(); 
-    const toast = useToast(); 
-    const [registrado, setRegistrado] = useState(false); 
-    const componentRef = useRef(); 
+    const { id } = useParams();
+    const [evento, setEvento] = useState();
+    const toast = useToast();
+    const [registrado, setRegistrado] = useState(false);
+    const componentRef = useRef();
     const [usuario, setUsuario] = useState(
         JSON.parse(localStorage.getItem("usuario"))
-<<<<<<< HEAD
-    ); 
-
-=======
     );
     const [cantidadEnEspera, setCantidadEnEspera] = useState(0);
     const [enListaDeEspera, setEnListaDeEspera] = useState(false);
->>>>>>> bf441a589c07cd73c965835f95908f2cc529b96a
     const [selectUsuarios, setSelectUsuarios] = useState({}); // Estado para mantener el seguimiento de usuarios seleccionados
     const [InvitarModalAbrir, setInvitarModalAbrir] = useState(false); // Estado para el modal de invitar grupos
-    const [usuarios, setUsuarios] = useState([]); // Estado para almacenar la lista de usuarios
+    const [usuarios, setUsuarios] = useState([]);
 
-    // Función para obtener los detalles del evento desde el servidor
     const fetchEvento = async () => {
         try {
             const response = await fetch(`http://localhost:3000/eventos/${id}`);
@@ -74,18 +67,17 @@ export const DetallesDelEvento = () => {
         }
     };
 
-    // useEffect para obtener los detalles del evento cuando se monta el componente
     useEffect(() => {
         fetchEvento();
     }, [id, toast]);
 
-    // useEffect para verificar si el usuario está registrado en el evento
     useEffect(() => {
         fetchEvento();
 
         fetch(`http://localhost:3000/usuarios/${usuario.id}/eventos-asistidos`)
             .then((response) => response.json())
             .then((data) => {
+                console.log("data", data);
                 const existeEvento = data.find((e) => e.id == id);
 
                 if (existeEvento) {
@@ -100,12 +92,13 @@ export const DetallesDelEvento = () => {
                     error
                 );
             });
+
+        console.log(registrado);
     }, []);
 
-    const [usuariosAsistentes, setUsuariosAsistentes] = useState([]); // Estado para almacenar los usuarios asistentes al evento
-    const [isOpen, setIsOpen] = useState(false); // Estado para manejar la apertura del modal de usuarios asistentes
+    const [usuariosAsistentes, setUsuariosAsistentes] = useState([]);
+    const [isOpen, setIsOpen] = useState(false);
 
-    // Función para registrar al usuario en el evento
     const handleRegistroEvento = () => {
         if (registrado || enListaDeEspera) {
             toast({
@@ -246,7 +239,6 @@ export const DetallesDelEvento = () => {
         }
     };
 
-    // Función para cancelar la asistencia del usuario al evento
     const handleCancelarAsistencia = () => {
         try {
             const usuarioJSON = localStorage.getItem("usuario");
@@ -348,9 +340,6 @@ export const DetallesDelEvento = () => {
         }
     };
 
-<<<<<<< HEAD
-    // Función para alternar entre registro y cancelación de asistencia
-=======
     const handleCancelarListaDeEspera = () => {
         fetch(`http://localhost:3000/lista-espera`, {
             method: "DELETE",
@@ -390,7 +379,6 @@ export const DetallesDelEvento = () => {
     // Dependencia vacía para ejecutar una sola vez al montar el componente// Dependencias para volver a ejecutar useEffect cuando id o usuario.id cambien
 
     // Maneja el cambio entre botones basado en asistira
->>>>>>> bf441a589c07cd73c965835f95908f2cc529b96a
     const handleToggleAsistencia = () => {
         if (registrado) {
             handleCancelarAsistencia();
@@ -401,7 +389,6 @@ export const DetallesDelEvento = () => {
         }
     };
 
-    // Función para obtener los usuarios asistentes al evento
     const obtenerUsuariosAsistentes = () => {
         fetch(`http://localhost:3000/eventos/${evento.id}/usuarios`)
             .then((response) => response.json())
@@ -430,7 +417,6 @@ export const DetallesDelEvento = () => {
             });
     };
 
-    // useEffect para obtener los detalles del evento cuando se monta el componente
     useEffect(() => {
         fetch(`http://localhost:3000/eventos/${id}`)
             .then((response) => response.json())
@@ -454,20 +440,26 @@ export const DetallesDelEvento = () => {
             });
     }, []);
 
-    // Función para obtener la lista de usuarios
     const obtenerUsuarios = async () => {
         try {
-            const response = await fetch(`http://localhost:3000/usuarios`);
+            const response = await fetch("http://localhost:3000/usuarios");
             if (!response.ok) {
-                throw new Error(`HTTP error! Status: ${response.status}`);
+                throw new Error("Error al obtener los usuarios");
             }
             const data = await response.json();
-            setUsuarios(data); // Actualiza el estado con los datos de los usuarios recibidos
+            setUsuarios(data);
+            // Inicializar el estado de selección para los usuarios
+            const seleccionInicial = data.reduce((acc, user) => {
+                acc[user.id] = false; // Suponiendo que 'id' es único para cada usuario
+                return acc;
+            }, {});
+
+            setSelectUsuarios(seleccionInicial);
         } catch (error) {
             console.error("Error al obtener los usuarios:", error);
             toast({
                 title: "Error",
-                description: "Hubo un problema al obtener los usuarios.",
+                description: "No se pudieron obtener los usuarios.",
                 status: "error",
                 duration: 3000,
                 isClosable: true,
@@ -476,63 +468,83 @@ export const DetallesDelEvento = () => {
         }
     };
 
-    // useEffect para obtener la lista de usuarios cuando se monta el componente
-    useEffect(() => {
+    const cambioSeleccion = (userId) => {
+        setSelectUsuarios((prevState) => ({
+            ...prevState,
+            [userId]: !prevState[userId],
+        }));
+    };
+
+    const seleccionarTodos = (event) => {
+        const { checked } = event.target;
+        const nuevaSeleccion = {};
+        usuarios.forEach((user) => {
+            nuevaSeleccion[user.id] = checked;
+        });
+        setSelectUsuarios(nuevaSeleccion);
+    };
+
+    // Función para abrir el modal y obtener usuarios
+    const AbrirModalInvitar = () => {
         obtenerUsuarios();
-    }, []);
+        setInvitarModalAbrir(true);
+    };
 
-    // Render del componente
+    if (!evento) {
+        return <div>Cargando...</div>;
+    }
+
+    function CloseButtonLink() {
+        return (
+            <a
+                href="/eventos"
+                style={{
+                    position: "absolute",
+                    top: "10px",
+                    right: "50px",
+                    textDecoration: "none",
+                }}
+            >
+                <CloseButton size="lg" />
+            </a>
+        );
+    }
+
+    const invitarUsuarios = () => {
+        for (const key in selectUsuarios) {
+            if (selectUsuarios[key]) {
+                fetch(`http://localhost:3000/notificaciones`, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({
+                        tipoDeNotificacionId: 3,
+                        usuarioId: key,
+                        mensaje: `El ${usuario.tipoUsuario.rol}: ${usuario.nombres} te ha invidado a asistir al evento: ${evento.solicitud.nombre}`,
+                        leida: false,
+                    }),
+                })
+                    .then((resp) => resp.json())
+                    .then((data) => console.log(data));
+            }
+        }
+    };
+
+    const pageStyle = `
+        @page {
+            size: auto;
+            margin: 20mm;
+        }
+        @media print {
+            body {
+                -webkit-print-color-adjust: exact;
+                font-family: Arial, sans-serif;
+            }
+        }
+    `;
+
     return (
-<<<<<<< HEAD
-        <Box>
-            <VStack spacing={4}>
-                <Heading as="h1" size="xl">
-                    {evento?.nombre}
-                </Heading>
-                <Text>{evento?.descripcion}</Text>
-                <Text>Fecha: {evento?.fecha}</Text>
-                <Text>Ubicación: {evento?.ubicacion}</Text>
-                <Image src={evento?.imagen} alt={evento?.nombre} />
-
-                <Button
-                    colorScheme="teal"
-                    onClick={handleToggleAsistencia}
-                >
-                    {registrado ? "Cancelar asistencia" : "Registrarse"}
-                </Button>
-
-                <Button colorScheme="blue" onClick={obtenerUsuariosAsistentes}>
-                    Ver usuarios asistentes
-                </Button>
-
-                <ReactToPrint
-                    trigger={() => (
-                        <Button
-                            leftIcon={<FaPrint />}
-                            colorScheme="blue"
-                            variant="outline"
-                        >
-                            Imprimir detalles del evento
-                        </Button>
-                    )}
-                    content={() => componentRef.current}
-                />
-
-                <Box ref={componentRef} style={{ display: "none" }}>
-                    <Heading as="h1" size="xl">
-                        {evento?.nombre}
-                    </Heading>
-                    <Text>{evento?.descripcion}</Text>
-                    <Text>Fecha: {evento?.fecha}</Text>
-                    <Text>Ubicación: {evento?.ubicacion}</Text>
-                    <Image src={evento?.imagen} alt={evento?.nombre} />
-                </Box>
-
-                <Modal isOpen={isOpen} onClose={() => setIsOpen(false)}>
-                    <ModalOverlay />
-                    <ModalContent>
-                        <ModalHeader>Usuarios asistentes</ModalHeader>
-=======
         <Box p={8}>
             <CloseButtonLink />
             <Heading as="h1" size="xl" textAlign={"center"}>
@@ -698,30 +710,22 @@ export const DetallesDelEvento = () => {
                             <div>Fecha: {evento.solicitud.fecha}</div>
                             <div>Cantidad en lista de espera: {cantidadEnEspera}</div>
                         </ModalHeader>
->>>>>>> bf441a589c07cd73c965835f95908f2cc529b96a
                         <ModalCloseButton />
                         <ModalBody>
                             <Table variant="simple">
                                 <Thead>
                                     <Tr>
+                                        <Th>Matrícula</Th>
                                         <Th>Nombre</Th>
-<<<<<<< HEAD
-                                        <Th>Email</Th>
-=======
                                         <Th>Apellidos</Th>
                                         <Th>Carrera</Th>
                                         <Th>Facultad</Th>
                                         <Th>Correo</Th>
->>>>>>> bf441a589c07cd73c965835f95908f2cc529b96a
                                     </Tr>
                                 </Thead>
                                 <Tbody>
                                     {usuariosAsistentes.map((usuario) => (
                                         <Tr key={usuario.id}>
-<<<<<<< HEAD
-                                            <Td>{usuario.nombre}</Td>
-                                            <Td>{usuario.email}</Td>
-=======
                                             <Td>{usuario.matricula}</Td>
                                             <Td>{usuario.nombres}</Td>
                                             <Td>{usuario.apellidos}</Td>
@@ -815,20 +819,33 @@ export const DetallesDelEvento = () => {
                                             <Td>{usuario.apellidos}</Td>
                                             <Td>{usuario.carrera}</Td>
                                             <Td>{usuario.correo}</Td>
->>>>>>> bf441a589c07cd73c965835f95908f2cc529b96a
                                         </Tr>
                                     ))}
                                 </Tbody>
                             </Table>
                         </ModalBody>
                         <ModalFooter>
-                            <Button colorScheme="blue" onClick={() => setIsOpen(false)}>
+                            <Button
+                                onClick={invitarUsuarios}
+                                colorScheme="green"
+                                ml={4}
+                                mt={10}
+                            >
+                                {" "}
+                                Invitar{" "}
+                            </Button>
+                            <Button
+                                colorScheme="green"
+                                ml={4}
+                                mt={10}
+                                onClick={() => setInvitarModalAbrir(false)}
+                            >
                                 Cerrar
                             </Button>
                         </ModalFooter>
                     </ModalContent>
                 </Modal>
-            </VStack>
+            </Center>
         </Box>
     );
 };

@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import {
-    // Importación de componentes de Chakra UI
     Card,
     Stack,
     CardBody,
@@ -23,47 +22,39 @@ import {
     Textarea,
     Text,
 } from "@chakra-ui/react";
-import { DeleteIcon, EditIcon } from "@chakra-ui/icons"; // Iconos de Chakra UI
-import { FaUserPlus } from "react-icons/fa6"; // Icono de usuario
-import { useNavigate } from "react-router-dom"; // Hook de navegación
-import { FormularioEditarEvento } from "../Solicitud/FormularioEditarEvento"; // Componente de formulario para editar evento
+import { DeleteIcon, EditIcon } from "@chakra-ui/icons";
+import { FaUserPlus } from "react-icons/fa6";
+import { useNavigate } from "react-router-dom";
+import { FormularioEditarEvento } from "../Solicitud/FormularioEditarEvento";
 
 export const MisEventosPerfil = ({ evento }) => {
-    // Definición de estados
-    const [eventos, setEventos] = useState([]); // Lista de eventos
-    const [selectedEvento, setSelectedEvento] = useState(null); // Evento seleccionado
-    const [isRegistroModalOpen, setIsRegistroModalOpen] = useState(false); // Estado del modal de registro
-    const [showEditarFormulario, setShowEditarFormulario] = useState(false); // Estado del formulario de edición
-    const [textArea, setTextArea] = useState(""); // Contenido del campo de texto para la solicitud de cancelación
-    const navigate = useNavigate(); // Hook de navegación
+    const [eventos, setEventos] = useState([]);
+    const [selectedEvento, setSelectedEvento] = useState(null);
+    const [isRegistroModalOpen, setIsRegistroModalOpen] = useState(false);
+    const [showEditarFormulario, setShowEditarFormulario] = useState(false);
+    const [textArea, setTextArea] = useState("");
+    const navigate = useNavigate();
     const [usuario, setUsuario] = useState(
         JSON.parse(localStorage.getItem("usuario"))
-<<<<<<< HEAD
-    ); // Usuario actual obtenido del almacenamiento local
-=======
     );
     const [eventoSeleccionadoId, setEventoSeleccionadoId] = useState(null);
     const [alumno, setAlumno] = useState({
         nombre: "",
         matricula: "",
     });
->>>>>>> bf441a589c07cd73c965835f95908f2cc529b96a
 
-    // Función para manejar el clic en una tarjeta de evento y redirigir al usuario a la página de edición
     const handleCardClick = (eventoId) => {
         navigate(`/perfil/editar-evento/${eventoId}`);
     };
 
-    // Hooks de Chakra UI para manejar el estado del modal de solicitud de cancelación y mostrar notificaciones
     const {
         isOpen: isOpenNotasCancelacion,
         onOpen: onOpenNotasCancelacion,
         onClose: onCloseNotasCancelacion,
     } = useDisclosure();
 
-    const toast = useToast(); // Hook de Chakra UI para mostrar notificaciones
+    const toast = useToast();
 
-    // Efecto para cargar los eventos del usuario desde el servidor cuando el componente se monta
     useEffect(() => {
         if (usuario) {
             fetch(`http://localhost:3000/usuarios/${usuario.id}/eventos`)
@@ -80,9 +71,6 @@ export const MisEventosPerfil = ({ evento }) => {
         }
     }, []);
 
-<<<<<<< HEAD
-    // Función para manejar la solicitud de cancelación de un evento
-=======
     const handleAlumnoInputs = (e) => {
         setAlumno((prevState) => {
             return {
@@ -92,10 +80,8 @@ export const MisEventosPerfil = ({ evento }) => {
         });
     };
 
->>>>>>> bf441a589c07cd73c965835f95908f2cc529b96a
     const handleCancelarEvento = () => {
         if (!textArea.trim().length) {
-            // Si no se ha ingresado una nota, mostrar un mensaje de error
             toast({
                 title: "Error",
                 description:
@@ -143,7 +129,6 @@ export const MisEventosPerfil = ({ evento }) => {
                 return Promise.all(promesas);
             })
             .then(() => {
-                // Notificar que la solicitud se envió con éxito y cerrar el modal
                 toast({
                     title: "Solicitud enviada con éxito",
                     status: "success",
@@ -155,7 +140,6 @@ export const MisEventosPerfil = ({ evento }) => {
                 onCloseNotasCancelacion();
             })
             .catch((error) => {
-                // Manejar errores
                 toast({
                     title: "Error",
                     description: error.message,
@@ -166,10 +150,6 @@ export const MisEventosPerfil = ({ evento }) => {
                 });
             });
 
-<<<<<<< HEAD
-        setTextArea(""); // Limpiar el contenido del campo de texto
-        handleClose(); // Cerrar el modal
-=======
         setTextArea("");
         handleClose();
     };
@@ -276,7 +256,6 @@ export const MisEventosPerfil = ({ evento }) => {
         });
 
         handleCloseRegistroModal();
->>>>>>> bf441a589c07cd73c965835f95908f2cc529b96a
     };
 
     return (
