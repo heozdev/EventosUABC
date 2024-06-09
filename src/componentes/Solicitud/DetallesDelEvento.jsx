@@ -525,8 +525,12 @@ export const DetallesDelEvento = () => {
     }
 
     const invitarUsuarios = () => {
+        let usuariosSeleccionados = 0;
+
         for (const key in selectUsuarios) {
             if (selectUsuarios[key]) {
+                usuariosSeleccionados++;
+
                 fetch(`http://localhost:3000/notificaciones`, {
                     method: "POST",
                     headers: {
@@ -539,9 +543,61 @@ export const DetallesDelEvento = () => {
                         leida: false,
                     }),
                 })
-                    .then((resp) => resp.json())
-                    .then((data) => console.log(data));
+                    .then((resp) => {
+                        console.log(resp);
+
+                        if (resp.status == 404) {
+                            throw new Error(
+                                "Error en la solicitud de asistencia: " +
+                                    "Usuario no encontrado"
+                            );
+                        }
+
+                        if (resp.status == 500) {
+                            throw new Error(
+                                "Error en la solicitud de asistencia: " +
+                                    "Este usuario ya ha sido registrado a este evento"
+                            );
+                        }
+                        return resp.json();
+                    })
+                    .then(() => {
+                        // Si la solicitud fue exitosa, manejar los datos recibidos
+                        toast({
+                            title: "Alumno(s) invitado(s) correctamente.",
+                            status: "success",
+                            position: "top",
+                            duration: 2000,
+                            isClosable: true,
+                        });
+
+                        setInvitarModalAbrir(false);
+                    })
+                    .catch((error) => {
+                        // Si hay un error en la solicitud, manejar el error y mostrarlo al usuario
+                        toast({
+                            title: "Error",
+                            description: error.message,
+                            status: "error",
+                            position: "top",
+                            duration: 2000,
+                            isClosable: true,
+                        });
+                    });
             }
+        }
+
+        if (!usuariosSeleccionados) {
+            toast({
+                title: "Error",
+                description: "Selecciona al menos un usuario.",
+                status: "error",
+                position: "top",
+                duration: 2000,
+                isClosable: true,
+            });
+
+            return;
         }
     };
 
