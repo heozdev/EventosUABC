@@ -351,6 +351,37 @@ app.delete("/eventos/:id", async (req, res) => {
     }
 });
 
+app.delete("/cancelar-evento/:id", async (req, res) => {
+    const { id } = req.params;
+    try {
+        // Busca todas las entradas en la tabla Asistencia relacionadas con el evento
+        const asistenciasRelacionadas = await prisma.asistencia.findMany({
+            where: {
+                eventoId: Number(id), // Asegúrate de que id sea un número
+            },
+        });
+
+        // Elimina todas las entradas relacionadas en la tabla Asistencia
+        await prisma.asistencia.deleteMany({
+            where: {
+                eventoId: Number(id), // Asegúrate de que id sea un número
+            },
+        });
+
+        // Una vez eliminadas las entradas relacionadas, procede a eliminar el evento
+        await prisma.evento.delete({
+            where: {
+                id: Number(id), // Asegúrate de que id sea un número
+            },
+        });
+
+        res.status(204).send(); // Envía una respuesta exitosa sin contenido
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: "Error al eliminar el evento" });
+    }
+});
+
 app.get("/eventos/:id", async (req, res) => {
     const { id } = req.params;
     try {

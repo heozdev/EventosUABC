@@ -154,6 +154,25 @@ export const MisEventosPerfil = ({ evento }) => {
         handleClose();
     };
 
+    const cancelarEventoEncargado = () => {
+        fetch(`http://localhost:3000/cancelar-evento/${selectedEvento.id}`, {
+            method: "DELETE",
+            headers: {
+                "Content-Type": "application/json",
+            },
+        })
+            .then((resp) => {})
+            .then((data) => {
+                setEventos((prevEventos) =>
+                    prevEventos.filter(
+                        (evento) => evento.id !== selectedEvento.id
+                    )
+                );
+            });
+
+        setSelectedEvento(null);
+    };
+
     const handleCloseEditarFormulario = () => {
         setShowEditarFormulario(false);
     };
@@ -209,7 +228,7 @@ export const MisEventosPerfil = ({ evento }) => {
                 }
                 return resp.json();
             })
-            .then((data) => {
+            .then(() => {
                 // Si la solicitud fue exitosa, manejar los datos recibidos
                 toast({
                     title: "Alumno registrado correctamente.",
@@ -235,6 +254,7 @@ export const MisEventosPerfil = ({ evento }) => {
             alumno: "",
             matricula: "",
         });
+
         handleCloseRegistroModal();
     };
 
@@ -465,7 +485,11 @@ export const MisEventosPerfil = ({ evento }) => {
                             </Button>
                             <Button
                                 colorScheme="red"
-                                onClick={onOpenNotasCancelacion}
+                                onClick={
+                                    usuario.tipoUsuario.rol == "Encargado"
+                                        ? cancelarEventoEncargado
+                                        : onOpenNotasCancelacion
+                                }
                             >
                                 Solicitar cancelacion
                             </Button>
