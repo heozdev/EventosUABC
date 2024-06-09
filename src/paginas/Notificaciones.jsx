@@ -1,4 +1,13 @@
-import { Box, Grid, GridItem, Heading, Text } from "@chakra-ui/react";
+import {
+    Box,
+    Grid,
+    GridItem,
+    Heading,
+    Text,
+    Center,
+    Icon,
+} from "@chakra-ui/react";
+import { FiAlertCircle } from "react-icons/fi";
 import { useEffect, useState } from "react";
 import Notificacion from "../modelos/Notificacion";
 import { SeleccionarNotificacion } from "../componentes/Notificaciones/SeleccionarNotificacion";
@@ -66,15 +75,32 @@ export const Notificaciones = () => {
                             <SeleccionarNotificacion />
                         ) : (
                             <NotificacionSeleccionada
+                                usuario={usuario}
+                                setNotificaciones={setNotificaciones}
                                 notificacionSeleccionada={
                                     notificacionSeleccionada
+                                }
+                                setNotificacionSeleccionada={
+                                    setNotificacionSeleccionada
                                 }
                             />
                         )}
                     </GridItem>
                 </Grid>
             ) : (
-                <Text>No cuenta con notificaciones</Text>
+                <Center h="calc(100% - 200px)">
+                    <Box textAlign="center">
+                        <Icon
+                            as={FiAlertCircle}
+                            w={16}
+                            h={16}
+                            color="gray.500"
+                        />
+                        <Text mt={4} fontSize="xl">
+                            No cuenta con notificaciones
+                        </Text>
+                    </Box>
+                </Center>
             )}
         </Box>
     );

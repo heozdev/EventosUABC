@@ -35,7 +35,6 @@ export const DetallesDelEvento = () => {
     const [evento, setEvento] = useState();
     const toast = useToast();
     const [registrado, setRegistrado] = useState(false);
-    const [asistira, setAsistira] = useState(false);
     const componentRef = useRef();
     const [usuario, setUsuario] = useState(
         JSON.parse(localStorage.getItem("usuario"))
@@ -116,7 +115,7 @@ export const DetallesDelEvento = () => {
                 body: JSON.stringify(data),
             })
                 .then((response) => response.json())
-                .then((responseData) => {
+                .then(() => {
                     toast({
                         title: "Registro exitoso",
                         description: "Se ha registrado correctamente al evento",
@@ -205,7 +204,7 @@ export const DetallesDelEvento = () => {
                     }
                     return response.json();
                 })
-                .then((responseData) => {
+                .then(() => {
                     toast({
                         title: "Cancelación exitosa",
                         description: "Se ha cancelado tu asistencia al evento.",
